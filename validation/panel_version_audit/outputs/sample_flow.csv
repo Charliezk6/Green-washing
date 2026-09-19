@@ -1,0 +1,13 @@
+﻿stage,n,firms
+v1_input_panel,9239,2867
+v1_common_8129,8129,2669
+v2_input_combined,18077,4949
+v2_input_original_rows,9239,2867
+v2_input_expansion_rows,8838,2957
+v2_common_14778_file,14778,4484
+v2_common_rebuilt_dropna,14778,4484
+overlap_v1_v2_common,8129,2669
+only_v1_common,0,0
+only_v2_common,6649,2413
+v2_common_from_original,8129,2669
+v2_common_from_expansion,6649,2413

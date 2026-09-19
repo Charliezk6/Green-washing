@@ -1,0 +1,4 @@
+﻿规格,类型,状态,信息
+W1,propensity_model,success,Logit收敛
+W2,propensity_model,success,Logit收敛
+W3_no_GW,propensity_model,success,Logit收敛

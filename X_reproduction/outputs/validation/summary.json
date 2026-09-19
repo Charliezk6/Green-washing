@@ -1,0 +1,12 @@
+{
+  "expertise_rows": 4089,
+  "expected_expertise_rows": 4089,
+  "expertise_unique_keys": 4089,
+  "company_rows": 8982,
+  "company_unique_keys": 8982,
+  "complete_x_matches": 8838,
+  "expected_complete_x_matches": 8838,
+  "invalid_continuous": 0,
+  "invalid_binary": 0,
+  "passed": true
+}

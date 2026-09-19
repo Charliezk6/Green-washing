@@ -1,0 +1,4 @@
+﻿SE specification,IMS,Controls,Observations,Adjusted R2,Year fixed effects,Industry fixed effects
+(1) Firm-clustered SE,-0.4829** (0.2362),Yes,15381,0.0221,Yes,Yes
+(2) Two-way clustered SE,-0.4829** (0.2348),Yes,15381,0.0221,Yes,Yes
+(3) Industry-clustered SE,-0.4829* (0.2639),Yes,15381,0.0221,Yes,Yes

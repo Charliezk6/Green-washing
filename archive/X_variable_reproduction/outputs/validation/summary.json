@@ -1,0 +1,35 @@
+{
+  "expertise": {
+    "actual_rows": 4089,
+    "reference_rows": 4089,
+    "missing_keys": 0,
+    "extra_keys": 0,
+    "differing_cells": 0,
+    "max_absolute_errors": {
+      "ClientCount": 0.0,
+      "FirmIndustryRevenue": 0.00048828125,
+      "IndustryYearRevenue": 0.0126953125,
+      "FirmYearRevenue": 0.009765625,
+      "IMS": 5.273559366969494e-16,
+      "IMS_D": 0.0,
+      "IPS": 4.440892098500626e-16,
+      "IPS_D": 0.0
+    },
+    "passed": true
+  },
+  "company_year": {
+    "actual_rows": 9239,
+    "reference_rows": 9239,
+    "missing_keys": 0,
+    "extra_keys": 0,
+    "differing_cells": 0,
+    "max_absolute_errors": {
+      "IMS": 5.273559366969494e-16,
+      "IMS_D": 0.0,
+      "IPS": 2.7755575615628914e-16,
+      "IPS_D": 0.0
+    },
+    "passed": true
+  },
+  "passed": true
+}

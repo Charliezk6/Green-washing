@@ -1,0 +1,326 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,booktabs,longtable,array}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    pdftitle={PSM两种设定的计算说明}
+}
+
+\title{PSM两种设定的计算说明：倾向模型、匹配规则与结果回归}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{说明目的}
+
+本文档说明当前 PSM 的两种设定如何计算：
+
+\begin{enumerate}[label=(\arabic*)]
+    \item 正式 PSM：倾向模型包含滞后漂绿；
+    \item 测试 PSM：倾向模型不包含滞后漂绿。
+\end{enumerate}
+
+两种设定的唯一差异是：在计算企业当期选择行业专家事务所概率的 Probit 倾向得分方程中，是否纳入上一期连续漂绿变量 \texttt{L\_Greenwashing连续\_基准}。除该差异外，两种设定使用相同的数据、严格滞后规则、年度和行业固定效应、共同支撑、原始倾向得分差 $0.03$ caliper、1:1 无放回匹配算法，以及相同的匹配后结果回归方程。
+
+当前正式结果来自：
+
+\begin{verbatim}
+validation/P1/02_倾向得分与属性匹配/run_matching.py
+\end{verbatim}
+
+不含滞后漂绿的版本是未修改正式脚本的临时测试，不应覆盖正式输出。
+
+\section{记号与分析单位}
+
+PSM 在企业--年度（firm-year）层面实施。设：
+
+\begin{itemize}
+    \item $i$ 表示企业；
+    \item $t$ 表示年份；
+    \item $j(i,t)$ 表示企业 $i$ 在年份 $t$ 所属的 \texttt{ExpertiseIndustryCode} 行业；
+    \item $D_{i,t}=IMS\_D_{i,t}$ 表示企业当期是否聘用行业专家事务所；
+    \item $D_{i,t}=1$ 为处理组，即当期行业专家客户；
+    \item $D_{i,t}=0$ 为对照组，即当期非行业专家客户；
+    \item $GW_{i,t}=Greenwashing连续\_基准_{i,t}$ 表示当期连续漂绿；
+    \item $L.Z_{i,t}=Z_{i,t-1}$ 表示变量 $Z$ 的严格滞后一期值。
+\end{itemize}
+
+严格滞后要求当前年度和上一条企业观测的年份相差恰好一年：
+
+\begin{equation}
+    t-(t-1)=1.
+\end{equation}
+
+只有满足这一条件时，脚本才生成 $t-1$ 变量。如果企业中间缺失年度，则不跨年度缺口生成滞后值。
+
+\section{两种设定共同使用的数据处理}
+
+\subsection{初始完整案例样本}
+
+脚本要求企业标识、年份、行业、当期处理变量 $D_{i,t}$ 以及倾向模型所需的全部滞后协变量非缺失，形成初始完整案例样本。当前初始完整案例样本为：
+
+\begin{equation}
+    N=5{,}431\quad\text{个企业--年度观测}.
+\end{equation}
+
+\subsection{行业固定效应的可识别性处理}
+
+倾向模型包含行业固定效应。如果一个行业内的 $D_{i,t}$ 恒为 $0$ 或恒为 $1$，则该行业固定效应会完美预测处理状态，含行业固定效应的 Probit 无法可靠识别。因此，在 Probit 估计前删除处理变量无行业内变异的行业。
+
+当前两种设定均删除以下行业：
+
+\begin{verbatim}
+C43 | H
+\end{verbatim}
+
+共删除 12 个企业--年度观测，其中包括 5 个处理组观测。两种设定的 Probit 样本均为：
+
+\begin{equation}
+    N=5{,}419,\qquad \sum_{i,t}D_{i,t}=1{,}210.
+\end{equation}
+
+这不是根据漂绿结果选择性删除企业，而是含行业固定效应 Probit 的可识别性处理。
+
+\section{设定 A：正式 PSM（倾向模型包含滞后漂绿）}
+
+\subsection{Probit 倾向得分方程}
+
+正式 PSM 估计企业在 $t$ 年选择行业专家事务所的条件概率：
+
+\begin{equation}
+\begin{aligned}
+    p_{i,t}
+    &=Pr\left(D_{i,t}=1\mid L.GW_{i,t},L.\mathbf{X}_{i,t},\lambda_t,\eta_{j(i,t)}\right)\\
+    &=\Phi\left(
+    \alpha+
+    \theta L.GW_{i,t}+
+    \boldsymbol{\delta}'L.\mathbf{X}_{i,t}+
+    \lambda_t+
+    \eta_{j(i,t)}
+    \right).
+\end{aligned}
+\end{equation}
+
+其中：
+
+\begin{itemize}
+    \item $\Phi(\cdot)$ 为标准正态累积分布函数，因此该模型为 Probit；
+    \item $L.GW_{i,t}=GW_{i,t-1}$ 为上一期连续漂绿；
+    \item $\lambda_t$ 为年度固定效应；
+    \item $\eta_{j(i,t)}$ 为行业固定效应；
+    \item $L.\mathbf{X}_{i,t}$ 为其他严格滞后一期协变量。
+\end{itemize}
+
+其他滞后协变量向量为：
+
+\begin{equation}
+\begin{aligned}
+L.\mathbf{X}_{i,t}=\big(&L.Size,\ L.Lev,\ L.ROA,\ L.CFO,\ L.Growth,\ L.FirmAgeLog,\\
+&L.SOE,\ L.Dual,\ L.BoardSize,\ L.IndependentDirectorRatio,\\
+&L.Big4,\ L.LnAuditFee,\ L.AuditorTenure,\ L.IsChangeFirm\big)'_{i,t}.
+\end{aligned}
+\end{equation}
+
+该模型的含义是：先根据企业上一年的漂绿、财务、治理和审计关系特征，估计它当年成为行业专家客户的概率。
+
+\subsection{为什么纳入滞后漂绿}
+上一期漂绿可能同时影响企业当期选择行业专家的概率和企业当期漂绿水平。因此，$L.GW_{i,t}$ 是处理前的潜在混杂变量。将其纳入倾向模型，是为了让行业专家客户尽可能与上一期漂绿也相近的非专家客户配对。
+正式 Probit 的共同支撑区间为：
+\begin{equation}
+    [0.0236,\ 0.8578].
+\end{equation}
+共同支撑后保留 4,789 个观测，删除 630 个对照组观测、不删除处理组观测。最终成功形成 1,188 个处理组--对照组配对，即 2,376 个企业--年度匹配观测。
+正式设定中，匹配后滞后漂绿的标准化均值差为：
+\begin{equation}
+    SMD(L.GW)=-0.0518,
+\end{equation}
+且全部 15 个倾向模型协变量满足：
+\begin{equation}
+    |SMD|<0.10.
+\end{equation}
+
+\section{设定 B：测试 PSM（倾向模型不包含滞后漂绿）}
+
+\subsection{Probit 倾向得分方程}
+
+测试设定从倾向模型中删除 $L.GW_{i,t}$，其他变量完全不变：
+
+\begin{equation}
+\begin{aligned}
+    p^{(-GW)}_{i,t}
+    &=Pr\left(D_{i,t}=1\mid L.\mathbf{X}_{i,t},\lambda_t,\eta_{j(i,t)}\right)\\
+    &=\Phi\left(
+    \alpha+
+    \boldsymbol{\delta}'L.\mathbf{X}_{i,t}+
+    \lambda_t+
+    \eta_{j(i,t)}
+    \right).
+\end{aligned}
+\end{equation}
+
+这里的 $L.\mathbf{X}_{i,t}$ 与正式设定完全相同，即仍包括滞后财务、治理和审计关系变量，只是不包括上一期连续漂绿。
+
+该测试检验：如果不直接使用上一期漂绿预测专家选择，而只依靠其他处理前客户特征进行匹配，PSM 结果是否发生实质变化。
+
+测试 Probit 的共同支撑区间为：
+
+\begin{equation}
+    [0.0200,\ 0.8542].
+\end{equation}
+
+共同支撑后保留 4,853 个观测，删除 566 个对照组观测、不删除处理组观测。最终仍形成 1,188 个处理组--对照组配对，即 2,376 个企业--年度匹配观测。
+
+测试设定中，匹配后滞后漂绿的标准化均值差为：
+
+\begin{equation}
+    SMD(L.GW)=-0.0721.
+\end{equation}
+
+它仍满足 $|SMD|<0.10$，但弱于正式设定的 $-0.0518$。此外，测试设定中 $L.AuditorTenure$ 未通过 $|SMD|<0.10$ 的平衡标准，因此该设定仅作为敏感性测试。
+
+\section{两种设定共同使用的匹配算法}
+
+\subsection{共同支撑}
+
+对每种倾向得分，脚本计算处理组和对照组得分范围的交集：
+
+\begin{equation}
+\mathcal{S}=\left[
+\max\left(\min p_T,\min p_C\right),\;
+\min\left(\max p_T,\max p_C\right)
+\right].
+\end{equation}
+
+只有 $p_{i,t}\in\mathcal{S}$ 的企业--年度观测可以参与匹配。
+
+\subsection{匹配距离与 caliper}
+
+对于共同支撑内任意处理组观测 $a$ 和对照组观测 $b$，定义倾向得分距离：
+
+\begin{equation}
+    d_{ab}=|p_a-p_b|.
+\end{equation}
+
+只有满足：
+
+\begin{equation}
+    d_{ab}\leq 0.03
+\end{equation}
+
+的处理组--对照组组合才是可行匹配对。$0.03$ 是原始倾向得分的绝对差，不是 logit 倾向得分标准差的倍数。
+
+\subsection{1:1 无放回全局最优指派}
+
+脚本使用线性指派算法，在所有可行匹配对中最小化总倾向得分距离：
+
+\begin{equation}
+    \min_{m_{ab}}\sum_{a\in T}\sum_{b\in C}m_{ab}d_{ab},
+\end{equation}
+
+满足：
+
+\begin{equation}
+    \sum_{b\in C}m_{ab}\leq 1,\qquad
+    \sum_{a\in T}m_{ab}\leq 1,\qquad
+    m_{ab}\in\{0,1\},
+\end{equation}
+
+且：
+
+\begin{equation}
+    m_{ab}=0\quad\text{if}\quad d_{ab}>0.03.
+\end{equation}
+
+因此：
+
+\begin{itemize}
+    \item 每个处理组观测最多匹配一个对照组观测；
+    \item 每个对照组观测最多被使用一次；
+    \item 对照组不放回；
+    \item 在 caliper 约束下，整体配对距离尽可能小。
+\end{itemize}
+
+
+\section{两种设定共同使用的匹配后结果回归}
+
+两种设定虽然使用不同的倾向得分方程，但匹配完成后使用相同的结果回归方程。
+
+\subsection{结果回归一：仅处理变量和固定效应}
+
+\begin{equation}
+    GW_{i,t}=\alpha+\beta D_{i,t}+\lambda_t+\eta_{j(i,t)}+\varepsilon_{i,t}.
+\end{equation}
+
+该模型在匹配后样本中比较行业专家客户与非专家客户的当期漂绿差异，同时控制年度和行业固定效应。
+
+\subsection{结果回归二：完整滞后协变量和固定效应}
+
+\begin{equation}
+\begin{aligned}
+    GW_{i,t}=\alpha+\beta D_{i,t}
+    +\theta L.GW_{i,t}
+    +\boldsymbol{\gamma}'L.\mathbf{X}_{i,t}
+    +\lambda_t+\eta_{j(i,t)}+\varepsilon_{i,t}.
+\end{aligned}
+\end{equation}
+
+该模型将上一期连续漂绿和全部其他滞后协变量再次放入结果方程。也就是说：
+
+\begin{itemize}
+    \item 在正式 PSM 中，滞后漂绿既用于计算倾向得分，也用于完整结果回归；
+    \item 在测试 PSM 中，滞后漂绿不用于计算倾向得分，但仍用于完整结果回归。
+\end{itemize}
+
+两类结果回归均按企业 \texttt{证券代码} 聚类计算标准误。
+
+\section{两种设定的结果对比}
+
+\subsection{仅控制处理变量和固定效应}
+
+\begin{table}[htbp]
+\centering
+\caption{匹配后仅控制处理变量和固定效应的结果}
+\begin{tabular}{lccc}
+\toprule
+设定 & $\hat{\beta}_{IMS\_D}$ & 企业聚类标准误 & $p$ 值 \\
+\midrule
+正式 PSM：倾向模型含 $L.GW$ & -0.0811 & 0.0662 & 0.2205 \\
+测试 PSM：倾向模型不含 $L.GW$ & -0.0959 & 0.0673 & 0.1544 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{加入全部滞后协变量和固定效应}
+
+\begin{table}[htbp]
+\centering
+\caption{匹配后加入全部滞后协变量和固定效应的结果}
+\begin{tabular}{lccc}
+\toprule
+设定 & $\hat{\beta}_{IMS\_D}$ & 企业聚类标准误 & $p$ 值 \\
+\midrule
+正式 PSM：倾向模型含 $L.GW$ & -0.0344 & 0.0362 & 0.3411 \\
+测试 PSM：倾向模型不含 $L.GW$ & -0.0290 & 0.0372 & 0.4358 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+两种设定下 $\hat{\beta}_{IMS\_D}<0$，即行业专家客户的漂绿点估计均较低，但所有 $p$ 值均大于常用显著性水平，不能拒绝：
+
+\begin{equation}
+    H_0:\beta=0.
+\end{equation}
+
+\end{document}

@@ -1,0 +1,13 @@
+{
+  "years": [2021, 2022, 2023, 2024],
+  "scale_variable": "OperatingRevenue",
+  "binary_threshold": 0.2,
+  "industry_rule": "manufacturing C uses three-character code; other industries use first letter; exclude O",
+  "market_input": "data/input/full_a_share_audit_market_2021_2024.csv",
+  "company_panel_input": "data/input/greenwashing_expansion_panel.csv",
+  "expertise_output": "outputs/expertise/auditor_industry_expertise_2021_2024.csv",
+  "company_output": "outputs/company_year/greenwashing_expansion_with_auditor_expertise.csv",
+  "expected_expertise_rows": 4089,
+  "expected_company_rows": 8838,
+  "panel_version": "deepgreen_reproduction3_expansion_panel"
+}

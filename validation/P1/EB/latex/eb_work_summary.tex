@@ -1,0 +1,125 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{ctex}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue]{hyperref}
+
+\title{熵平衡稳健性检验工作总结：\\标准二元EB（\(IMS\ge0.20\)）}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{总体定位}
+
+本项目围绕审计师行业专长（连续变量\(IMS\)，及其阈值二元变量\(IMS\_D\)）与
+企业漂绿（Greenwashing）之间的关系，构建\textbf{标准二元熵平衡}（entropy balancing,
+EB；Hainmueller 2012）稳健性检验，作为连续处理GPS--IPW主分析的补充证据。
+
+以\(IMS\_D=1\)（\(IMS\ge0.20\)）为处理组，仅对控制组（\(IMS\_D=0\)）重新加权，
+使其滞后协变量矩匹配处理组，识别对象是高低专长组之间的平均差异（ATT口径）。
+相对正文文献常用的10\%切点，本检验采用更高的``强专长''阈值。
+
+样本为完整公司--年度面板（10,001个观测、4,007家公司），第一阶段协变量采用
+全部15个基准滞后协变量（滞后漂绿、财务、治理与审计选择变量）。
+
+\section{方法}
+
+\subsection{熵平衡求解器}
+
+在保持权重为正、总质量不变的约束下，最小化权重与基准权重之间的熵距离
+\[
+\min_{\{w_i\}}\sum_i w_i\ln\frac{w_i}{q_i},
+\qquad
+\text{s.t.}\quad \sum_i w_i g_k(X_i)=\mu_k^{\text{target}},
+\]
+其中\(g_k(X_i)\)为矩约束向量（均值与连续变量平方），
+\(\mu_k^{\text{target}}\)为目标矩。数值实现采用带步长衰减与Hessian正则化的
+阻尼Newton迭代，收敛阈值为矩偏差\(<10^{-6}\)，并记录最大矩偏差、迭代次数与
+约束数量以备审计。
+
+\subsection{标准二元EB（IMS\_D，阈值0.20）}
+
+遵循Hainmueller (2012)的ATT权重构造。处理指示在EB流水线内由连续\(IMS\)现场构造为
+\(IMS\_D=1\{IMS\ge0.20\}\)，\textbf{不}改写面板/正文中文献口径的10\% \(IMS\_D\)：
+\begin{itemize}
+  \item 处理组（\(IMS\_D=1\)，620个公司--年度）保持基准权重1；
+  \item 仅对控制组（\(IMS\_D=0\)，9,381个公司--年度）求解EB权重；
+  \item 约束控制组加权后的协变量一阶矩与连续协变量二阶矩等于处理组样本矩；
+  \item 求解后控制组权重总和重新标准化为处理组样本量（620）。
+\end{itemize}
+矩约束数量按协变量规格为15--26个。三种规格均成功收敛，最大矩偏差介于\(7.7\times10^{-14}\)与
+\(3.2\times10^{-10}\)之间。
+
+结果回归包含两个模型：
+\begin{itemize}
+  \item \textbf{B1}（\(GW \sim IMS\_D\)，无结果方程控制）：标准二元EB的自然结果方程；
+  \item \textbf{B2}（\(GW \sim IMS + \text{全部滞后协变量}\)）：附加敏感性——在二元EB权重下
+        保留连续\(IMS\)。该模型回答的是“在高低组选择被平衡之后，连续强度变化
+        是否仍与漂绿负相关”，不构成对二元EB识别对象的替代解释。
+\end{itemize}
+
+\section{结果}
+
+\begin{table}[htbp]
+\centering
+\caption{标准二元EB（\(IMS\ge0.20\)）：平衡与回归汇总（处理组620 / 控制组9,381）}
+\begin{tabular}{lccc}
+\toprule
+ & 公司变量 & 公司+外部环境变量 & 公司+外部环境变量+审计选择变量 \\
+\midrule
+矩约束数 & 15 & 20 & 26 \\
+最大矩偏差 & \(8.8\times10^{-14}\) & \(7.7\times10^{-14}\) & \(3.2\times10^{-10}\) \\
+收敛 & 是 & 是 & 是 \\
+控制组权重最大值 & 1.100 & 1.762 & 1.570 \\
+ESS（全样本权重） & 2,218 & 2,209 & 2,148 \\
+B1: \(IMS\_D\)系数 & \(-0.2255^{**}\) & \(-0.2171^{**}\) & \(-0.2203^{**}\) \\
+B1: \(p\)值 & 0.015 & 0.021 & 0.027 \\
+B2: 连续\(IMS\)系数 & \(-0.3381^{**}\) & \(-0.3372^{**}\) & \(-0.3900^{**}\) \\
+B2: \(p\)值 & 0.030 & 0.030 & 0.012 \\
+\bottomrule
+\end{tabular}
+
+\small
+\textit{注：平衡后所有协变量SMD降至\(10^{-10}\)量级以下；未调整时Size、CFO、
+LnAuditFee、Big4的|SMD|分别约为0.526、0.309、0.561、0.400（高于0.10切点设定），
+反映强专长组与其余样本的协变量差异更大。对照ESS约占对照样本的43\%。详见\texttt{results2/}。}
+\end{table}
+
+核心发现：在\(IMS\ge0.20\)切点下，\textbf{二元处理效应（B1）在三种规格下均显著为负}
+（约\(-0.22\)，\(p\in[0.015,0.027]\)）；\textbf{在同一套二元EB权重下保留连续\(IMS\)（B2）
+亦显著为负}（约\(-0.34\)至\(-0.39\)）。提高切点后，阈值ATT与连续强度证据方向一致。
+代价是处理组缩小至620、全样本ESS降至约2,150，有效信息少于0.10切点设定，
+结果宜作内部稳健性备忘而非正文主证据。
+
+\section{局限与披露}
+
+\begin{itemize}
+  \item \textbf{处理组缩小}：\(N_1=620\)（约占完整样本6.2\%），远小于文献10\%切点下的2,450；
+  \item \textbf{有效样本量下降}：全样本ESS约2,148（完整规格），对照ESS约占对照样本43\%；
+  \item \textbf{估计对象}：B1为跨越0.20阈值的ATT，B2为连续强度关联；二者不能替代
+        GPS--IPW连续处理主证据；
+  \item \textbf{与正文口径分离}：正文描述统计与基线回归中的\(IMS\_D\)仍为10\%文献切点；
+        本处0.20仅为二元EB流水线内的检验定义。
+\end{itemize}
+
+尝试过的连续处理交互矩EB（EBCT；T\"ubbicke 2022）在本面板上因高维行业--年份--处理
+交互矩不可行而未采用，最大矩偏差停留在约0.0224。
+
+\section{结论与论文表述边界}
+
+\begin{enumerate}
+  \item \textbf{主分析}：GPS--IPW（连续处理）保持不变；
+  \item \textbf{二元EB（\texttt{results2/}）}：处理定义为\(IMS\ge0.20\)（流水线内构造，
+        不改正文10\% \(IMS\_D\)）。平衡成功；B1与B2均显著为负。
+        同时披露处理组较小（\(N_1=620\)）与ESS下降。该结果作为内部稳健性备忘，
+        \emph{未}写入论文正文；若引用须同时说明切点选择与样本量/权重代价；
+  \item \textbf{不可行的表述}：连续处理熵平衡、消除内生性、
+        解决未观测选择、二元EB证明因果效应。
+\end{enumerate}
+
+\end{document}

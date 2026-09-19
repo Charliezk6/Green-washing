@@ -1,0 +1,20 @@
+{
+  "rows": 8982,
+  "unique_company_year_keys": 8982,
+  "gi_complete": 7325,
+  "greenwashing_complete": 7258,
+  "greenwashing_1": 2110,
+  "greenwashing_0": 5148,
+  "invalid_gi": 0,
+  "invalid_greenwashing": 0,
+  "invalid_industry_level": 0,
+  "expected": {
+    "samples": 8982,
+    "layer_b_company_years": 7325,
+    "gi_complete": 7325,
+    "greenwashing_complete": 7258,
+    "greenwashing_1": 2110,
+    "greenwashing_0": 5148
+  },
+  "passed": true
+}

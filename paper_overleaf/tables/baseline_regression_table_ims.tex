@@ -1,0 +1,32 @@
+\begin{table}[htbp]
+\centering\caption{Audit Firm Industry Specialization and Corporate Greenwashing: IMS}\label{tab:baseline-regressions-ims}
+\footnotesize
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.12}
+\resizebox{0.87\textwidth}{!}{%
+\begin{tabular}{@{}lcccc@{}}\hline
+&(1)&(2)&(3)&(4)\\[1pt]\hline
+IMS & \shortstack{-1.0488***\\(0.2334)} & \shortstack{-0.5396**\\(0.2348)} & \shortstack{-0.5433**\\(0.2351)} & \shortstack{-0.4829**\\(0.2362)}\\[4pt]
+Size &  & \shortstack{-0.1708***\\(0.0207)} & \shortstack{-0.1690***\\(0.0211)} & \shortstack{-0.1362***\\(0.0246)}\\[4pt]
+Lev &  & \shortstack{0.3033***\\(0.1082)} & \shortstack{0.3087***\\(0.1085)} & \shortstack{0.2931***\\(0.1092)}\\[4pt]
+ROA &  & \shortstack{0.5571**\\(0.2794)} & \shortstack{0.5666**\\(0.2792)} & \shortstack{0.4111\\(0.2796)}\\[4pt]
+CFO &  & \shortstack{-0.2045\\(0.2298)} & \shortstack{-0.2217\\(0.2294)} & \shortstack{-0.1424\\(0.2301)}\\[4pt]
+Growth &  & \shortstack{-0.0002\\(0.0394)} & \shortstack{-0.0020\\(0.0394)} & \shortstack{0.0019\\(0.0392)}\\[4pt]
+FirmAge &  & \shortstack{0.0017\\(0.0025)} & \shortstack{0.0030\\(0.0027)} & \shortstack{0.0007\\(0.0028)}\\[4pt]
+SOE &  &  & \shortstack{-0.0891*\\(0.0508)} & \shortstack{-0.0722\\(0.0515)}\\[4pt]
+Dual &  &  & \shortstack{-0.0321\\(0.0364)} & \shortstack{-0.0327\\(0.0363)}\\[4pt]
+BoardSize &  &  & \shortstack{0.0318\\(0.0809)} & \shortstack{0.0362\\(0.0803)}\\[4pt]
+Indep &  &  & \shortstack{-0.3352\\(0.2878)} & \shortstack{-0.2725\\(0.2871)}\\[4pt]
+Big4 &  &  &  & \shortstack{-0.3613***\\(0.0960)}\\[4pt]
+AuditFee &  &  &  & \shortstack{-0.0441\\(0.0467)}\\[4pt]
+Tenure &  &  &  & \shortstack{0.0099***\\(0.0033)}\\[4pt]
+AuditorChange &  &  &  & \shortstack{0.0562\\(0.0392)}\\[4pt]
+Intercept & \shortstack{0.0602\\(0.1769)} & \shortstack{3.6559***\\(0.4665)} & \shortstack{3.7020***\\(0.5056)} & \shortstack{3.5218***\\(0.6184)}\\[4pt]
+Observations & 15,381 & 15,381 & 15,381 & 15,381\\
+Adjusted \(R^2\) & 0.0009 & 0.0157 & 0.0163 & 0.0220\\
+Year fixed effects & Yes & Yes & Yes & Yes\\
+Industry fixed effects & Yes & Yes & Yes & Yes\\
+\hline\end{tabular}}
+\vspace{0.4em}
+\begin{minipage}{0.92\textwidth}\footnotesize\textit{Notes:} The dependent variable is continuous Greenwashing. All specifications include year and industry fixed effects and use firm-clustered standard errors. Coefficients are reported above standard errors in parentheses. ***, **, and * indicate two-tailed significance at 1, 5, and 10 percent.\end{minipage}
+\end{table}

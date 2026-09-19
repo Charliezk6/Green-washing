@@ -1,0 +1,568 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{threeparttable}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{ctex}
+\usepackage[hidelinks]{hyperref}
+
+\title{机制可核对性与文献导向异质性：变量、假设与规格说明}
+\author{}
+\date{2026-09-15}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{工作定位}
+
+本报告记录在基准共同样本上完成的三组异质性估计：重点排污单位（及环保处罚对照）、报表财务交叉项，以及文献中常见的公司/审计师调节。检验对象是事务所行业专长与企业漂绿之间的条件关联是否随调节变量 \(V\) 变化。
+
+报告内容限于：（i）变量定义；（ii）每张表对应的事先假设；（iii）约束交互与完全交互的方程；（iv）实际估计的规格与系数。不讨论结果对正文主张的含义。
+
+
+\section{样本、数据链与估计规格}
+
+\subsection{分析样本}
+
+分析样本与基准回归共同样本一致：15,381 个公司--年度观测，4,604 家公司，年份 2021--2024。因变量为 \texttt{Greenwashing连续\_基准}。固定效应为年份 \(C(\text{时间})\) 与行业 \(C(\text{ExpertiseIndustryCode})\)。标准误按证券代码聚类。
+
+共同样本基于baseline regression在因变量、\(IMS\)、\(IMS\_D\)、行业代码及全部基准控制非缺失的观测上构造；脚本要求行数恰好为 15,381。连续基准控制在该共同样本上按 1\% 与 99\% 分位数缩尾。\(IMS\)、\(IMS\_D\) 与因变量不缩尾。
+
+\subsection{数据合并}
+详见readme文件。
+
+\section{变量定义}
+
+\subsection{因变量}
+
+\texttt{Greenwashing连续\_基准}。沟通侧为绿色信息含量 \(GI\) 的行业--年 \(z\) 分数，绩效侧为华证环境评分的行业--年 \(z\) 分数。行业分类与专长计算所用 \texttt{ExpertiseIndustryCode} 相同。\(z\) 分数使用对应行业--年均值与样本标准差（\(ddof=1\)）：
+\[
+Greenwashing_{i,t}=GI\_z_{i,t}-ESGE\_z_{i,t}.
+\]
+
+\subsection{行业专长}
+
+事务所以 CSMAR \texttt{InstitutionID} 识别。专长在全 A 股审计市场上按客户营业收入计算。制造业使用证监会行业门类下的次类代码，非制造业使用门类代码。
+\[
+IMS_{a,j,t}=\frac{\sum_{i\in(a,j,t)}Revenue_{i,t}}{\sum_{i\in(j,t)}Revenue_{i,t}}.
+\]
+\texttt{IMS\_D}\(=1\{IMS\ge 0.20\}\)，否则为 0。每条调节都对 \(IMS\) 与 \(IMS\_D\) 平行估计。
+
+\subsection{基准控制}
+
+与基准回归控制集相同。若调节 \(V\) 已在该集合中（本组仅 \texttt{SOE}），则从控制向量中剔除 \(V\)，再以主效应和交互形式进入方程。
+
+\begin{center}
+\begin{threeparttable}
+\caption{基准控制变量}
+\begin{tabular}{llp{9.2cm}}
+\toprule
+组别 & 变量 & 定义 \\
+\midrule
+财务 & \(Size\) & \(\ln(\text{TotalAssets})\)，总资产须为正 \\
+ & \(Lev\) & 总负债 / 总资产 \\
+ & \(ROA\) & 净利润 / 总资产 \\
+ & \(CFO\) & 经营净现金流 / 总资产 \\
+ & \(Growth\) & 全市场营业收入的相邻年同比：\(Rev_t/Rev_{t-1}-1\)；上年收入非正或年份不连续则缺失 \\
+ & \(FirmAge\) & 上市年限，负值作缺失 \\
+治理 & \(SOE\) & 同年全部实际控制人记录中任一 \texttt{S0702b} \(\in\{1100,2000,2100,2120\}\) 为 1；无实控人记 0；粘性补全后仍缺记 0 \\
+ & \(Dual\) & 两职合一 \\
+ & \(BoardSize\) & \(\ln(\text{董事人数})\)，人数须为正 \\
+ & \(IndependentDirectorRatio\) & 独立董事比例 \\
+审计 & \(Big4\) & 国际四大 \\
+ & \(LnAuditFee\) & \(\ln(\text{TotalAuditFee})\)，费用须为正 \\
+ & \(AuditorTenure\) & 审计任期 \\
+ & \(IsChangeFirm\) & 相对上年更换事务所为 1，否则为 0 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 缩尾变量：\(Size\), \(Lev\), \(ROA\), \(CFO\), \(Growth\), \(FirmAge\), \(BoardSize\), \(IndependentDirectorRatio\), \(LnAuditFee\), \(AuditorTenure\)（共同样本 1\%/99\%）。对数与比率不满足定义时作缺失。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\subsection{重点排污与处罚}
+
+\begin{center}
+\begin{threeparttable}
+\caption{重点排污与处罚变量}
+\begin{tabular}{lp{10.6cm}}
+\toprule
+变量 & 定义 \\
+\midrule
+\texttt{KeyPollMonUnit} & CSMAR 上市公司环境监管与认证披露表中的重点排污单位字段，公司--年取值。覆盖 15,381；其中 \(=1\) 的观测 5,941。 \\
+\texttt{L\_KeyPollMonUnit} & 同一公司上一相邻会计年度的 \texttt{KeyPollMonUnit}；年份差不为 1 则缺失。滞后规格 \(N=10{,}488\)。 \\
+\texttt{Penalty\_D} & 样本期环保处罚总表按证券代码--年汇总后的当年处罚指示；未匹配到处罚记录填 0。\(Penalty\_D=1\) 的观测 1,059。 \\
+\bottomrule
+\end{tabular}
+\end{threeparttable}
+\end{center}
+
+ISO14001、环保投资字段已写入机制面板，本组回归未使用。
+
+\subsection{财务交叉项}
+
+固定资产净额、在建工程、预计负债取自 CSMAR 合并资产负债表（仅 \texttt{Typrep=A} 的 12 月 31 日年报）：固定资产净额 \texttt{PPE} 对应科目 \texttt{A001212000}，在建工程 \texttt{CIP} 对应 \texttt{A001213000}，预计负债 \texttt{Provision} 对应 \texttt{A002207000}。
+
+资本支出取自 CSMAR 财务指标文件中的购建长期资产现金支出字段 \texttt{Outcap}（购建固定资产、无形资产和其他长期资产支付的现金）。样本中有 2 条 \texttt{Outcap} 为负，这两条不参与后续计算，按缺失处理。
+
+回归使用的不是科目原值，而是除以总资产后的强度。分子为填补后的 \texttt{PPE}、\texttt{CIP}、\texttt{Provision} 或 \texttt{Outcap}，分母一律为分析面板中该公司当年的总资产 \texttt{TotalAssets}。例如资本支出强度 \(\texttt{Capex\_TA}=\texttt{Outcap}/\texttt{TotalAssets}\)。
+
+部分公司--年在源数据中没有对应科目金额（字段为空）。主规格把这些缺失填成 0，以便 15,381 条都能算出强度比率；同时用 \texttt{PPE\_observed}、\texttt{CIP\_observed}、\texttt{Provision\_observed}、\texttt{Capex\_observed} 标记填 0 之前该字段是否本来就有数。稳健性里另在这些标记为 1 的非缺失子样本上重估。
+
+
+\begin{center}
+\begin{threeparttable}
+\caption{财务调节变量}
+\label{tab:fin-vars}
+\begin{tabular}{lp{10.4cm}}
+\toprule
+变量 & 定义 \\
+\midrule
+\texttt{PPE\_TA} & 填 0 后固定资产净额 / 总资产。非缺失 15,380。填 0 后中位数 17.0\%。 \\
+\texttt{CIP\_TA} & 填 0 后在建工程 / 总资产。非缺失 13,415；填 0 后大于 0 的观测 13,404。中位数 1.6\%。 \\
+\texttt{Capex\_TA} & 填 0 后 \texttt{Outcap} / 总资产。非缺失 15,373。中位数 3.4\%。 \\
+\texttt{Provision\_TA} & 填 0 后预计负债 / 总资产。非缺失 5,922。 \\
+\texttt{Provision\_D} & \(1\{\text{填 0 后预计负债}>0\}\)；取 1 的观测 5,894（38.3\%）。 \\
+\texttt{HighCapex} & \texttt{Capex\_TA} 高于同一 \texttt{ExpertiseIndustryCode}--年中位数为 1；取 1 的观测 7,639。 \\
+\texttt{HighCIP} & \texttt{CIP\_TA} 高于同一行业--年中位数为 1；取 1 的观测 7,624。 \\
+\texttt{L\_Capex\_TA} & 将原始 \texttt{Outcap} 的日历年加 1 后左连，缺失填 0，再除以当期总资产。 \\
+\texttt{L\_CIP\_TA} & 在建工程的同样滞后构造。 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 填 0 后 \texttt{Capex\_TA} 与 \texttt{CIP\_TA} 相关系数 0.59，与 \texttt{PPE\_TA} 相关系数 0.33。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\subsection{文献导向调节}
+
+由 \texttt{run\_lit\_hetero.py} 在分析面板上现场构造，覆盖口径见表~\ref{tab:lit-cov}。
+
+\begin{center}
+\begin{threeparttable}
+\caption{文献导向调节变量}
+\begin{tabular}{lp{10.4cm}}
+\toprule
+变量 & 定义 \\
+\midrule
+\texttt{HeavyPoll} & \texttt{IndustryCode} 属于环保部《上市公司环保核查行业分类管理名录》对照 2012 年证监会代码，并并入 CAS 1631/1521 应用指南点名的公用事业 \texttt{D45}/\texttt{D46}。代码集见表~\ref{tab:heavypoll-codes}。 \\
+\texttt{SOE} & 与基准控制相同。 \\
+\texttt{ShortTenure} & \(1\{\texttt{AuditorTenure}\le 3\}\)；任期缺失则本变量缺失。该调节进入方程时，连续任期 \texttt{AuditorTenure} 仍留在控制集中。 \\
+\texttt{CI} & 客户 \texttt{TotalAuditFee} / 同一 \texttt{InstitutionID}--年样本内审计费合计；事务所--年合计非正则缺失。构造后按 1\%/99\% 缩尾。均值 1.3\%，中位数 0.4\%。 \\
+\texttt{HighCI} & \(1\{\texttt{CI}>\text{样本中位数}\}\)。 \\
+\bottomrule
+\end{tabular}
+\end{threeparttable}
+\end{center}
+
+\begin{center}
+\begin{threeparttable}
+\caption{重污染行业代码}
+\label{tab:heavypoll-codes}
+\begin{tabular}{ll}
+\toprule
+代码 & 行业 \\
+\midrule
+B06 & 煤炭开采和洗选业 \\
+B07 & 石油和天然气开采业 \\
+B08 & 黑色金属矿采选业 \\
+B09 & 有色金属矿采选业 \\
+B10 & 非金属矿采选业 \\
+C13 & 农副食品加工业 \\
+C15 & 酒、饮料和精制茶制造业 \\
+C17 & 纺织业 \\
+C19 & 皮革、毛皮、羽毛及其制品和制鞋业 \\
+C22 & 造纸和纸制品业 \\
+C25 & 石油、煤炭及其他燃料加工业 \\
+C26 & 化学原料和化学制品制造业 \\
+C27 & 医药制造业 \\
+C28 & 化学纤维制造业 \\
+C30 & 非金属矿物制品业 \\
+C31 & 黑色金属冶炼和压延加工业 \\
+C32 & 有色金属冶炼和压延加工业 \\
+D44 & 电力、热力生产和供应业 \\
+D45 & 燃气生产和供应业 \\
+D46 & 水的生产和供应业 \\
+\bottomrule
+\end{tabular}
+\end{threeparttable}
+\end{center}
+
+\begin{center}
+\begin{threeparttable}
+\caption{文献导向调节覆盖（\(N=15{,}381\)）}
+\label{tab:lit-cov}
+\begin{tabular}{lrrr}
+\toprule
+变量 & 非缺失 & \(=1\) 的观测 & 份额 \\
+\midrule
+\texttt{HeavyPoll} & 15,381 & 4,148 & 27.0\% \\
+\texttt{SOE} & 15,381 & 4,258 & 27.7\% \\
+\texttt{ShortTenure} & 15,381 & 4,191 & 27.2\% \\
+\texttt{HighCI} & 15,381 & 7,690 & 50.0\% \\
+\bottomrule
+\end{tabular}
+\end{threeparttable}
+\end{center}
+
+\section{约束交互与完全交互}
+
+记 \(Y_{i,t}\) 为 \texttt{Greenwashing连续\_基准}，\(S_{i,t}\) 为 \(IMS\) 或 \(IMS\_D\)，\(V_{i,t}\) 为调节，\(X_{i,t}\) 为其余基准控制（已去掉与 \(V\) 重复的项），\(\lambda_t\) 为年份固定效应，\(\delta_j\) 为行业固定效应。估计均为公司聚类 OLS。
+
+\subsection{约束交互}
+
+只允许专长斜率随 \(V\) 变化，控制变量斜率在两组之间相同：
+\begin{equation}
+Y_{i,t}=\alpha+\beta S_{i,t}+\theta V_{i,t}+\gamma (S_{i,t}\times V_{i,t})+\delta'X_{i,t}+\lambda_t+\delta_j+\varepsilon_{i,t}.
+\label{eq:constrained}
+\end{equation}
+对应 \texttt{hetero\_common.constrained\_formula}。
+
+\subsection{完全交互}
+
+全部控制也与 \(V\) 相乘：
+\begin{equation}
+Y_{i,t}=\alpha+\beta S_{i,t}+\theta V_{i,t}+\gamma (S_{i,t}\times V_{i,t})+\delta'X_{i,t}+\eta'(X_{i,t}\times V_{i,t})+\lambda_t+\delta_j+\varepsilon_{i,t}.
+\label{eq:full}
+\end{equation}
+对应 \texttt{hetero\_common.full\_interact\_formula}。\(\gamma\) 的 \(p\) 值为 \(V=1\) 与 \(V=0\) 两组专长斜率之差的正式检验。连续调节（如 \texttt{Capex\_TA}、\texttt{CI}）使用同一函数形式，此时 \(\gamma\) 为专长斜率随 \(V\) 的变化。
+
+KeyPoll 另估在式~\eqref{eq:full} 上加入行业\(\times\)年固定效应 \(C(\text{时间}):C(\text{ExpertiseIndustryCode})\) 的规格。
+
+\subsection{分组回归}
+
+在 \(V=1\) 与 \(V=0\) 的子样本上分别估计
+\begin{equation}
+Y_{i,t}=\alpha+\beta S_{i,t}+\delta'X_{i,t}+\lambda_t+\delta_j+\varepsilon_{i,t},
+\label{eq:split}
+\end{equation}
+其中 \(X\) 为完整基准控制。对应 \texttt{hetero\_common.subsample\_formula} 与 \texttt{run\_split}。分组回归不对 \(\beta\) 的组间差异做检验。
+
+每条主线报告上述三层；表中交互项为 \(\gamma\)，分组行报告子样本中的 \(\beta\)。
+
+\section{各表检验的假设}
+\label{sec:hypotheses}
+
+以下符号预测均针对交互项 \(\gamma\)（或分组中高组相对低组更负的专长斜率）。核心解释交替取 \(IMS\) 与 \(IMS\_D\)。
+
+\subsection{表~\ref{tab:keypoll}与表~\ref{tab:keypoll-d}：重点排污单位}
+
+脚本：\texttt{run\_keypoll\_full\_interact.py}。产出：\texttt{keypoll\_full\_interact\_coefficients.csv}。表~\ref{tab:keypoll} 用连续 \(IMS\)，表~\ref{tab:keypoll-d} 用 \(IMS\_D\)，规格一一对应。
+
+\textbf{主检验} 重点排污单位须公开污染物种类、排放口、排放量和防治设施等，这些内容更容易与年报中已审的资产、在建工程、支出或或有事项对照。若这条核对机会是一阶的，则专长与漂绿的负向关联应在 \texttt{KeyPollMonUnit}\(=1\) 时更强：
+\[
+\gamma=\frac{\partial Y}{\partial S}\Big|_{V=1}-\frac{\partial Y}{\partial S}\Big|_{V=0}<0
+\qquad\text{（}S\times\texttt{KeyPollMonUnit}\text{）}.
+\]
+表中约束交互、完全交互和分组三行都在回答同一问题：两组的专长斜率是否不同；完全交互中的 \(\gamma\) 是组间差异的正式检验。
+
+\textbf{滞后 KeyPoll（表~\ref{tab:keypoll}--\ref{tab:keypoll-d} 中标注``滞后 KeyPoll''的行）。}
+当期 \texttt{KeyPollMonUnit} 与当期漂绿、当期环境披露写在同一年，身份本身也可能随当年监管和披露同时变化。滞后规格改用上一年的重点排污身份 \(V=\texttt{L\_KeyPollMonUnit}\)，使调节在时间上先于当期 \(Y\) 和当期 \(S\)。仅当同一公司相邻两年相差恰好 1 年时才能构造滞后项，故样本从 15,381 减为 10,488。问的仍是：\emph{上年}已被列为重点排污单位的公司，\emph{当年}专长与漂绿的负向关联是否更强，预测仍为 \(\gamma<0\)。
+
+\textbf{剔除处罚当年（表~\ref{tab:keypoll}--\ref{tab:keypoll-d} 中标注``剔除处罚当年''的行）。}
+重点排污单位更容易在同一年收到环保处罚。处罚当年企业面临执法压力，披露和外部关注也可能随之改变，因而当期 \(IMS\times\texttt{KeyPollMonUnit}\) 可能混进``被处罚''而不是``监管身份提供核对机会''。该规格把 \texttt{Penalty\_D}\(=1\) 的 1,059 条拿掉，在其余 14,322 条上仍用当期 \texttt{KeyPollMonUnit} 做调节。调节变量没有换成处罚，只是不让处罚当年进入估计。预测仍为 \(\gamma<0\)。
+
+行业\(\times\)年固定效应规格在完全交互上再加入 \(C(\text{时间}):C(\text{ExpertiseIndustryCode})\)，吸收行业--年共同冲击；符号预测与主检验相同。
+
+\subsection{表~\ref{tab:penalty}：环保处罚对照}
+
+同一脚本，但调节从重点排污\emph{身份}换成环保处罚\emph{事件}。\texttt{Penalty\_D}\(=1\) 表示该公司该年在环保处罚总表中至少有一条记录（1,059 个公司--年），否则为 0。方程、控制、固定效应和三层规格与表~\ref{tab:keypoll} 相同，只是 \(V=\texttt{Penalty\_D}\)。
+
+表~\ref{tab:penalty}：全样本保留，\emph{调节改成是否处罚当年}，问处罚年与非处罚年的专长斜率是否不同。
+
+
+各行含义：约束/完全交互报告 \(S\times\texttt{Penalty\_D}\)，即处罚年相对非处罚年的专长斜率差；分组两行分别是处罚年子样本和非处罚年子样本里的 \(S\) 系数。
+
+该表是对照，不是重点排污主检验。重点排污是相对持续的监管名单身份，对应``更可能有可核对的环境信息''; 处罚是当年执法冲击，对应``该年被点名处罚''。两者不应读成同一个 \(V\)。脚本将本表标记为 \texttt{Penalty contrast}：用来看专长斜率是否随处罚事件变化，而不是用来重复 CAS 1521 核对机会假设。因此事先\emph{没有}把 \(\gamma<0\) 写成与 KeyPoll 相同的主预测——处罚既可能伴随更强监督，也可能伴随披露调整，本表只估计差异，不预设符号。
+
+\subsection{表~\ref{tab:financial}：财务交叉}
+
+脚本：\texttt{run\_financial\_hetero.py}。产出：\texttt{financial\_hetero\_coefficients.csv}。
+
+事先假设：资本支出、在建工程或预计负债提供更多一般可核对财务锚点时，负向关联更强，即下列交互均预测 \(\gamma<0\)：
+\texttt{IMS}\(\times\texttt{Capex\_TA}\)、\(\times\texttt{HighCapex}\)、\(\times\texttt{CIP\_TA}\)、\(\times\texttt{HighCIP}\)、\(\times\texttt{Provision\_D}\)、\(\times\texttt{Provision\_TA}\)
+及其 \(IMS\_D\) 对应项。非缺失子样本与滞后 capex/CIP 使用同一符号预测。
+
+\texttt{PPE\_TA} 在脚本中标记为固定资产稳健性（\texttt{PPE robustness}）， 因为固定资产不明确是环保设备等，预测方向同为 \(\gamma<0\)，但不作为资本支出/在建工程主调节。
+
+\subsection{表~\ref{tab:lit}：文献导向异质性}
+
+脚本：\texttt{run\_lit\_hetero.py}。产出：\texttt{lit\_hetero\_coefficients.csv}。本组不再使用重点排污或报表科目，而改用审计专长与中国漂绿文献中常见的四条调节，每条单独估计。下面先按文献写清事先预测说的是什么，再给出符号对照。
+
+\textbf{重污染行业 \texttt{HeavyPoll}。}
+环保部《上市公司环保核查行业分类管理名录》以及 CAS 1631/现 1521 应用指南点名石油天然气、化工、制药、冶金、采矿、造纸、印染、公用事业等高环境风险行业。Marquis, Toffel and Zhou (2016) 指出，环境损害更突出的企业在外部监督更强时更少做选择性披露。预测是：在这些行业里，环境声明与已审信息、行业知识交叉的机会更多，专长与漂绿的负向关联应更强，故 \(S\times\texttt{HeavyPoll}\) 的 \(\gamma<0\)。与重点排污不同，这里的 \(V\) 是行业分类，不随公司是否自述监管身份而变。
+
+\textbf{产权 \texttt{SOE}。}
+Wang, Wong and Xia (2008) 表明，中国国有企业受政府干预和预算软约束影响，对高质量审计的市场化需求弱于非国企。预测是：非国企更依赖市场监督，专长与更低漂绿的关联应更强。交互以国企为 \(V=1\)，因此等价表述为 \(S\times\texttt{SOE}\) 的 \(\gamma>0\)（国企组的专长斜率不如非国企那么负）。分组上则对应非国企子样本的 \(S\) 更负。
+
+\textbf{短任期 \texttt{ShortTenure}。}
+Gul, Fung and Jaggi (2009) 的逻辑是：审计师对客户的专有知识随任期积累；任期短时客户特定知识不足，行业专长可以替代这部分知识，因而专长对报告质量的作用在短任期更明显。本检验将短任期定义为 \(\texttt{AuditorTenure}\le 3\)，预测 \(S\times\texttt{ShortTenure}\) 的 \(\gamma<0\)，即负向关联在短任期组更强。
+
+\textbf{客户重要性 \texttt{HighCI} / \texttt{CI}。}
+Reynolds and Francis (2000) 讨论事务所（分所）对重要客户的经济依赖可能削弱独立性。若客户越重要、独立性越差，则专长约束漂绿的作用应更弱，即斜率不那么负。\texttt{HighCI} 为审计费占比高于样本中位数，预测 \(S\times\texttt{HighCI}\) 的 \(\gamma>0\)；连续 \texttt{CI} 为同一方向，即 \(S\times\texttt{CI}\) 的 \(\gamma>0\)。
+
+符号汇总如下（\(\gamma\) 均为 \(S\times V\)）：
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+调节 \(V\) & 事先预测 & 文字含义 \\
+\midrule
+\texttt{HeavyPoll} & \(\gamma<0\) & 重污染行业中专长--漂绿关联更负 \\
+\texttt{SOE} & \(\gamma>0\) & 非国企中该关联更负 \\
+\texttt{ShortTenure} & \(\gamma<0\) & 短任期中该关联更负 \\
+\texttt{HighCI}、\texttt{CI} & \(\gamma>0\) & 客户越重要，该关联越弱（更不负） \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{估计结果}
+
+系数、标准误与 \(p\) 值取自对应 CSV。\(^{*}\)、\(^{**}\)、\(^{***}\) 分别表示 \(p<0.10\)、\(p<0.05\)、\(p<0.01\)。交互行报告 \(\gamma\)；分组行报告子样本中的 \(S\) 系数。
+
+\subsection{重点排污单位}
+
+\begin{center}
+\begin{threeparttable}
+\caption{重点排污单位：\(IMS\) 交互与分组}
+\label{tab:keypoll}
+\begin{tabular}{lcccc}
+\toprule
+规格 & 系数 & 标准误 & \(p\) & \(N\) \\
+\midrule
+约束交互 \(IMS\times\texttt{KeyPollMonUnit}\) & \(-1.361^{***}\) & 0.428 & 0.001 & 15,381 \\
+完全交互 \(IMS\times\texttt{KeyPollMonUnit}\) & \(-0.363\) & 0.425 & 0.393 & 15,381 \\
+完全交互 + 行业\(\times\)年 FE & \(-0.358\) & 0.434 & 0.409 & 15,381 \\
+滞后 KeyPoll，约束交互 & \(-1.095^{**}\) & 0.450 & 0.015 & 10,488 \\
+滞后 KeyPoll，完全交互 & \(-0.217\) & 0.454 & 0.632 & 10,488 \\
+剔除处罚当年，约束交互 & \(-1.219^{***}\) & 0.432 & 0.005 & 14,322 \\
+剔除处罚当年，完全交互 & \(-0.239\) & 0.429 & 0.577 & 14,322 \\
+\midrule
+分组：\texttt{KeyPollMonUnit}\(=1\) 的 \(IMS\) & \(-0.497\) & 0.341 & 0.145 & 5,941 \\
+分组：\texttt{KeyPollMonUnit}\(=0\) 的 \(IMS\) & \(-0.459^{*}\) & 0.279 & 0.099 & 9,440 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：除标明外，固定效应为年份与行业；公司聚类。``滞后 KeyPoll''用 \(V=\texttt{L\_KeyPollMonUnit}\)，须相邻年份。``剔除处罚当年''仍用当期 \texttt{KeyPollMonUnit}，但样本限于 \texttt{Penalty\_D}\(=0\)。规格含义见第~\ref{sec:hypotheses}~节。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\begin{center}
+\begin{threeparttable}
+\caption{重点排污单位：\(IMS\_D\) 交互与分组}
+\label{tab:keypoll-d}
+\begin{tabular}{lcccc}
+\toprule
+规格 & 系数 & 标准误 & \(p\) & \(N\) \\
+\midrule
+约束交互 \(IMS\_D\times\texttt{KeyPollMonUnit}\) & \(-0.291^{**}\) & 0.140 & 0.038 & 15,381 \\
+完全交互 \(IMS\_D\times\texttt{KeyPollMonUnit}\) & \(-0.049\) & 0.139 & 0.723 & 15,381 \\
+完全交互 + 行业\(\times\)年 FE & \(-0.045\) & 0.142 & 0.749 & 15,381 \\
+滞后 KeyPoll，约束交互 & \(-0.212\) & 0.146 & 0.145 & 10,488 \\
+滞后 KeyPoll，完全交互 & \(-0.004\) & 0.145 & 0.977 & 10,488 \\
+剔除处罚当年，约束交互 & \(-0.254^{*}\) & 0.139 & 0.067 & 14,322 \\
+剔除处罚当年，完全交互 & \(-0.021\) & 0.137 & 0.879 & 14,322 \\
+\midrule
+分组：\texttt{KeyPollMonUnit}\(=1\) 的 \(IMS\_D\) & \(-0.057\) & 0.104 & 0.584 & 5,941 \\
+分组：\texttt{KeyPollMonUnit}\(=0\) 的 \(IMS\_D\) & \(-0.175^{*}\) & 0.102 & 0.085 & 9,440 \\
+\bottomrule
+\end{tabular}
+\end{threeparttable}
+\end{center}
+
+\subsection{环保处罚对照}
+
+\begin{center}
+\begin{threeparttable}
+\caption{环保处罚对照}
+\label{tab:penalty}
+\begin{tabular}{lcccc}
+\toprule
+规格 & 系数 & 标准误 & \(p\) & \(N\) \\
+\midrule
+约束交互 \(IMS\times\texttt{Penalty\_D}\) & \(-1.012\) & 0.633 & 0.110 & 15,381 \\
+完全交互 \(IMS\times\texttt{Penalty\_D}\) & \(-0.565\) & 0.632 & 0.371 & 15,381 \\
+分组：\texttt{Penalty\_D}\(=1\) 的 \(IMS\) & \(-0.785\) & 0.710 & 0.269 & 1,059 \\
+分组：\texttt{Penalty\_D}\(=0\) 的 \(IMS\) & \(-0.447^{*}\) & 0.236 & 0.058 & 14,322 \\
+\midrule
+约束交互 \(IMS\_D\times\texttt{Penalty\_D}\) & \(-0.378\) & 0.274 & 0.168 & 15,381 \\
+完全交互 \(IMS\_D\times\texttt{Penalty\_D}\) & \(-0.245\) & 0.265 & 0.356 & 15,381 \\
+分组：\texttt{Penalty\_D}\(=1\) 的 \(IMS\_D\) & \(-0.242\) & 0.312 & 0.438 & 1,059 \\
+分组：\texttt{Penalty\_D}\(=0\) 的 \(IMS\_D\) & \(-0.124\) & 0.078 & 0.110 & 14,322 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：调节为是否处罚\emph{当年}，不是重点排污身份。交互项是处罚年与非处罚年的专长斜率差。与表~\ref{tab:keypoll} 中``剔除处罚当年''的区别见第~\ref{sec:hypotheses}~节。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\subsection{财务交叉}
+
+\begin{center}
+\begin{threeparttable}
+\caption{财务交叉：\(IMS\) 交互与分组}
+\label{tab:financial}
+\begin{tabular}{lcccc}
+\toprule
+规格 & 系数 & 标准误 & \(p\) & \(N\) \\
+\midrule
+\multicolumn{5}{l}{\textit{资本支出}} \\
+约束 \(IMS\times\texttt{Capex\_TA}\) & \(-6.084\) & 4.319 & 0.159 & 15,381 \\
+完全交互 \(IMS\times\texttt{Capex\_TA}\) & \(-3.452\) & 4.426 & 0.435 & 15,381 \\
+约束 \(IMS\times\texttt{HighCapex}\) & \(-0.321\) & 0.383 & 0.402 & 15,381 \\
+完全交互 \(IMS\times\texttt{HighCapex}\) & \(-0.310\) & 0.389 & 0.425 & 15,381 \\
+非缺失子样本，完全交互 \(IMS\times\texttt{Capex\_TA}\) & \(-3.430\) & 4.428 & 0.439 & 15,373 \\
+滞后 \(L\_Capex\_TA\)，完全交互 & \(-4.015\) & 4.666 & 0.389 & 15,381 \\
+分组：\texttt{HighCapex}\(=1\) 的 \(IMS\) & \(-0.378\) & 0.310 & 0.222 & 7,639 \\
+分组：\texttt{HighCapex}\(=0\) 的 \(IMS\) & \(-0.531^{*}\) & 0.313 & 0.090 & 7,742 \\
+\midrule
+\multicolumn{5}{l}{\textit{在建工程}} \\
+约束 \(IMS\times\texttt{CIP\_TA}\) & \(0.396\) & 3.752 & 0.916 & 15,381 \\
+完全交互 \(IMS\times\texttt{CIP\_TA}\) & \(1.007\) & 3.793 & 0.791 & 15,381 \\
+约束 \(IMS\times\texttt{HighCIP}\) & \(-0.025\) & 0.361 & 0.946 & 15,381 \\
+完全交互 \(IMS\times\texttt{HighCIP}\) & \(0.227\) & 0.366 & 0.534 & 15,381 \\
+非缺失子样本，完全交互 \(IMS\times\texttt{CIP\_TA}\) & \(1.561\) & 3.812 & 0.682 & 13,415 \\
+滞后 \(L\_CIP\_TA\)，完全交互 & \(0.284\) & 4.578 & 0.950 & 15,381 \\
+分组：\texttt{HighCIP}\(=1\) 的 \(IMS\) & \(-0.117\) & 0.309 & 0.706 & 7,624 \\
+分组：\texttt{HighCIP}\(=0\) 的 \(IMS\) & \(-0.793^{***}\) & 0.298 & 0.008 & 7,757 \\
+\midrule
+\multicolumn{5}{l}{\textit{预计负债}} \\
+约束 \(IMS\times\texttt{Provision\_D}\) & \(-0.246\) & 0.410 & 0.549 & 15,381 \\
+完全交互 \(IMS\times\texttt{Provision\_D}\) & \(-0.221\) & 0.423 & 0.602 & 15,381 \\
+完全交互 \(IMS\times\texttt{Provision\_TA}\) & \(-51.948\) & 43.746 & 0.235 & 15,381 \\
+非缺失子样本，完全交互 \(IMS\times\texttt{Provision\_D}\) & \(5.256^{**}\) & 2.520 & 0.037 & 5,922 \\
+分组：\texttt{Provision\_D}\(=1\) 的 \(IMS\) & \(-0.628^{*}\) & 0.365 & 0.085 & 5,894 \\
+分组：\texttt{Provision\_D}\(=0\) 的 \(IMS\) & \(-0.429\) & 0.289 & 0.138 & 9,487 \\
+\midrule
+\multicolumn{5}{l}{\textit{固定资产强度（脚本标记为稳健性）}} \\
+约束 \(IMS\times\texttt{PPE\_TA}\) & \(-3.521^{***}\) & 1.341 & 0.009 & 15,381 \\
+完全交互 \(IMS\times\texttt{PPE\_TA}\) & \(-2.739^{**}\) & 1.384 & 0.048 & 15,381 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：非缺失子样本分别要求 \texttt{Capex\_observed}\(=1\)、\texttt{CIP\_observed}\(=1\)、\texttt{Provision\_observed}\(=1\)。预计负债非缺失子样本中填 0 前已有科目记录，组内 \texttt{Provision\_D} 几乎全部为 1。滞后规格在填 0 后的 \(L\_Capex\_TA\)、\(L\_CIP\_TA\) 上估计，\(N=15{,}381\)。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\begin{center}
+\begin{threeparttable}
+\caption{财务交叉：\(IMS\_D\) 交互（摘录）}
+\begin{tabular}{lcccc}
+\toprule
+规格 & 系数 & 标准误 & \(p\) & \(N\) \\
+\midrule
+完全交互 \(IMS\_D\times\texttt{Capex\_TA}\) & \(-0.362\) & 1.401 & 0.796 & 15,381 \\
+完全交互 \(IMS\_D\times\texttt{HighCapex}\) & \(-0.016\) & 0.132 & 0.902 & 15,381 \\
+完全交互 \(IMS\_D\times\texttt{CIP\_TA}\) & \(2.525^{**}\) & 1.115 & 0.024 & 15,381 \\
+完全交互 \(IMS\_D\times\texttt{HighCIP}\) & \(0.118\) & 0.124 & 0.341 & 15,381 \\
+完全交互 \(IMS\_D\times\texttt{Provision\_D}\) & \(-0.055\) & 0.144 & 0.703 & 15,381 \\
+完全交互 \(IMS\_D\times\texttt{Provision\_TA}\) & \(-2.153\) & 12.591 & 0.864 & 15,381 \\
+完全交互 \(IMS\_D\times\texttt{PPE\_TA}\) & \(-0.527\) & 0.458 & 0.250 & 15,381 \\
+非缺失子样本 \(IMS\_D\times\texttt{Capex\_TA}\) 完全交互 & \(-0.362\) & 1.402 & 0.796 & 15,373 \\
+非缺失子样本 \(IMS\_D\times\texttt{CIP\_TA}\) 完全交互 & \(2.173^{**}\) & 1.108 & 0.050 & 13,415 \\
+滞后 \(IMS\_D\times L\_Capex\_TA\) 完全交互 & \(-0.268\) & 1.573 & 0.865 & 15,381 \\
+滞后 \(IMS\_D\times L\_CIP\_TA\) 完全交互 & \(1.974\) & 1.466 & 0.178 & 15,381 \\
+\bottomrule
+\end{tabular}
+\end{threeparttable}
+\end{center}
+
+\subsection{文献导向异质性}
+
+\begin{center}
+\begin{threeparttable}
+\caption{文献导向调节：\(IMS\) 交互与分组}
+\label{tab:lit}
+\begin{tabular}{lcccc}
+\toprule
+规格 & 系数 & 标准误 & \(p\) & \(N\) \\
+\midrule
+\multicolumn{5}{l}{\textit{重污染行业}} \\
+约束 \(IMS\times\texttt{HeavyPoll}\) & \(-1.216^{**}\) & 0.525 & 0.021 & 15,381 \\
+完全交互 \(IMS\times\texttt{HeavyPoll}\) & \(-0.567\) & 0.546 & 0.299 & 15,381 \\
+分组：\texttt{HeavyPoll}\(=1\) 的 \(IMS\) & \(-0.906^{*}\) & 0.477 & 0.058 & 4,148 \\
+分组：\texttt{HeavyPoll}\(=0\) 的 \(IMS\) & \(-0.335\) & 0.268 & 0.212 & 11,233 \\
+\midrule
+\multicolumn{5}{l}{\textit{国企}} \\
+约束 \(IMS\times\texttt{SOE}\) & \(0.711\) & 0.480 & 0.138 & 15,381 \\
+完全交互 \(IMS\times\texttt{SOE}\) & \(0.782\) & 0.484 & 0.106 & 15,381 \\
+分组：\texttt{SOE}\(=1\) 的 \(IMS\) & \(-0.278\) & 0.405 & 0.492 & 4,258 \\
+分组：\texttt{SOE}\(=0\) 的 \(IMS\) & \(-0.628^{**}\) & 0.281 & 0.025 & 11,123 \\
+\midrule
+\multicolumn{5}{l}{\textit{短任期}} \\
+约束 \(IMS\times\texttt{ShortTenure}\) & \(0.762^{*}\) & 0.392 & 0.052 & 15,381 \\
+完全交互 \(IMS\times\texttt{ShortTenure}\) & \(0.738^{*}\) & 0.405 & 0.069 & 15,381 \\
+分组：\texttt{ShortTenure}\(=1\) 的 \(IMS\) & \(-0.136\) & 0.372 & 0.715 & 4,191 \\
+分组：\texttt{ShortTenure}\(=0\) 的 \(IMS\) & \(-0.618^{**}\) & 0.273 & 0.024 & 11,190 \\
+\midrule
+\multicolumn{5}{l}{\textit{客户重要性}} \\
+约束 \(IMS\times\texttt{HighCI}\) & \(-0.524\) & 0.475 & 0.270 & 15,381 \\
+完全交互 \(IMS\times\texttt{HighCI}\) & \(-0.210\) & 0.491 & 0.669 & 15,381 \\
+完全交互 \(IMS\times\texttt{CI}\) & \(-16.065^{**}\) & 8.008 & 0.045 & 15,381 \\
+分组：\texttt{HighCI}\(=1\) 的 \(IMS\) & \(-0.588\) & 0.407 & 0.149 & 7,690 \\
+分组：\texttt{HighCI}\(=0\) 的 \(IMS\) & \(-0.688^{**}\) & 0.329 & 0.037 & 7,691 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：\texttt{SOE} 作调节时从控制集中剔除后再进入主效应与交互。\texttt{CI} 为连续客户重要性。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\begin{center}
+\begin{threeparttable}
+\caption{文献导向调节：\(IMS\_D\) 交互与分组（摘录）}
+\begin{tabular}{lcccc}
+\toprule
+规格 & 系数 & 标准误 & \(p\) & \(N\) \\
+\midrule
+约束 \(IMS\_D\times\texttt{HeavyPoll}\) & \(-0.262\) & 0.169 & 0.122 & 15,381 \\
+完全交互 \(IMS\_D\times\texttt{HeavyPoll}\) & \(-0.112\) & 0.171 & 0.513 & 15,381 \\
+约束 \(IMS\_D\times\texttt{SOE}\) & \(0.083\) & 0.164 & 0.610 & 15,381 \\
+完全交互 \(IMS\_D\times\texttt{SOE}\) & \(0.100\) & 0.164 & 0.540 & 15,381 \\
+约束 \(IMS\_D\times\texttt{ShortTenure}\) & \(0.056\) & 0.143 & 0.694 & 15,381 \\
+完全交互 \(IMS\_D\times\texttt{ShortTenure}\) & \(0.051\) & 0.146 & 0.726 & 15,381 \\
+完全交互 \(IMS\_D\times\texttt{HighCI}\) & \(-0.158\) & 0.161 & 0.327 & 15,381 \\
+完全交互 \(IMS\_D\times\texttt{CI}\) & \(-4.714^{*}\) & 2.537 & 0.063 & 15,381 \\
+分组：\texttt{HeavyPoll}\(=1\) 的 \(IMS\_D\) & \(-0.214\) & 0.142 & 0.132 & 4,148 \\
+分组：\texttt{SOE}\(=0\) 的 \(IMS\_D\) & \(-0.147\) & 0.095 & 0.124 & 11,123 \\
+分组：\texttt{ShortTenure}\(=1\) 的 \(IMS\_D\) & \(-0.192\) & 0.134 & 0.150 & 4,191 \\
+分组：\texttt{HighCI}\(=1\) 的 \(IMS\_D\) & \(-0.275^{*}\) & 0.141 & 0.051 & 7,690 \\
+\bottomrule
+\end{tabular}
+\end{threeparttable}
+\end{center}
+
+\section{脚本与产出对照}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+脚本 & 系数表 & 本报告表格 \\
+\midrule
+\texttt{run\_keypoll\_full\_interact.py} & \texttt{keypoll\_full\_interact\_coefficients.csv} & 表~\ref{tab:keypoll}、\ref{tab:keypoll-d}、\ref{tab:penalty} \\
+\texttt{run\_financial\_hetero.py} & \texttt{financial\_hetero\_coefficients.csv} & 表~\ref{tab:financial} \\
+\texttt{run\_lit\_hetero.py} & \texttt{lit\_hetero\_coefficients.csv} & 表~\ref{tab:lit} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{参考文献}
+
+\begin{itemize}
+\item Gul, F.~A., S.~Y.~K.~Fung, and B.~Jaggi. 2009. Earnings quality: Some evidence on the role of auditor tenure and auditors' industry expertise. \textit{Journal of Accounting and Economics} 47 (3): 265--287.
+\item Marquis, C., M.~W.~Toffel, and Y.~Zhou. 2016. Scrutiny, norms, and selective disclosure: A global study of greenwashing. \textit{Organization Science} 27 (2): 483--504.
+\item Reynolds, J.~K., and J.~R.~Francis. 2000. Does size matter? The influence of large clients on office-level auditor reporting decisions. \textit{Journal of Accounting and Economics} 30 (3): 375--400.
+\item Wang, Q., T.~J.~Wong, and L.~Xia. 2008. State ownership, the institutional environment, and auditor choice: Evidence from China. \textit{Journal of Accounting and Economics} 46 (1): 112--134.
+\end{itemize}
+
+\end{document}

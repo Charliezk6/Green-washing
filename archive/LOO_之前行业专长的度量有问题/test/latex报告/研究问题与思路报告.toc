@@ -1,0 +1,17 @@
+\contentsline {section}{\numberline {1}报告目的}{2}{section.1}%
+\contentsline {section}{\numberline {2}研究思路的形成过程}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}起点：传统治理假设}{2}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}第一个转折：原始指标包含焦点客户自身}{2}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}第二个转折：同一样本下LOO结果消失}{3}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}第三个转折：不能把一切简单归因于最大企业}{4}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}第三阶段：替代度量和正式系数差异检验}{4}{subsection.2.5}%
+\contentsline {section}{\numberline {3}当前最直接的研究问题}{5}{section.3}%
+\contentsline {subsection}{\numberline {3.1}核心研究问题}{5}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}三个递进子问题}{5}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}不宜作为当前核心的问题}{6}{subsection.3.3}%
+\contentsline {section}{\numberline {4}当前最直接体现的研究贡献}{6}{section.4}%
+\contentsline {subsection}{\numberline {4.1}第一项贡献：识别研究结论的度量依赖性}{6}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}第二项贡献：区分焦点客户规模与外部行业经验}{6}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}第三项贡献：拓展行业专长理论的适用场景并提供边界证据}{7}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}第四项贡献：示范对不显著结果的规范处理}{7}{subsection.4.4}%
+\contentsline {section}{\numberline {5}贡献的边界与不能声称的内容}{7}{section.5}%

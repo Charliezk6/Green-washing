@@ -1,0 +1,17 @@
+{
+  "project": "TWFE-IMS-LOO",
+  "input_panel": "../data/input/combined_regression_panel_15381.csv",
+  "dependent": "Greenwashing连续_基准",
+  "core_variables": ["IMS", "IMS_D"],
+  "loo_variables": ["IMS_LOO", "IMS_LOO_D"],
+  "revenue_variable": "OperatingRevenue",
+  "firm_id": "证券代码",
+  "year": "时间",
+  "auditor": "AccountingFirmName",
+  "industry": "ExpertiseIndustryCode",
+  "controls": ["Size", "Lev", "ROA", "CFO", "Growth", "FirmAge", "SOE", "Dual", "BoardSize", "IndependentDirectorRatio", "Big4", "LnAuditFee", "AuditorTenure", "IsChangeFirm"],
+  "winsorization": {"lower": 0.01, "upper": 0.99},
+  "ims_threshold": 0.20,
+  "standard_errors": "clustered_by_firm",
+  "notes": "IMS_LOO is revenue market share with the focal firm removed from both numerator and denominator. All generated artifacts belong under validation/P1/TWFE-IMS-LOO."
+}

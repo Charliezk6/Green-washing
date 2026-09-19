@@ -1,0 +1,19 @@
+{
+  "project": "IMS-LOO-full-market",
+  "input_panel": "validation/P1/data/input/combined_regression_panel_15381.csv",
+  "market_input": "X_reproduction/data/input/full_a_share_audit_market_2021_2024.csv",
+  "dependent": "Greenwashing连续_基准",
+  "firm_id": "证券代码",
+  "year": "时间",
+  "industry": "ExpertiseIndustryCode",
+  "market_industry": "IndustryCode",
+  "auditor_id": "InstitutionID",
+  "auditor_name": "AccountingFirmName",
+  "revenue": "OperatingRevenue",
+  "controls": ["Size", "Lev", "ROA", "CFO", "Growth", "FirmAge", "SOE", "Dual", "BoardSize", "IndependentDirectorRatio", "Big4", "LnAuditFee", "AuditorTenure", "IsChangeFirm"],
+  "years": [2021, 2022, 2023, 2024],
+  "ims_threshold": 0.20,
+  "fixed_effects": "industry_year",
+  "standard_errors": "firm_clustered",
+  "notes": "Construct full-market revenue IMS using the same market file, years, positive-revenue rule, InstitutionID, industry coding rule, and O exclusion as the original X reproduction. Then subtract the focal firm's market revenue from the full-market numerator and denominator."
+}

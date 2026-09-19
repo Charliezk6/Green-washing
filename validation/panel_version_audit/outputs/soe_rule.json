@@ -1,0 +1,26 @@
+{
+  "exclusive_soe_s0702b_codes": [
+    1100,
+    2000,
+    2100,
+    2120
+  ],
+  "soe_codes_seen_with_SOE1": [
+    1100,
+    2000,
+    2100,
+    2120
+  ],
+  "nonsoe_codes_seen_with_SOE0": [
+    1000,
+    1200,
+    1210,
+    1220,
+    1230,
+    2500,
+    3110,
+    3120,
+    3200
+  ],
+  "overlap_codes": []
+}

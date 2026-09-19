@@ -1,0 +1,17 @@
+{
+  "input_n": 18077,
+  "common_n": 15381,
+  "common_soe_fill0": 0.27111371172225474,
+  "common_soe_imputed": 0.27683505623821597,
+  "combined_panel": "D:\\Charlie 应用\\Documents\\zkk\\Research Project\\greenwashing\\validation\\panel_version_audit\\outputs\\soe_impute\\combined_panel_soe_imputed.csv",
+  "common_sample": "D:\\Charlie 应用\\Documents\\zkk\\Research Project\\greenwashing\\validation\\panel_version_audit\\outputs\\soe_impute\\common_sample_15381_soe_imputed.csv",
+  "soe_codes": [
+    1100,
+    2000,
+    2100,
+    2120
+  ],
+  "max_carry_gap": 2,
+  "production_panel_untouched": "D:\\Charlie 应用\\Documents\\zkk\\Research Project\\greenwashing\\Regression\\data\\input\\combined_greenwashing_auditor_expertise_panel.csv",
+  "production_common_untouched": "D:\\Charlie 应用\\Documents\\zkk\\Research Project\\greenwashing\\Regression\\outputs\\paper_tables\\common_sample_15381.csv"
+}

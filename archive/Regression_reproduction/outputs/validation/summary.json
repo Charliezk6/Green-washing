@@ -1,0 +1,8 @@
+{
+  "actual_rows": 172,
+  "reference_rows": 172,
+  "missing_keys": 0,
+  "extra_keys": 0,
+  "differing_cells": 0,
+  "passed": true
+}

@@ -1,0 +1,3 @@
+﻿model,n,firms,industries,years,fixed_effects,cluster
+IMS_LOO_industry_year_fe,15277,4580,47,4,industry_year,firm
+IMS_LOO_D_industry_year_fe,15277,4580,47,4,industry_year,firm

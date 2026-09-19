@@ -1,0 +1,25 @@
+\begin{table}[H]
+    \centering
+    \caption{Robustness of Baseline Estimates to Alternative Standard-Error Clustering}
+    \label{tab:baseline_se_robustness}
+    \resizebox{0.9\textwidth}{!}{%
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{lrrr}
+        \toprule
+        & (1) Firm-clustered SE & (2) Two-way clustered SE & (3) Industry-clustered SE \\
+        \midrule
+        \(IMS\) & \shortstack{-0.4829** \\ (0.2362)} & \shortstack{-0.4829** \\ (0.2348)} & \shortstack{-0.4829* \\ (0.2639)} \\
+        Controls & Yes & Yes & Yes \\
+        Observations & 15,381 & 15,381 & 15,381 \\
+        Adjusted $R^2$ & 0.0221 & 0.0221 & 0.0221 \\
+        Year fixed effects & Yes & Yes & Yes \\
+        Industry fixed effects & Yes & Yes & Yes \\
+        \bottomrule
+    \end{tabular}%
+    }
+    \par\smallskip
+    \begin{minipage}{0.95\textwidth}
+        \footnotesize
+        \textit{Notes:} The dependent variable is current Greenwashing. All columns estimate the baseline specification with the full set of financial, governance, and audit controls. Only the standard-error clustering changes across columns. Coefficient estimates are reported first, followed by standard errors in parentheses. ***, **, and * indicate two-tailed significance at 1, 5, and 10 percent.
+    \end{minipage}
+\end{table}

@@ -1,0 +1,7 @@
+\contentsline {section}{\numberline {1}总体定位}{1}{section.1}%
+\contentsline {section}{\numberline {2}方法}{1}{section.2}%
+\contentsline {subsection}{\numberline {2.1}熵平衡求解器}{1}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}标准二元EB（IMS\_D，阈值0.20）}{2}{subsection.2.2}%
+\contentsline {section}{\numberline {3}结果}{2}{section.3}%
+\contentsline {section}{\numberline {4}局限与披露}{3}{section.4}%
+\contentsline {section}{\numberline {5}结论与论文表述边界}{3}{section.5}%

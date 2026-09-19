@@ -1,0 +1,26 @@
+\begin{table}[H]
+    \centering
+    \caption{Binary Complements to GPS--IPW}
+    \label{tab:gps-binary-matching}
+    \resizebox{0.9\textwidth}{!}{%
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{lrr}
+        \toprule
+        & (1) Entropy Balancing & (2) Propensity-Score Matching \\
+        \midrule
+        \(IMS\) & \shortstack{-0.3406** \\ (0.1542)} & --- \\
+        \(IMS_D\) & --- & \shortstack{-0.1120** \\ (0.0534)} \\
+        Controls & Yes & Yes \\
+        Observations & 10,488 & 1,218 \\
+        Adjusted $R^2$ & 0.6079 & 0.5906 \\
+        Year fixed effects & Yes & Yes \\
+        Industry fixed effects & Yes & Yes \\
+        \bottomrule
+    \end{tabular}%
+    }
+    \par\smallskip
+    \begin{minipage}{0.95\textwidth}
+        \footnotesize
+        \textit{Notes:} The dependent variable is current Greenwashing. Column (1) reports the entropy-balancing specification and column (2) reports the propensity-score matching specification. Coefficient estimates are reported first, followed by standard errors in parentheses. All models include year and industry fixed effects and use firm-clustered standard errors. Column (1) uses 10,488 firm-years from 4,168 firms; the effective sample size is 2,245. Column (2) uses 1,218 matched firm-years from 792 firms (609 pairs). ***, **, and * indicate two-tailed significance at 1, 5, and 10 percent.
+    \end{minipage}
+\end{table}

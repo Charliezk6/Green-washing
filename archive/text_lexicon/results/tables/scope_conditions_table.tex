@@ -1,0 +1,27 @@
+\begin{table}[htbp]
+    \centering
+    \caption{Scope Conditions Consistent with an Other-Information Channel}
+    \label{tab:scope-conditions}
+    \resizebox{\textwidth}{!}{%
+    \renewcommand{\arraystretch}{1.35}
+    \begin{tabular}{lccccc}
+        \toprule
+        & (1) & (2) & (3) & (4) & (5) \\
+        \midrule
+        \(IMS\) & \shortstack{-0.6348 \\ (0.4421)} & \shortstack{-0.3712 \\ (0.2664)} & \shortstack{0.0529 \\ (0.2841)} & \shortstack{-0.4013* \\ (0.2362)} & \shortstack{-0.5441** \\ (0.2602)} \\
+        Moderator \(V\) & \shortstack{-0.5228** \\ (0.2200)} & \shortstack{-0.0434 \\ (0.0385)} & \shortstack{0.6493*** \\ (0.0511)} & \shortstack{0.3520*** \\ (0.0692)} & \shortstack{0.5195 \\ (0.3639)} \\
+        \(IMS \times V\) & \shortstack{0.8493 \\ (2.1361)} & \shortstack{-0.2588 \\ (0.3761)} & \shortstack{-1.3617*** \\ (0.4277)} & \shortstack{-1.0115 \\ (0.6326)} & \shortstack{2.6274 \\ (3.4060)} \\
+        Controls & Yes & Yes & Yes & Yes & Yes \\
+        Observations & 15,381 & 15,381 & 15,381 & 15,381 & 15,381 \\
+        Adjusted $R^2$ & 0.0229 & 0.0225 & 0.0493 & 0.0246 & 0.0229 \\
+        Year fixed effects & Yes & Yes & Yes & Yes & Yes \\
+        Industry fixed effects & Yes & Yes & Yes & Yes & Yes \\
+        \bottomrule
+    \end{tabular}%
+    }
+    \par\smallskip
+    \begin{minipage}{0.98\textwidth}
+        \footnotesize
+        \textit{Notes:} The dependent variable is continuous Greenwashing. The moderator \(V\) is \(AuditIntersect\_Share\) / \(HighIntersect\) / \(KeyPollMonUnit\) / \(Penalty\_D\) / \(Soft\_Share\) in columns (1)--(5). Column (5) is a placebo based on symbolic environmental language. All specifications include the baseline financial, governance, and audit controls, year and industry fixed effects, and firm-clustered standard errors. Coefficient estimates are reported first, followed by standard errors in parentheses. ***, **, and * indicate two-tailed significance at 1, 5, and 10 percent.
+    \end{minipage}
+\end{table}

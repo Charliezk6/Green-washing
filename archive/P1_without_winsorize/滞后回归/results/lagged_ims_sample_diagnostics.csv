@@ -1,0 +1,2 @@
+﻿基准共同样本数,滞后回归样本数,企业数,年度数,行业数,严格连续年度,缩尾规则,控制变量
+14778,10001,4007,3,47,是,与 Regression/scripts/reproduce_regression.py 一致；在基准共同样本的 1% 和 99% 分位缩尾,Size、Lev、ROA、CFO、Growth、FirmAge、SOE、Dual、BoardSize、IndependentDirectorRatio、Big4、LnAuditFee、AuditorTenure、IsChangeFirm

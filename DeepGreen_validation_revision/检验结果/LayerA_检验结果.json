@@ -1,0 +1,47 @@
+{
+  "layer": "LayerA",
+  "sample": 1000,
+  "model_vs_majority": {
+    "sample": 1000,
+    "TP": 491,
+    "TN": 487,
+    "FP": 9,
+    "FN": 13,
+    "Accuracy": 0.978,
+    "Precision": 0.982,
+    "Recall": 0.9742063492063492,
+    "F1": 0.9780876494023905,
+    "MCC": 0.9560305934684943
+  },
+  "human_pairwise_kappa": {
+    "annotator_1_vs_2": 0.9659929265287179,
+    "annotator_1_vs_3": 0.9699918377798761,
+    "annotator_2_vs_3": 0.9359433739425652
+  },
+  "human_pairwise_agreement": {
+    "annotator_1_vs_2": 0.983,
+    "annotator_1_vs_3": 0.985,
+    "annotator_2_vs_3": 0.968
+  },
+  "unanimous_rate": 0.968,
+  "majority_vote_distribution": {
+    "0": 496,
+    "1": 504
+  },
+  "model_distribution": {
+    "0": 500,
+    "1": 500
+  },
+  "model_vs_unanimous": {
+    "sample": 968,
+    "TP": 486,
+    "TN": 461,
+    "FP": 8,
+    "FN": 13,
+    "Accuracy": 0.9783057851239669,
+    "Precision": 0.9838056680161943,
+    "Recall": 0.9739478957915831,
+    "F1": 0.9788519637462235,
+    "MCC": 0.9566348829913854
+  }
+}

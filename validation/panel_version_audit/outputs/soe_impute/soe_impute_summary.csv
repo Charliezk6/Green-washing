@@ -1,0 +1,3 @@
+﻿scope,n,S0702b_missing_panel,S0702b_missing_rate,missing_but_same_year_code,missing_but_no_controller,last_write_empty_but_other_row_has_code,SOE_fill0_mean,SOE_fill0_ones,SOE_imputed_mean,SOE_imputed_ones,source_same_year_code,source_no_controller,source_firm_carry,source_residual_zero,flipped_0_to_1,flipped_1_to_0
+input_18077,18077,3450,0.1908502517010566,2764,580,394,0.27255628699452344,4927,0.27819881617525033,5029,17391,580,96,10,102,0
+common_15381,15381,3186,0.20713867758923346,2663,433,334,0.27111371172225474,4170,0.27683505623821597,4258,14858,433,80,10,88,0

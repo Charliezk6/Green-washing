@@ -1,0 +1,204 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,booktabs,array}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue,
+  pdftitle={IPSW W3 no GW 结果说明}
+}
+
+\title{逆倾向得分加权检验：删除倾向得分方程中漂绿变量的结果说明}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{检验目的与设定}
+
+本文档报告逆倾向得分加权（inverse propensity score weighting, IPSW）的 W3\_no\_GW 规格。该规格的目的，是检验不将企业既有漂绿表现直接用于预测其当期选择行业专家事务所时，行业专家客户与非行业专家客户的当期漂绿差异。
+
+分析单位为企业--年度观测。设 $i$ 表示企业、$t$ 表示年度、$j(i,t)$ 表示企业所属的 \texttt{ExpertiseIndustryCode} 行业。处理变量为：
+
+\begin{equation}
+D_{i,t}=IMS\_D_{i,t},
+\end{equation}
+
+其中，$D_{i,t}=1$ 表示企业当期聘用行业专家事务所，$D_{i,t}=0$ 表示聘用非行业专家事务所。结果变量为当期连续漂绿指标：
+
+\begin{equation}
+GW_{i,t}=\text{当期连续漂绿指标}.
+\end{equation}
+
+所有滞后变量均按企业--年度排序生成，且仅当相邻两条企业记录满足 $t-(t-1)=1$ 时保留严格滞后一期值，不跨缺失年度构造滞后变量。
+
+\section{倾向得分方程}
+
+W3\_no\_GW 使用 Logit 模型估计企业当期选择行业专家事务所的条件概率：
+
+\begin{equation}
+\begin{aligned}
+e_{i,t}
+&=Pr(D_{i,t}=1\mid L.\mathbf{X}_{i,t},\lambda_t,\eta_{j(i,t)})\\
+&=\Lambda\left(
+\alpha+\boldsymbol{\delta}'L.\mathbf{X}_{i,t}
++\lambda_t+\eta_{j(i,t)}
+\right),
+\end{aligned}
+\end{equation}
+
+其中，$\Lambda(\cdot)$ 为 Logistic 累积分布函数，$\lambda_t$ 为年度固定效应，$\eta_{j(i,t)}$ 为行业固定效应。该规格\textbf{不}纳入以下滞后漂绿变量：
+
+\begin{equation}
+L.GW_{i,t},\quad L.GI_{i,t},\quad L.ESGE_{i,t}.
+\end{equation}
+
+倾向得分方程仅使用如下处理发生前的财务、治理及审计关系协变量：
+
+\begin{equation}
+\begin{aligned}
+L.\mathbf{X}_{i,t}=\big(&L.Size,\ L.Lev,\ L.ROA,\ L.CFO,\ L.Growth,\ L.FirmAgeLog,\\
+&L.SOE,\ L.Dual,\ L.BoardSize,\ L.IndependentDirectorRatio,\\
+&L.Big4,\ L.LnAuditFee,\ L.AuditorTenure,\ L.IsChangeFirm\big)'_{i,t}.
+\end{aligned}
+\end{equation}
+
+因此，W3\_no\_GW 识别的是：在财务状况、治理、既有审计关系、年度和行业相近的企业之间，行业专家客户与非行业专家客户的当期漂绿差异。它没有使两组企业按既有漂绿水平直接平衡，故应作为不含漂绿选择变量的敏感性规格，而非替代主规格。
+
+\section{样本、固定效应识别与共同支撑}
+
+表 \ref{tab:flow} 报告样本处理过程。完整案例样本包含 5,436 个企业--年度观测，其中行业专家客户为 1,216 个。由于部分年度--行业单元内处理变量没有变异，Logit 估计前删除 41 个观测；倾向得分模型最终使用 5,395 个观测。处理组和对照组的倾向得分共同支撑区间为 $[0.0174,0.8460]$。共同支撑限制后保留 4,956 个观测，删除 439 个对照组观测，没有删除处理组观测。
+
+\begin{table}[htbp]
+\centering
+\caption{W3\_no\_GW 样本流程与共同支撑}
+\label{tab:flow}
+\begin{tabular}{lr}
+\toprule
+项目 & 数值 \\
+\midrule
+完整案例样本 & 5,436 \\
+完整案例中的处理组观测 & 1,216 \\
+年度--行业无处理变异而剔除的观测 & 41 \\
+Logit 倾向得分模型样本 & 5,395 \\
+倾向模型中的处理组比例 & 22.39\% \\
+共同支撑下限 & 0.0174 \\
+共同支撑上限 & 0.8460 \\
+共同支撑样本 & 4,956 \\
+共同支撑剔除的处理组观测 & 0 \\
+共同支撑剔除的对照组观测 & 439 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{权重构造与诊断}
+
+主规格采用稳定化平均处理效应（ATE）权重：
+
+\begin{equation}
+w^{ATE}_{i,t}=
+D_{i,t}\frac{Pr(D=1)}{e_{i,t}}
++(1-D_{i,t})\frac{Pr(D=0)}{1-e_{i,t}}.
+\end{equation}
+
+主结果将共同支撑样本的稳定化 ATE 权重按 1\% 和 99\% 分位数截尾。作为敏感性检验，另报告未截尾 ATE、0.5\%/99.5\% 截尾 ATE，以及面向已聘用行业专家企业的 ATT 权重：
+
+\begin{equation}
+w^{ATT}_{i,t}=D_{i,t}+(1-D_{i,t})\frac{e_{i,t}}{1-e_{i,t}}.
+\end{equation}
+
+表 \ref{tab:weights} 表明，主 ATE 截尾权重的均值为 0.988、标准差为 0.341、最大值为 2.700，有效样本量为 4,428。相对于共同支撑样本的 4,956 个观测，权重导致的有效样本损失有限；未截尾 ATE 权重的最大值为 13.994，且有效样本量下降至 3,923，因此截尾主规格更稳健。
+
+\begin{table}[htbp]
+\centering
+\caption{W3\_no\_GW 权重诊断}
+\label{tab:weights}
+\begin{tabular}{lrrrrr}
+\toprule
+权重 & 均值 & 标准差 & 最大值 & ESS & 处理组 ESS \\
+\midrule
+稳定化 ATE，未截尾 & 1.005 & 0.516 & 13.994 & 3,923 & 647 \\
+稳定化 ATE，1\%/99\% 截尾 & 0.988 & 0.341 & 2.700 & 4,428 & 903 \\
+稳定化 ATE，0.5\%/99.5\% 截尾 & 0.995 & 0.389 & 3.881 & 4,298 & 829 \\
+ATT，1\%/99\% 截尾 & 0.480 & 0.375 & 1.391 & 3,079 & 1,208 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{协变量平衡}
+
+使用主 ATE 截尾权重后，除 $L.Big4$ 外，所有进入倾向得分方程的协变量均满足 $|SMD|<0.10$。$L.Big4$ 的加权后标准化均值差为 0.121，略高于预先设定的 0.10 阈值。因此，该规格实现了大多数处理前财务、治理和审计关系变量的均值平衡，但不能宣称所有协变量实现完全平衡。
+
+\begin{table}[htbp]
+\centering
+\caption{主 ATE 截尾权重下的协变量平衡摘要}
+\label{tab:balance}
+\begin{tabular}{lrrr}
+\toprule
+变量 & 处理组均值 & 对照组均值 & SMD \\
+\midrule
+$L.Size$ & 22.187 & 22.188 & -0.001 \\
+$L.Lev$ & 0.401 & 0.404 & -0.014 \\
+$L.ROA$ & 0.030 & 0.030 & 0.003 \\
+$L.CFO$ & 0.050 & 0.049 & 0.014 \\
+$L.Growth$ & 0.133 & 0.143 & -0.012 \\
+$L.SOE$ & 0.245 & 0.229 & 0.037 \\
+$L.Big4$ & 0.083 & 0.052 & 0.121 \\
+$L.LnAuditFee$ & 13.918 & 13.921 & -0.005 \\
+$L.AuditorTenure$ & 7.823 & 7.973 & -0.026 \\
+$L.IsChangeFirm$ & 0.089 & 0.084 & 0.015 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\section{加权结果方程与结果}
+
+主加权结果方程为：
+
+\begin{equation}
+GW_{i,t}=\alpha+\beta D_{i,t}+\lambda_t+\eta_{j(i,t)}+\varepsilon_{i,t}.
+\end{equation}
+
+标准误按公司聚类。增强规格进一步加入全部 $L.\mathbf{X}_{i,t}$ 协变量。表 \ref{tab:results} 显示，主 1\%/99\% 截尾稳定化 ATE 估计的 $\beta$ 为 $-0.1199$，在 10\% 水平显著（$p=0.055$）。未截尾 ATE 和 0.5\%/99.5\% 截尾 ATE 估计也均为负，并在 5\% 水平显著。ATT 规格为负但不显著。加入滞后协变量后的增强加权估计为 $-0.1106$，在 10\% 水平显著。
+
+\begin{table}[htbp]
+\centering
+\caption{W3\_no\_GW 加权结果：因变量为当期连续漂绿}
+\label{tab:results}
+\begin{tabular}{lrrrr}
+\toprule
+模型 & $\hat{\beta}$ & 聚类标准误 & $p$ 值 & 观测数 \\
+\midrule
+稳定化 ATE，1\%/99\% 截尾（主规格） & -0.1199$^{*}$ & 0.0625 & 0.055 & 4,956 \\
+ATT，1\%/99\% 截尾 & -0.0964 & 0.0609 & 0.114 & 4,956 \\
+稳定化 ATE，未截尾 & -0.1714$^{**}$ & 0.0677 & 0.011 & 4,956 \\
+稳定化 ATE，0.5\%/99.5\% 截尾 & -0.1353$^{**}$ & 0.0636 & 0.033 & 4,956 \\
+稳定化 ATE，1\%/99\% 截尾，加入 $L.\mathbf{X}$ & -0.1106$^{*}$ & 0.0609 & 0.069 & 4,956 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize 注：$^{*}p<0.10$，$^{**}p<0.05$。所有模型包含年度和行业固定效应，标准误按公司聚类。}
+\end{tabular}
+\end{table}
+
+\section{解释边界}
+
+W3\_no\_GW 的结果表明，在不以既有漂绿直接预测行业专家选择、但对财务、治理和审计关系特征加权平衡后，行业专家客户的当期漂绿指标显著或边际显著地低于非行业专家客户。主规格的点估计为 $-0.1199$。
+
+这一结果不应被解释为无条件的因果效应，原因包括：
+
+\begin{enumerate}[label=(\arabic*)]
+  \item IPSW 只能平衡进入倾向得分方程的可观测协变量，不能排除未观测的审计需求、声誉偏好或治理质量差异；
+  \item W3\_no\_GW 有意删除了滞后漂绿及其构成项，因此不保证处理组和对照组在既有漂绿轨迹上可比；
+  \item $L.Big4$ 加权后仍存在轻度残余不平衡（$SMD=0.121$）；
+  \item ATT 结果未达到常用显著性水平，表明对估计对象和权重设定仍有敏感性。
+\end{enumerate}
+
+因此，该规格应作为验证行业专家与较低漂绿之间负向关系的补充敏感性证据，并与纳入滞后漂绿的 W1/W2 IPSW、倾向得分匹配、客户选择方程及换所样本结果联合解读。
+
+\end{document}

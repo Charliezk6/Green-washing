@@ -1,0 +1,2 @@
+﻿n,unmatched,PPE_observed,CIP_observed,CIP_positive_filled,Provision_observed,Provision_D,Capex_observed,HighCapex,HighCIP,Capex_TA_median,CIP_TA_median,PPE_TA_median,corr_Capex_CIP,corr_Capex_PPE,corr_Provision_D_TA,L_Capex_nonmissing_raw
+15381,0,15380,13415,13404,5922,5894,15373,7639,7624,0.033923232705851264,0.01600423460780031,0.1696176886399686,0.5879448653879616,0.3326348318086934,0.30343317035895884,15370

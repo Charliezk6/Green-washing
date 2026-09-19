@@ -216,3 +216,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Licensed / oversized research data (keep local only)
+appendix/
+*.jsonl
+
+# LLM intermediate artifacts (~1 million files); scripts are force-added
+Y_variable_reproduction/LLM_classification/

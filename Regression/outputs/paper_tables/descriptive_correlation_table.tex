@@ -1,0 +1,64 @@
+\begin{landscape}
+    \vspace*{-1.5cm}
+
+    \begin{center}
+    
+    \captionof{table}{Descriptive Statistics}
+    \label{tab:descriptive-statistics}
+    
+    \scriptsize
+    \resizebox{0.7\linewidth}{!}{%
+    \begin{tabular}{lrrrrrrrr}\hline
+    Variable & N & Mean & Std. Dev. & Min & 25th Pctl. & Median & 75th Pctl. & Max\\\hline
+    \input{../Regression/outputs/paper_tables/descriptive_rows.tex}
+    \\\hline
+    \end{tabular}}
+    
+    \vspace{3pt}
+    
+    \begin{minipage}{0.75\linewidth}
+    \footnotesize
+    \textit{Notes:} This table reports descriptive statistics for all variables. All statistics are based on 15,381 firm-year observations.
+    \end{minipage}
+    
+    \vspace{8pt}
+    
+    \captionof{table}{Pairwise Correlations}
+    \label{tab:correlations}
+    
+    \resizebox{1\linewidth}{!}{%
+    \begin{tabular}{lrrrrrrrrrrrrrrrrr}\hline
+    Variables &
+    (1) &
+    (2) &
+    (3) &
+    (4) &
+    (5) &
+    (6) &
+    (7) &
+    (8) &
+    (9) &
+    (10) &
+    (11) &
+    (12) &
+    (13) &
+    (14) &
+    (15) &
+    (16) &
+    (17)\\\hline
+    
+    \input{../Regression/outputs/paper_tables/correlation_rows.tex}
+    \\\hline
+    \end{tabular}}
+    
+    \vspace{3pt}
+    
+    \begin{minipage}{0.98\linewidth}
+    \footnotesize
+    \textit{Notes:} This table reports Pearson correlations when both variables are continuous and Spearman correlations when either variable is binary. Coefficients in bold are significant at the 5 percent level using two-tailed tests. Variables are numbered as follows: (1) Greenwashing, (2) IMS, (3) IMS\_D, (4) Size, (5) Lev, (6) ROA, (7) CFO, (8) Growth, (9) FirmAge, (10) SOE, (11) Dual, (12) BoardSize, (13) IndDirector, (14) Big4, (15) AuditFee, (16) Tenure, and (17) AuditorChange. All statistics are based on 15,381 firm-year observations.
+    \end{minipage}
+    
+    \end{center}
+    
+    \end{landscape}
+    

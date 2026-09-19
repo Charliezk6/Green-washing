@@ -1,0 +1,17 @@
+{
+  "rows": 18077,
+  "soe_mean_before": 0.27255628699452344,
+  "soe_mean_after": 0.27819881617525033,
+  "soe_ones_after": 5029,
+  "soe_source_counts": {
+    "same_year_code": 17391,
+    "no_controller": 580,
+    "firm_carry": 96,
+    "residual_zero": 10
+  },
+  "y_complete_before": 16483,
+  "y_complete_after": 16483,
+  "y_corr_overlapping": 1.0,
+  "soe_rule": "any same-year S0702b in {1100,2000,2100,2120}; no actual controller coded 0; constant within-firm carry if gap<=2; residual missing coded 0",
+  "y_rule": "industry-year z-score of GI minus E-score using ExpertiseIndustryCode and ddof=1"
+}

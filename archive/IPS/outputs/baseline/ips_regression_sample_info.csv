@@ -1,0 +1,9 @@
+﻿模型,核心变量,样本数,公司数,年度数,行业数,企业固定效应
+IPS (1) Univariate,IPS,14778,4484,4,47,否
+IPS (2) Financial Controls,IPS,14778,4484,4,47,否
+IPS (3) Financial and Governance Controls,IPS,14778,4484,4,47,否
+IPS (4) Full Controls,IPS,14778,4484,4,47,否
+IPS_D (1) Univariate,IPS_D,14778,4484,4,47,否
+IPS_D (2) Financial Controls,IPS_D,14778,4484,4,47,否
+IPS_D (3) Financial and Governance Controls,IPS_D,14778,4484,4,47,否
+IPS_D (4) Full Controls,IPS_D,14778,4484,4,47,否

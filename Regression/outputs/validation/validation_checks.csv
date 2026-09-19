@@ -1,0 +1,2 @@
+﻿input_rows,unique_company_year_keys,coefficient_rows,model_rows,common_sample,expected_common_sample,all_models_use_common_sample,unique_company_year_passed,expected_model_rows,passed
+18077,18077,76,8,15381,15381,True,True,8,True

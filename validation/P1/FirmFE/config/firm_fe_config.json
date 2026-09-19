@@ -1,0 +1,19 @@
+{
+  "dependent": "Greenwashing连续_基准",
+  "core_variables": ["IMS", "IMS_D"],
+  "financial_controls": ["Size", "Lev", "ROA", "CFO", "Growth", "FirmAge"],
+  "governance_controls": ["SOE", "Dual", "BoardSize", "IndependentDirectorRatio"],
+  "audit_controls": ["Big4", "LnAuditFee", "AuditorTenure", "IsChangeFirm"],
+  "input_panel": "Regression/data/input/combined_greenwashing_auditor_expertise_panel.csv",
+  "input_revenue": "Regression/data/input/full_market_financial_revenue_2020_2024.csv",
+  "baseline_coefficients": "Regression/outputs/baseline/基准回归完整系数.csv",
+  "output_dir": "outputs",
+  "expected_common_sample": 15381,
+  "firm_fe": true,
+  "year_fe": true,
+  "industry_fe": false,
+  "ims_d_source": "panel_20pct",
+  "ims_threshold": 0.20,
+  "standard_errors": "firm_clustered",
+  "notes": "Same as baseline regression except industry FE replaced by firm FE. Panel IMS_D uses the 20% strong-specialization cut."
+}

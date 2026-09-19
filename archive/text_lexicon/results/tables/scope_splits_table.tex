@@ -1,0 +1,24 @@
+\begin{table}[htbp]
+    \centering
+    \caption{Split-Sample Associations by Auditable Environmental Context}
+    \label{tab:scope-splits}
+    \renewcommand{\arraystretch}{1.35}
+    \begin{tabular}{lcccc}
+        \toprule
+        & (1) & (2) & (3) & (4) \\
+        \midrule
+        Sample & High \(AuditIntersect\) & Low \(AuditIntersect\) & Key pollution unit & Not key pollution unit \\
+        \(IMS\) & \shortstack{-0.8027** \\ (0.3563)} & \shortstack{-0.2450 \\ (0.2730)} & \shortstack{-0.4992 \\ (0.3413)} & \shortstack{-0.4592* \\ (0.2785)} \\
+        Controls & Yes & Yes & Yes & Yes \\
+        Observations & 7,044 & 8,337 & 5,941 & 9,440 \\
+        Adjusted $R^2$ & 0.0175 & 0.0416 & 0.1393 & 0.0154 \\
+        Year fixed effects & Yes & Yes & Yes & Yes \\
+        Industry fixed effects & Yes & Yes & Yes & Yes \\
+        \bottomrule
+    \end{tabular}
+    \par\smallskip
+    \begin{minipage}{0.95\textwidth}
+        \footnotesize
+        \textit{Notes:} Each column re-estimates the baseline model in the indicated subsample, so control slopes may differ across groups. High \(AuditIntersect\) equals one when the firm-year share of environmental statements with auditable anchors exceeds the industry-year median. Key pollution unit equals one when the firm discloses status as a key pollution-monitoring unit. Split-sample coefficients are for display. ***, **, and * indicate two-tailed significance at 1, 5, and 10 percent.
+    \end{minipage}
+\end{table}

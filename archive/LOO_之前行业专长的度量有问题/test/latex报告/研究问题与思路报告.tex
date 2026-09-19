@@ -1,0 +1,275 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[UTF8]{ctex}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{setspace}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{threeparttable}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\geometry{left=2.6cm,right=2.6cm,top=2.5cm,bottom=2.5cm}
+\onehalfspacing
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.25em}
+
+\title{审计师行业专长与企业漂绿：\\研究问题、贡献与研究思路形成报告}
+\author{}
+\date{2026年7月}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{报告目的}
+
+本报告不以寻找统计显著性为目的，而是根据三阶段实证诊断，回答三个更基础的问题：第一，目前的数据最直接支持什么研究问题；第二，原始资产市场份额与Leave-One-Out（以下简称LOO）指标为何产生不同结果；第三，这种差异能够形成什么程度的研究贡献。
+
+当前最核心的发现不是“审计师行业专长显著抑制企业漂绿”，也不是“行业专长确定没有作用”，而是：
+
+\begin{quote}
+审计师行业专长与企业漂绿之间的经验关系高度依赖行业专长的度量方式。传统客户资产市场份额包含焦点客户自身的相对规模信息；剔除焦点客户后，由事务所其他同行业客户所形成的行业经验与漂绿之间未呈现稳定关系。
+\end{quote}
+
+因此，论文最适合被定位为漂绿这一新场景中的行业专长度量敏感性检验，而不是以获得负向显著系数为目标的传统假设检验。
+
+\section{研究思路的形成过程}
+
+\subsection{起点：传统治理假设}
+
+研究最初的问题是：会计师事务所在特定行业积累的专业知识，是否能够提高其识别客户环境信息不一致的能力，从而抑制企业漂绿？由此形成传统假设：
+
+\begin{equation}
+AuditorIndustryExpertise_{it}\uparrow
+\quad\Longrightarrow\quad
+Greenwashing_{it}\downarrow.
+\end{equation}
+
+第一轮使用事务所在行业--年度内的客户资产市场份额衡量行业专长：
+
+\begin{equation}
+AssetShare_{ajt}=
+\frac{\sum_{k\in a,j}Assets_{kt}}
+{\sum_{k\in j}Assets_{kt}}.
+\end{equation}
+
+完整控制模型中，原始Asset Share的系数为$-0.473$，公司聚类$p=0.053$。这一结果方向符合传统治理假设，但只达到10\%边际显著水平，而且其他阈值、排名及二元漂绿模型未形成一致证据。
+
+\subsection{第一个转折：原始指标包含焦点客户自身}
+
+对于企业$i$，其自身资产同时进入原始市场份额的分子与分母。当企业在行业中规模较大时，即使其事务所在该行业没有丰富的其他客户经验，企业自身也会提高该事务所的行业份额。因此，原始指标可以概念性地拆分为：
+
+\begin{equation}
+TraditionalAssetShare
+\approx OtherClientExperience+FocalClientComponent.
+\end{equation}
+
+为隔离事务所从其他客户中形成的行业经验，构造：
+
+\begin{equation}
+AssetShare^{LOO}_{iajt}=
+\frac{AuditorIndustryAssets_{ajt}-Assets_{it}}
+{IndustryAssets_{jt}-Assets_{it}}.
+\end{equation}
+
+并定义：
+
+\begin{equation}
+Gap_{it}=AssetShare_{it}-AssetShare^{LOO}_{it},
+\end{equation}
+
+\begin{equation}
+RelativeSize_{it}=\frac{Assets_{it}}{IndustryAssets_{jt}}.
+\end{equation}
+
+结果显示，$Gap$与$RelativeSize$的相关系数为0.9758；控制行业和年度固定效应后，RelativeSize的系数为0.9443，$p<0.001$。这一结果确认原始指标含有很强的焦点客户规模成分。不过，由于二者存在代数联系，该结果属于指标结构诊断，不能单独作为因果证据。
+
+\subsection{第二个转折：同一样本下LOO结果消失}
+
+在相同8,577个观测、相同控制变量、相同行业和年度固定效应及公司聚类标准误下：
+
+\begin{table}[htbp]
+\centering
+\caption{统一样本下的核心度量比较}
+\begin{tabular}{lrrr}
+\toprule
+行业专长度量 & 系数 & 聚类标准误 & $p$值 \\
+\midrule
+原始Asset Share & -0.473 & 0.244 & 0.053 \\
+LOO Asset Share & -0.010 & 0.269 & 0.971 \\
+LOO Client Share & -0.330 & 0.331 & 0.319 \\
+公司固定效应：LOO Asset Share & 0.012 & 0.277 & 0.966 \\
+公司固定效应：LOO Client Share & -0.033 & 0.416 & 0.937 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+由此可见，原始资产口径下的负向关系没有在剔除焦点客户后得到重复。公司固定效应下两个LOO指标的点估计也接近于零。LOO指标具有公司内变化，因此结果不能完全归因于解释变量恒定；但样本期只有四年，仍存在统计功效和动态识别不足的问题。
+
+\subsection{第三个转折：不能把一切简单归因于最大企业}
+
+第二阶段剔除大客户后，原始Asset Share的系数明显缩小：剔除行业--年度第一大企业后，系数从$-0.473$变为$-0.161$，$p=0.539$；剔除前5\%和前10\%大型企业后也不显著。这说明全样本原始结果对大型客户处理敏感。
+
+但是，行业内相对规模分组并未发现负向关系集中于最大企业Q4。修正交互模型、加入规模组主效应后，原始Asset Share、LOO Asset Share和LOO Client Share的组间联合检验$p$值分别为0.308、0.131和0.507。因此，没有正式证据支持规模组之间存在系统差异。
+
+Q1小企业组中一度观察到资产份额显著为负，但该结果：
+
+\begin{itemize}
+  \item 在多重检验调整后不再达到5\%显著水平；
+  \item 主要集中于2021年和制造业；
+  \item 在公司固定效应模型中转为正值且不显著；
+  \item 客户数量口径没有形成一致支持。
+\end{itemize}
+
+因此，不能把论文转向“行业专长只对小企业有效”，也不能断言全样本原始关系完全由最大客户造成。更准确的判断是，传统Asset Share包含客户规模相关信息，并且其结果对大客户处理敏感。
+
+\subsection{第三阶段：替代度量和正式系数差异检验}
+
+第三阶段进一步考察不同经济口径：
+
+\begin{table}[htbp]
+\centering
+\caption{替代行业专长度量结果}
+\begin{tabular}{lrr}
+\toprule
+度量 & 系数 & $p$值 \\
+\midrule
+Sales Share & -0.173 & 0.398 \\
+LOO Sales Share & 0.057 & 0.798 \\
+是否拥有其他同行业客户 & -0.001 & 0.993 \\
+正值LOO资产经验强度 & -0.062 & 0.801 \\
+滞后一期LOO Asset Share & -0.301 & 0.286 \\
+滞后一期LOO Client Share & -0.279 & 0.435 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+原始Asset Share在不缩尾时为$-0.489$（$p=0.037$），采用0.5\%、1\%和2\%缩尾后$p$值分别约为0.053、0.060和0.076，说明其方向和数量级相近，但统计显著性对尾部处理敏感。相比之下，LOO资产份额在所有缩尾口径下均接近于零。
+
+为了避免用“一个显著、一个不显著”错误地推断系数存在差异，研究采用公司层面整体重抽样的Bootstrap，分别估计相同样本、相同控制和固定效应下的原始与LOO模型。1,000次有效重复结果为：
+
+\begin{table}[htbp]
+\centering
+\caption{原始与LOO资产份额系数差异的公司层面Bootstrap}
+\begin{tabular}{lr}
+\toprule
+统计量 & 结果 \\
+\midrule
+全样本系数差（原始$-$LOO） & -0.4628 \\
+Bootstrap平均系数差 & -0.4331 \\
+Bootstrap标准误 & 0.1519 \\
+95\%百分位置信区间 & $[-0.7309,-0.1523]$ \\
+正态近似$p$值 & 0.0023 \\
+中心化Bootstrap双侧$p$值 & 0.006 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+该检验表明，两种度量对应的估计系数存在统计显著差异。它支持“测量方式会实质性改变研究结论”，但不证明LOO不存在测量误差，也不证明原始指标在所有研究场景中无效。
+
+\section{当前最直接的研究问题}
+
+\subsection{核心研究问题}
+
+基于现有结果，最直接、最能够由数据回答的问题是：
+
+\begin{quote}
+当审计师行业专长由传统客户资产市场份额改为剔除焦点客户自身的LOO市场份额时，审计师行业专长与企业漂绿之间的关系是否仍然成立？
+\end{quote}
+
+对应英文表述为：
+
+\begin{quote}
+Does the association between auditor industry expertise and corporate greenwashing survive a leave-one-out measurement of industry expertise?
+\end{quote}
+
+这个问题优于“行业专长是否抑制漂绿”，因为后者默认不同代理变量衡量的是同一个经济概念，而当前证据恰好说明这一前提需要检验。
+
+\subsection{三个递进子问题}
+
+\begin{enumerate}
+  \item 传统Asset Share是否同时包含事务所行业经验和焦点客户自身规模信息？
+  \item 剔除焦点客户后，事务所从其他同行业客户形成的经验是否与企业漂绿相关？
+  \item 原始与LOO度量所得系数是否存在正式的统计差异，而不只是显著性标签不同？
+\end{enumerate}
+
+现有数据对三个问题分别给出以下回答：第一，原始指标确实含有强烈的焦点客户规模成分；第二，全样本中未发现LOO经验与漂绿之间的稳定关系；第三，1,000次公司层面Bootstrap显示两种系数存在显著差异。
+
+\subsection{不宜作为当前核心的问题}
+
+以下问题暂时不适合作为论文核心：
+
+\begin{itemize}
+  \item 行业专长是否在因果意义上降低漂绿：当前没有足够长的事件窗口或外生冲击；
+  \item 行业专长是否只对小企业有效：修正交互和多重检验没有形成稳健支持；
+  \item Big Four是否强化行业专长作用：交互项不显著且Big Four样本较小；
+  \item 事务所由非专家转专家是否降低漂绿：仅12个转入事件具有至少两个处理前时期和一个处理后时期，难以检验平行趋势。
+\end{itemize}
+
+\section{当前最直接体现的研究贡献}
+
+\subsection{第一项贡献：识别研究结论的度量依赖性}
+
+本文最强、最直接的贡献是揭示：审计师行业专长与企业漂绿之间的经验结论并非对指标构造稳健。传统Asset Share得到负向关系，而LOO资产份额、LOO客户份额、销售收入份额、两部式经验指标和滞后LOO指标均未复制该结果；Bootstrap进一步确认原始与LOO系数存在显著差异。
+
+这一贡献不是提出一个新的显著效应，而是识别一个经验结论成立所依赖的测量条件。其方法论意义在于，研究者不能把所有市场份额指标无条件地视为同一潜在概念的可互换代理变量。
+
+\subsection{第二项贡献：区分焦点客户规模与外部行业经验}
+
+传统Asset Share把焦点企业自身纳入事务所行业业务组合。LOO指标回答的是一个更具体的问题：如果不使用企业自身来认定其审计师具有行业专长，该事务所是否仍然拥有来自其他同行业客户的经验？
+
+因此，本文并非简单地用“新指标替代旧指标”，而是在区分两种经济内容：
+
+\begin{align}
+\text{传统Asset Share} &:\quad \text{事务所行业组合，包含焦点客户自身},\\
+\text{LOO Asset Share} &:\quad \text{事务所来自其他同行业客户的经验}.
+\end{align}
+
+结果表明，与漂绿负相关的部分主要存在于包含焦点客户的传统指标中，而非由其他客户形成的行业经验中。这使原始系数的解释从“行业知识监督效应”转变为“行业知识与客户规模成分的混合关系”。
+
+\subsection{第三项贡献：拓展行业专长理论的适用场景并提供边界证据}
+
+审计行业专长文献主要建立在财务报告、盈余管理、审计定价和审计质量等场景。漂绿则经常存在于ESG报告、可持续发展报告和叙述性环境信息中，未必属于传统财务报表审计的直接范围。
+
+本文将行业专长理论应用于漂绿场景，并发现更接近其他客户经验的LOO指标没有呈现稳定治理效应。这一结果提示：
+
+\begin{quote}
+审计师在财务报告领域积累的行业知识，未必会自动转化为识别和约束非财务环境叙事的能力。
+\end{quote}
+
+该贡献应被称为“可能的理论边界证据”，而不是“证明行业专长在非财务领域无效”。短样本、漂绿指标噪音和审计职责范围都限制了更强结论。
+
+\subsection{第四项贡献：示范对不显著结果的规范处理}
+
+本文没有因为LOO结果不显著而不断变换模型寻找支持性结果，而是依次进行统一样本比较、公司固定效应、指标分解、大客户剔除、替代市场份额、滞后指标、多重检验和公司层面Bootstrap。其研究设计价值在于区分：
+
+\begin{itemize}
+  \item 点估计接近于零与估计不精确；
+  \item 指标替换与样本变化；
+  \item 显著性标签不同与系数正式不同；
+  \item 测量敏感性与因果效应。
+\end{itemize}
+
+
+\section{贡献的边界与不能声称的内容}
+
+\begin{table}[htbp]
+\centering
+\caption{可以声称与不能声称的内容}
+\begin{tabular}{p{0.43\textwidth}p{0.43\textwidth}}
+\toprule
+可以声称 & 不能声称 \\
+\midrule
+结果对行业专长度量高度敏感 & 传统Asset Share在所有研究中无效 \\
+原始指标包含焦点客户规模成分 & LOO是完全准确的真实专长 \\
+全样本未发现LOO专长的稳健关系 & 行业专长确定不会影响漂绿 \\
+原始与LOO系数存在统计差异 & 系数差异完全由机械偏误因果导致 \\
+结果提示非财务治理边界 & 已经证明行业专长理论失效 \\
+当前数据不适合将DID作为核心证据 & 事务所变更没有识别价值 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{document}

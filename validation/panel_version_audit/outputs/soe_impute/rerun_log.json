@@ -1,0 +1,50 @@
+[
+  {
+    "step": "baseline",
+    "status": "ok"
+  },
+  {
+    "step": "twoway",
+    "status": "ok"
+  },
+  {
+    "step": "firmfe",
+    "status": "ok"
+  },
+  {
+    "step": "loo",
+    "status": "ok"
+  },
+  {
+    "step": "lagged",
+    "status": "ok"
+  },
+  {
+    "step": "switching",
+    "status": "ok"
+  },
+  {
+    "step": "gps",
+    "status": "ok"
+  },
+  {
+    "step": "eb",
+    "status": "ok"
+  },
+  {
+    "step": "psm",
+    "status": "ok"
+  },
+  {
+    "step": "gps_table",
+    "status": "ok"
+  },
+  {
+    "step": "hetero",
+    "status": "ok"
+  },
+  {
+    "step": "collect",
+    "status": "ok"
+  }
+]

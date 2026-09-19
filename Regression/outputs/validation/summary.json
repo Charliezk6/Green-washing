@@ -1,0 +1,12 @@
+{
+  "input_rows": 18077,
+  "unique_company_year_keys": 18077,
+  "coefficient_rows": 76,
+  "model_rows": 8,
+  "common_sample": 15381,
+  "expected_common_sample": 15381,
+  "all_models_use_common_sample": true,
+  "unique_company_year_passed": true,
+  "expected_model_rows": 8,
+  "passed": true
+}

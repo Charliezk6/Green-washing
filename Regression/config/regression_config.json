@@ -1,0 +1,16 @@
+{
+  "dependent": "Greenwashing连续_基准",
+  "core_variables": ["IMS", "IMS_D"],
+  "financial_controls": ["Size", "Lev", "ROA", "CFO", "Growth", "FirmAge"],
+  "governance_controls": ["SOE", "Dual", "BoardSize", "IndependentDirectorRatio"],
+  "audit_controls": ["Big4", "LnAuditFee", "AuditorTenure", "IsChangeFirm"],
+  "input_panel": "data/input/combined_greenwashing_auditor_expertise_panel.csv",
+  "input_revenue": "data/input/full_market_financial_revenue_2020_2024.csv",
+  "output_dir": "outputs/baseline",
+  "expected_common_sample": 15381,
+  "panel_version": "original_regression_panel_plus_deepgreen_reproduction3_expansion_soe_s0702b_y_combined_ddof1",
+  "industry_rule": "manufacturing uses secondary CSRC codes; non-manufacturing uses primary CSRC codes",
+  "dependent_definition": "industry-year GI z-score minus industry-year E-score z-score using ExpertiseIndustryCode and sample SD (ddof=1)",
+  "soe_definition": "1 if any same-year S0702b in {1100,2000,2100,2120}; no actual controller coded 0; constant within-firm carry if gap<=2; residual missing coded 0",
+  "ims_d_threshold": 0.20
+}

@@ -1,0 +1,4 @@
+﻿family,n,accuracy,gold_positive_rate,rule_positive_rate
+intersect_boundary,100,1.0,0.0,0.0
+intersect_positive,100,0.98,0.98,1.0
+soft,100,1.0,0.0,0.0

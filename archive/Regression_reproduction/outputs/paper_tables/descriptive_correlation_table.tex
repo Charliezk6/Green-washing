@@ -1,0 +1,30 @@
+\begin{landscape}
+\begin{table}[p]
+\centering
+\setlength{\belowcaptionskip}{4pt}
+\caption{Descriptive Statistics and Correlation Matrix}
+\label{tab:descriptive-statistics}
+\label{tab:correlations}
+\scriptsize
+\textit{Panel A: Descriptive Statistics}\\[3pt]
+\resizebox{0.6\linewidth}{!}{%
+\begin{tabular}{lrrrrrrr}\hline
+Variable & N & Mean & Std. Dev. & 25th Pctl. & Median & 75th Pctl. & Max\\\hline
+Greenwashing&8,129&0.002&1.331&-0.809&-0.055&0.902&5.026\\ IMS&8,129&0.066&0.078&0.014&0.040&0.094&0.704\\ IMS\_D&8,129&0.229&0.420&0&0&0&1\\
+Size&8,129&22.168&1.166&21.342&21.955&22.802&27.535\\ Lev&8,129&0.405&0.203&0.244&0.391&0.545&1.939\\ ROA&8,129&0.022&0.076&0.004&0.028&0.057&0.759\\ CFO&8,129&0.045&0.071&0.009&0.043&0.081&0.839\\
+Growth&8,129&0.110&0.742&-0.082&0.052&0.201&33.767\\ FirmAgeLog&8,129&2.166&0.812&1.609&2.398&2.708&3.497\\ SOE&8,129&0.227&0.419&0&0&0&1\\ Dual&8,129&0.364&0.481&0&0&1&1\\
+BoardSize&8,129&2.066&0.197&1.946&2.197&2.197&2.773\\ IndependentDirectorRatio&8,129&0.382&0.054&0.333&0.375&0.429&0.714\\ Big4&8,129&0.043&0.203&0&0&0&1\\ LnAuditFee&8,129&13.950&0.562&13.580&13.864&14.279&17.127\\
+AuditorTenure&8,129&7.728&5.877&3&6&11&34\\ IsChangeFirm&8,129&0.117&0.322&0&0&0&1\\\hline
+\end{tabular}}
+\par\vspace{5mm}
+\noindent\makebox[\linewidth][c]{\textit{Panel B: Pairwise Correlations}}\par\vspace{3pt}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lrrrrrrrrrrrrrrrrr}\hline
+Variables & \rotatebox{65}{Greenwashing} & \rotatebox{65}{IMS} & \rotatebox{65}{IMS\_D} & \rotatebox{65}{Size} & \rotatebox{65}{Lev} & \rotatebox{65}{ROA} & \rotatebox{65}{CFO} & \rotatebox{65}{Growth} & \rotatebox{65}{FirmAge} & \rotatebox{65}{SOE} & \rotatebox{65}{Dual} & \rotatebox{65}{BoardSize} & \rotatebox{65}{IndDirector} & \rotatebox{65}{Big4} & \rotatebox{65}{AuditFee} & \rotatebox{65}{Tenure} & \rotatebox{65}{AuditorChange}\\\hline
+\input{../Regression_reproduction/outputs/paper_tables/correlation_rows.tex}
+\\\hline
+\end{tabular}}
+\vspace{3pt}
+\begin{minipage}{0.98\linewidth}\footnotesize\textit{Notes:} Panel A reports descriptive statistics. Panel B reports Pearson correlations when both variables are continuous and Spearman correlations when either variable is binary. Coefficients in bold are significant at the 5 percent level (two-tailed). All statistics use 8,129 observations.\end{minipage}
+\end{table}
+\end{landscape}

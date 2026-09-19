@@ -1,0 +1,8 @@
+{
+  "input": "D:\\Charlie 应用\\Documents\\zkk\\Research Project\\greenwashing\\Regression_reproduction\\outputs\\baseline\\已构造基准回归变量的面板.csv",
+  "输入观测数": 9239,
+  "企业数": 2867,
+  "严格连续滞后观测数": 6199,
+  "起始年度": 2021,
+  "结束年度": 2024
+}

@@ -1,0 +1,7 @@
+﻿model,n,firms,industries,years,fixed_effects,cluster
+IMS_firm_clustered,15381,4604,47,4,industry_year,firm_clustered
+IMS_industry_clustered,15381,4604,47,4,industry_year,industry_clustered
+IMS_industry_year_clustered,15381,4604,47,4,industry_year,industry_year_clustered
+IMS_D_firm_clustered,15381,4604,47,4,industry_year,firm_clustered
+IMS_D_industry_clustered,15381,4604,47,4,industry_year,industry_clustered
+IMS_D_industry_year_clustered,15381,4604,47,4,industry_year,industry_year_clustered

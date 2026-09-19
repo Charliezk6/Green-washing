@@ -16,7 +16,7 @@
 
 > A one-standard-deviation increase in X is associated with a [ΔY] change in Y, which is a [Z] percent [decrease] relative to the unconditional mean (or probability) of Y.
 
-算法常放脚注：\(\beta \times \mathrm{SD}(X)/\mathrm{mean}(Y)\)。
+算法常放脚注：\beta \times \mathrm{SD}(X)/\mathrm{mean}(Y)。
 
 例（Khavis, Sheneman, and Szerwo 2025, *RAST*）：
 
@@ -40,16 +40,20 @@ Krishnan (2003, *Accounting Horizons*) 把量级写进摘要：
 
 ### 1.3 分母怎么选
 
-| 情境 | 顶刊常用分母 | 本文 |
-|---|---|---|
-| Y 有清楚均值（应计、重述概率、费用） | 占 mean(Y) 或无条件概率的 % | **不适用**：Greenwashing 均值 −0.0021，除以均值会爆炸 |
-| Y 是标准化/脱钩分数 | 占 SD(Y) | **适用**。Marquis et al. (2016)：\(\beta / \mathrm{SD}(Y)\)，“nearly one-half a standard deviation” |
-| 判断大不大 | 同回归其他系数（Big4、规模） | **适用** |
-| 文献对照 | 正文通常一句，几乎不做对照表 | 对照放本备忘录 |
+
+| 情境                  | 顶刊常用分母              | 本文                                                                                         |
+| ------------------- | ------------------- | ------------------------------------------------------------------------------------------ |
+| Y 有清楚均值（应计、重述概率、费用） | 占 mean(Y) 或无条件概率的 % | **不适用**：Greenwashing 均值 −0.0021，除以均值会爆炸                                                    |
+| Y 是标准化/脱钩分数         | 占 SD(Y)             | **适用**。Marquis et al. (2016)：\beta / \mathrm{SD}(Y)，“nearly one-half a standard deviation” |
+| 判断大不大               | 同回归其他系数（Big4、规模）    | **适用**                                                                                     |
+| 文献对照                | 正文通常一句，几乎不做对照表      | 对照放本备忘录                                                                                    |
+
 
 Marquis, Toffel, and Zhou (2016, *Organization Science*) 最接近本文 Y 的构造（选择性披露幅度，也是沟通–绩效类缺口）：
 
 > … a one-standard-deviation increase in environmental damage is associated with a 0.10 decline in selective disclosure magnitude, the equivalent of nearly one-half a standard deviation (calculated as β ÷ SD = −0.093 ÷ 0.23 = −0.40).
+
+
 
 ### 1.4 经典 JAR 专长文常常只报符号
 
@@ -70,33 +74,43 @@ Reichelt and Wang (2010, *JAR*)、Balsam et al. (2003, *AJPT*)、Dunn and Mayhew
 
 ---
 
+
+
 ## 2. 本文换算
+
+
 
 ### 2.1 口径（先澄清导师用的两个数）
 
-| 数字 | 实际是什么 | 不是什么 |
-|---|---|---|
-| −0.4829 | 列 (4) IMS 系数 | — |
-| 0.2362 | 该系数的 **标准误** | **不是** Greenwashing 的标准差 |
-| 1.3366 | Greenwashing 的样本标准差 | 正文已写 1.337 |
-| 0.0483 | 0.10 × 0.4829，**因变量原单位** 的变化 | **不是** 0.048 个标准差 |
+
+| 数字      | 实际是什么                        | 不是什么                     |
+| ------- | ---------------------------- | ------------------------ |
+| −0.4829 | 列 (4) IMS 系数                 | —                        |
+| 0.2362  | 该系数的 **标准误**                 | **不是** Greenwashing 的标准差 |
+| 1.3366  | Greenwashing 的样本标准差          | 正文已写 1.337               |
+| 0.0483  | 0.10 × 0.4829，**因变量原单位** 的变化 | **不是** 0.048 个标准差        |
+
 
 Greenwashing 均值 −0.0021（行业–年标准化后接近 0），故 **不用 % of mean(Y)**。
 
 IMS：均值 0.0698，SD 0.0817，P25 0.0152，P75 0.0983。+0.10 是 0.10 / 0.0817 ≈ **1.22 个 IMS 标准差**。
 
-公式：\(\text{standardized effect} = \beta \times \Delta X / \mathrm{SD}(Y)\)。\(\mathrm{SD}(Y)=1.3366\)。IQR(Y)=0.8979−(−0.8204)=1.7183。
+公式：\text{standardized effect} = \beta \times \Delta X / \mathrm{SD}(Y)。\mathrm{SD}(Y)=1.3366。IQR(Y)=0.8979−(−0.8204)=1.7183。
 
 ### 2.2 换算表（列 (4)）
 
-| 增量 | \(\Delta X\) | \(\beta\times\Delta X\)（Y 单位） | / SD(Y) | / IQR(Y) |
-|---|---|---|---|---|
-| IMS +1 SD（主口径） | 0.0817 | 0.0395 | **0.030** | 0.023 |
-| IMS +0.10（正文现用；>1 SD of IMS） | 0.10 | 0.0483 | 0.036 | 0.028 |
-| IMS P25→P75 | 0.0831 | 0.0401 | 0.030 | 0.023 |
-| IMS_D（≥20% vs 其他） | 1 | 0.1434 | **0.107** | 0.083 |
-| 同表 Big4 | 1 | 0.3613 | **0.270** | 0.210 |
-| 同表 Size +1 SD（参考） | 1.2148 | 0.1655 | 0.124 | 0.096 |
+
+| 增量                           | \Delta X | \beta\times\Delta X（Y 单位） | / SD(Y)   | / IQR(Y) |
+| ---------------------------- | -------- | ------------------------- | --------- | -------- |
+| IMS +1 SD（主口径）               | 0.0817   | 0.0395                    | **0.030** | 0.023    |
+| IMS +0.10（正文现用；>1 SD of IMS） | 0.10     | 0.0483                    | 0.036     | 0.028    |
+| IMS P25→P75                  | 0.0831   | 0.0401                    | 0.030     | 0.023    |
+| IMS_D（≥20% vs 其他）            | 1        | 0.1434                    | **0.107** | 0.083    |
+| 同表 Big4                      | 1        | 0.3613                    | **0.270** | 0.210    |
+| 同表 Size +1 SD（参考）            | 1.2148   | 0.1655                    | 0.124     | 0.096    |
+
+
+
 
 ### 2.3 读法
 
@@ -108,6 +122,8 @@ IMS：均值 0.0698，SD 0.0817，P25 0.0152，P75 0.0983。+0.10 是 0.10 / 0.0
 GPS–IPW 列 (3) 系数 −0.2878：1 SD IMS → 约 0.024 单位 / **0.018 SD of Y**，可观测选择校正后更小，但仍为负。不作为回复主数字。
 
 ---
+
+
 
 ## 3. 文献句
 
@@ -173,6 +189,8 @@ JAR 经典专长文可以只写方向。近年实证才强制写量级。回复�
 
 ---
 
+
+
 ## 4. 导师回复草稿
 
 可直接粘贴。不指责计算，只陈述口径；不写“正文已改”。
@@ -193,6 +211,9 @@ JAR 经典专长文可以只写方向。近年实证才强制写量级。回复�
 
 ---
 
+
+
 ## 附：若日后改正文可用的英文骨架（本次不写入 Paper.tex）
 
-> In column (4), the coefficient on \(IMS\) is \(-0.4829\). A one-standard-deviation increase in \(IMS\) (0.082) is associated with a 0.039 decline in Greenwashing, or about 0.03 of the outcome’s standard deviation (1.337). A 10-percentage-point increase in industry market share—already larger than one standard deviation of \(IMS\)—corresponds to a 0.048 decline (0.036 of a standard deviation). Relative to other clients, firms audited by auditors meeting the 20 percent threshold (\(IMS\_D\)) have Greenwashing scores that are 0.143 lower, or about 0.11 of a standard deviation. By comparison, the same specification associates Big4 with a 0.36 decline (about 0.27 of a standard deviation). These magnitudes are modest. They are closer to the specialist-versus-nonspecialist contrasts reported for earnings quality (e.g., Krishnan 2003) than to a first-order sustainability-assurance effect, which is consistent with the limited reach of the other-information requirement in CAS 1521.
+> In column (4), the coefficient on IMS is -0.4829. A one-standard-deviation increase in IMS (0.082) is associated with a 0.039 decline in Greenwashing, or about 0.03 of the outcome’s standard deviation (1.337). A 10-percentage-point increase in industry market share—already larger than one standard deviation of IMS—corresponds to a 0.048 decline (0.036 of a standard deviation). Relative to other clients, firms audited by auditors meeting the 20 percent threshold (IMSD) have Greenwashing scores that are 0.143 lower, or about 0.11 of a standard deviation. By comparison, the same specification associates Big4 with a 0.36 decline (about 0.27 of a standard deviation). These magnitudes are modest. They are closer to the specialist-versus-nonspecialist contrasts reported for earnings quality (e.g., Krishnan 2003) than to a first-order sustainability-assurance effect, which is consistent with the limited reach of the other-information requirement in CAS 1521.
+

@@ -1,4 +1,7 @@
-﻿SE specification,IMS,Controls,Observations,Adjusted R2,Year fixed effects,Industry fixed effects
-(1) Firm-clustered SE,-0.4829** (0.2362),Yes,15381,0.0221,Yes,Yes
-(2) Two-way clustered SE,-0.4829** (0.2348),Yes,15381,0.0221,Yes,Yes
-(3) Industry-clustered SE,-0.4829* (0.2639),Yes,15381,0.0221,Yes,Yes
+﻿SE specification,cluster,IMS,IMS_D,IMS_se,IMS_p,IMS_D_se,IMS_D_p,Clusters,Observations,Adjusted R2_IMS,Year fixed effects,Industry fixed effects
+(1) Firm,firm_clustered,-0.4829** (0.2362),-0.1434* (0.0794),0.2362071380332374,0.0409212446306836,0.0794130492779684,0.0709572138403592,4604,15381,0.022,Yes,Yes
+(2) Audit firm,auditor_clustered,-0.4829** (0.2428),-0.1434 (0.0958),0.2427901075669982,0.0467125116717151,0.0957627528292395,0.134275463915703,96,15381,0.022,Yes,Yes
+(3) Audit-firm–industry,auditor_industry_clustered,-0.4829** (0.2277),-0.1434* (0.0839),0.2276736016777744,0.0339258898453205,0.0839248495368587,0.0875113542834724,1205,15381,0.022,Yes,Yes
+(4) Firm + audit firm,firm_auditor_clustered,-0.4829* (0.2470),-0.1434 (0.0970),0.2470462469389871,0.0506264489773609,0.0970324411657694,0.139445684586271,4604 × 96,15381,0.022,Yes,Yes
+(5) Audit firm + industry,auditor_industry_twoway,-0.4829* (0.2770),-0.1434 (0.1011),0.2770090671404216,0.0812971438972615,0.10114423281106,0.1562551861025088,96 × 47,15381,0.022,Yes,Yes
+(6) Industry,industry_clustered,-0.4829* (0.2639),-0.1434 (0.0900),0.2638602960783273,0.0672384299897729,0.0900168393762425,0.1111517614786282,47,15381,0.022,Yes,Yes

@@ -1,0 +1,20 @@
+\begin{table}[H]
+    \centering
+    \caption{Wild Cluster Bootstrap for Few-Cluster Inference}
+    \label{tab:wild_cluster_bootstrap}
+    \resizebox{0.98\textwidth}{!}{%
+    \begin{tabular}{lccccccccc}
+        \toprule
+        Cluster & G & \(IMS\) & Sandwich \(p\) & WCR \(p\) & \(IMS\) 95\% CI & \(IMS\_D\) & Sandwich \(p\) & WCR \(p\) & \(IMS\_D\) 95\% CI \\
+        \midrule
+        Industry & 47 & -0.4829 & 0.0672 & 0.0730 & [-0.9567, -0.0078] & -0.1434 & 0.1112 & 0.1330 & [-0.3094, 0.0313] \\
+        Audit firm & 96 & -0.4829 & 0.0467 & 0.0910 & [-0.9354, -0.0132] & -0.1434 & 0.1343 & 0.1730 & [-0.3178, 0.0333] \\
+        \bottomrule
+    \end{tabular}%
+    }
+    \par\smallskip
+    \begin{minipage}{0.98\textwidth}
+        \footnotesize
+        \textit{Notes:} Restricted wild cluster bootstrap with Webb six-point weights, 999 replications, and the plus-one $p$-value. Confidence intervals are unrestricted wild-cluster percentile intervals. The regression is the baseline specification with year and industry fixed effects.
+    \end{minipage}
+\end{table}

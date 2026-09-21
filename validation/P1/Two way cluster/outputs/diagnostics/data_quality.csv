@@ -1,2 +1,2 @@
-﻿raw_rows,company_year_duplicates,firms,industries,years
-15381,0,4604,47,4
+﻿raw_rows,company_year_duplicates,firms,auditors,auditor_industry,auditor_industry_year,industries,years
+15381,0,4604,96,1205,3827,47,4

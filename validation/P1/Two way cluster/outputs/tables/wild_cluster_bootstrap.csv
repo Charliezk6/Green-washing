@@ -1,0 +1,3 @@
+﻿cluster_label,cluster,n_clusters,n_boot,IMS,IMS_sandwich_p,IMS_wcr_p,IMS_CI,IMS_D,IMS_D_sandwich_p,IMS_D_wcr_p,IMS_D_CI
+Industry,industry_clustered,47,999,-0.4829,0.0672384299898369,0.073,"[-0.9567, -0.0078]",-0.1434,0.1111517614786816,0.133,"[-0.3094, 0.0313]"
+Audit firm,auditor_clustered,96,999,-0.4829,0.046712511671769,0.091,"[-0.9354, -0.0132]",-0.1434,0.1342754639157393,0.173,"[-0.3178, 0.0333]"

@@ -1,0 +1,24 @@
+\begin{table}[H]
+    \centering
+    \caption{Baseline Estimates under Treatment-Structure Clustering}
+    \label{tab:treatment_structure_clustering}
+    \resizebox{0.98\textwidth}{!}{%
+    \begin{tabular}{lcccc}
+        \toprule
+        Clustering & \(IMS\) & \(IMS\_D\) & Clusters & N \\
+        \midrule
+        (1) Firm & -0.4829** (0.2362) & -0.1434* (0.0794) & 4604 & 15,381 \\
+        (2) Audit firm & -0.4829** (0.2428) & -0.1434 (0.0958) & 96 & 15,381 \\
+        (3) Audit-firm–industry & -0.4829** (0.2277) & -0.1434* (0.0839) & 1205 & 15,381 \\
+        (4) Firm + audit firm & -0.4829* (0.2470) & -0.1434 (0.0970) & 4604 × 96 & 15,381 \\
+        (5) Audit firm + industry & -0.4829* (0.2770) & -0.1434 (0.1011) & 96 × 47 & 15,381 \\
+        (6) Industry & -0.4829* (0.2639) & -0.1434 (0.0900) & 47 & 15,381 \\
+        \bottomrule
+    \end{tabular}%
+    }
+    \par\smallskip
+    \begin{minipage}{0.98\textwidth}
+        \footnotesize
+        \textit{Notes:} Same baseline specification with year and industry fixed effects. Only the standard-error clustering changes. Two-way rows report Cameron--Gelbach--Miller multiway clustering. Coefficient estimates are followed by standard errors in parentheses. ***, **, and * denote two-tailed significance at 1, 5, and 10 percent.
+    \end{minipage}
+\end{table}

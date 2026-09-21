@@ -1,17 +1,17 @@
 {
-  "project": "TWFE-IMS-LOO",
-  "input_panel": "../data/input/combined_regression_panel_15381.csv",
+  "project": "treatment-structure-clustering",
+  "input_panel": "validation/panel_version_audit/outputs/soe_impute/common_sample_15381_soe_imputed.csv",
   "dependent": "Greenwashing连续_基准",
   "core_variables": ["IMS", "IMS_D"],
-  "loo_variables": ["IMS_LOO", "IMS_LOO_D"],
-  "revenue_variable": "OperatingRevenue",
   "firm_id": "证券代码",
   "year": "时间",
-  "auditor": "AccountingFirmName",
+  "auditor_id": "InstitutionID",
+  "auditor_name": "AccountingFirmName",
   "industry": "ExpertiseIndustryCode",
   "controls": ["Size", "Lev", "ROA", "CFO", "Growth", "FirmAge", "SOE", "Dual", "BoardSize", "IndependentDirectorRatio", "Big4", "LnAuditFee", "AuditorTenure", "IsChangeFirm"],
-  "winsorization": {"lower": 0.01, "upper": 0.99},
   "ims_threshold": 0.20,
-  "standard_errors": "clustered_by_firm",
-  "notes": "IMS_LOO is revenue market share with the focal firm removed from both numerator and denominator. All generated artifacts belong under validation/P1/TWFE-IMS-LOO."
+  "n_boot": 999,
+  "boot_seed": 20260921,
+  "float_ims_tol": 1e-12,
+  "notes": "Cluster at the IMS assignment structure (audit firm and audit-firm-industry). Wild cluster bootstrap uses Webb weights and restricted WCR. Outputs stay under validation/P1/Two way cluster."
 }

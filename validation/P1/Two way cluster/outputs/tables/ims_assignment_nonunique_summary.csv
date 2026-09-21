@@ -1,0 +1,2 @@
+﻿n_obs,n_assignment_cells,n_nonunique_cells,n_obs_in_nonunique_cells,n_float_noise_cells,n_material_spread_cells,n_obs_in_material_cells,float_tol,max_material_spread,material_industries
+15381,3827,243,3037,238,5,15,1e-12,0.3143657393196046,G

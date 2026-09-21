@@ -1,0 +1,806 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{threeparttable}
+\usepackage{ctex}
+\usepackage[hidelinks]{hyperref}
+
+\begin{document}
+
+\section{处理结构聚类稳健性：原理、结果与注意事项}
+
+\subsection{1. 为什么需要重新考虑标准误？}
+
+本文的核心回归结果是：审计师行业专长（IMS）与企业 Greenwashing 之间存在负向关系。基准回归中，IMS 的系数为 $-0.4829$。
+
+但是，这里有一个需要特别注意的统计问题：
+
+\begin{quote}
+IMS 并不是对每一家企业完全独立测量的。对于同一审计师事务所、同一行业和同一年份的客户，IMS 来自同一个
+\textit{audit-firm $\times$ industry $\times$ year}
+组合，因此这些企业的处理变量实际上具有共同来源。
+\end{quote}
+
+例如，如果某一家审计事务所在某一行业中的行业专长水平发生变化，那么该事务所该行业的多个客户会同时受到这一变化的影响。因此，即使企业本身是不同的观测值，它们的 IMS 也可能存在共同的测量来源或共同冲击。
+
+如果仍然使用普通的 firm-clustered standard errors，就可能低估这些观测之间的相关性，从而使统计显著性看起来比实际更强。
+
+因此，本部分并不是重新估计一个新的经济关系，而是回答一个更具体的问题：
+
+\begin{quote}
+\textbf{如果允许不同企业之间存在由审计事务所、行业以及处理变量共同来源所产生的相关性，IMS 与 Greenwashing 的负向关系是否仍然存在？}
+\end{quote}
+
+需要特别强调的是：
+
+\begin{itemize}
+    \item 聚类方式不会改变回归系数；
+    \item 聚类方式只会改变 standard errors、$t$ statistics 和 $p$ values；
+    \item 因此，这部分分析检验的是\textbf{统计推断（inference）是否稳健}，而不是重新检验经济关系本身。
+\end{itemize}
+
+\subsection{2. 本文为什么需要不同层级的 clustering？}
+
+本文的样本包括：
+
+\begin{itemize}
+    \item 15,381 个 firm-year observations；
+    \item 4,604 家企业；
+    \item 96 家审计事务所；
+    \item 47 个行业；
+    \item 2021--2024 年，共 4 年。
+\end{itemize}
+
+基准模型包含 year fixed effects 和 industry fixed effects，并控制：
+
+\begin{itemize}
+    \item Size
+    \item Lev
+    \item ROA
+    \item CFO
+    \item Growth
+    \item FirmAge
+    \item SOE
+    \item Dual
+    \item BoardSize
+    \item IndependentDirectorRatio
+    \item Big4
+    \item LnAuditFee
+    \item AuditorTenure
+    \item IsChangeFirm
+\end{itemize}
+
+因此，本部分使用不同 clustering 方式，分别允许不同来源的 residual correlation。
+
+直观地说：
+
+\begin{itemize}
+    \item \textbf{Firm clustering：}允许同一家企业不同年份之间存在相关性；
+    \item \textbf{Audit-firm clustering：}允许同一家审计事务所的不同客户之间存在共同冲击；
+    \item \textbf{Audit-firm--industry clustering：}允许同一家审计事务所在同一行业中的客户共享相关冲击，这与 IMS 的构造方式尤其接近；
+    \item \textbf{Industry clustering：}允许同一行业中的企业受到共同的行业需求、监管和信息披露环境冲击；
+    \item \textbf{Two-way clustering：}同时允许两个维度上的相关性。
+\end{itemize}
+
+因此，不同 clustering specification 实际上是在问：
+
+\begin{quote}
+“如果我允许更多来源的企业之间存在共同冲击，我是否仍然得到相同的统计结论？”
+\end{quote}
+
+\subsection{3. 一个重要概念：cluster 数量决定 inference 的可靠程度}
+
+Cluster-robust standard errors 并不是简单地“把标准误调大”。
+
+其基本思想是：在同一个 cluster 内，观测值之间可以存在任意形式的相关性，而不同 clusters 之间被认为相互独立。
+
+因此，真正决定 cluster-robust inference 是否可靠的，不只是样本量 $N=15,381$，还包括独立 clusters 的数量 $G$。
+
+例如：
+
+\begin{itemize}
+    \item Firm clustering 有 4,604 个 clusters；
+    \item Audit-firm clustering 有 96 个 clusters；
+    \item Audit-firm--industry clustering 有 1,205 个 clusters；
+    \item Industry clustering 只有 47 个 clusters；
+    \item Year clustering 只有 4 个 clusters。
+\end{itemize}
+
+因此，虽然总体样本非常大，但 industry clustering 和 year clustering 存在明显的 small-cluster problem。
+
+一般而言，当 cluster 数量较少时，传统 cluster-robust sandwich estimator 的有限样本表现可能较差，并可能导致过度拒绝原假设。因此，对于只有 47 个 industry clusters 的 specification，需要进一步使用 small-cluster-robust inference。
+
+\subsection{4. Cluster size 的实际情况}
+
+为了判断上述问题的严重程度，进一步检查了各类 cluster 的大小。
+
+\begin{table}[htbp]
+\centering
+\caption{Cluster Size Diagnostics}
+\begin{tabular}{lrrrrr}
+\toprule
+Cluster & Number of Clusters & Min & Median & Max & Mean \\
+\midrule
+Firm & 4,604 & 1 & 4 & 4 & 3.3 \\
+Audit firm & 96 & 1 & 7.5 & 2,147 & 160.2 \\
+Audit firm--industry & 1,205 & 1 & 5 & 278 & 12.8 \\
+Audit firm--industry--year & 3,827 & 1 & 2 & 85 & 4.0 \\
+Industry & 47 & 7 & 239 & 1,846 & 327.3 \\
+Year & 4 & 3,318 & 3,936 & 4,192 & 3,845.3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+这里有两个值得注意的现象。
+
+第一，audit-firm clustering 虽然有 96 个 clusters，但 cluster size 非常不均衡。最大的审计事务所包含 2,147 个 firm-year observations，而最小的 cluster 只有 1 个 observation。因此，不能只根据“96 $>$ 50”就认为普通 cluster-robust inference 一定没有问题。
+
+第二，industry clustering 只有 47 个 clusters。47 并不是一个可以完全忽略 small-cluster concern 的数量，因此本文进一步使用 wild cluster bootstrap 进行检验。
+
+\subsection{5. One-way clustering 的主要结果}
+
+所有 clustering specifications 使用完全相同的样本、相同的回归方程和相同的固定效应，因此系数完全相同。变化的只有 standard errors 和相应的 statistical inference。
+
+\begin{table}[htbp]
+\centering
+\caption{Robustness to Alternative Clustering Specifications}
+\begin{tabular}{lcc}
+\toprule
+Clustering & IMS & IMS\_D \\
+\midrule
+Firm & $-0.4829^{**}$ (0.2362) & $-0.1434^{*}$ (0.0794) \\
+Audit firm & $-0.4829^{**}$ (0.2428) & $-0.1434$ (0.0958) \\
+Audit firm--industry & $-0.4829^{**}$ (0.2277) & $-0.1434^{*}$ (0.0839) \\
+Firm + audit firm & $-0.4829^{*}$ (0.2470) & $-0.1434$ (0.0970) \\
+Audit firm + industry & $-0.4829^{*}$ (0.2770) & $-0.1434$ (0.1011) \\
+Industry & $-0.4829^{*}$ (0.2639) & $-0.1434$ (0.0900) \\
+\bottomrule
+\end{tabular}
+
+\vspace{2mm}
+
+\begin{flushleft}
+\footnotesize
+Notes: Standard errors are reported in parentheses. $^{***}$, $^{**}$, and $^{*}$ denote statistical significance at the 1\%, 5\%, and 10\% levels, respectively. All tests are two-sided.
+\end{flushleft}
+\end{table}
+
+这张表最重要的信息不是“哪个 clustering 最显著”，而是以下三个事实。
+
+\paragraph{第一，IMS 的点估计完全稳定。}
+
+无论如何 clustering，IMS 的 coefficient 始终为：
+
+\[
+\boxed{-0.4829}
+\]
+
+这说明 clustering choice 并没有改变 IMS 与 Greenwashing 之间的估计关系。
+
+\paragraph{第二，IMS 始终保持负向。}
+
+在所有 six specifications 中，IMS 的系数均为 $-0.4829$。Standard error 从 0.2277 到 0.2770 之间变化，但没有改变系数的方向。
+
+因此，从 coefficient stability 的角度看，结果非常稳定。
+
+\paragraph{第三，统计显著性比点估计更加敏感。}
+
+在 firm、audit-firm 和 audit-firm--industry clustering 下，IMS 在 5\% 水平显著。
+
+在 firm + audit-firm、audit-firm + industry 和 industry clustering 下，IMS 在 10\% 水平显著。
+
+因此，不应表述为：
+
+\begin{quote}
+“IMS 在所有 clustering specifications 下都保持 5\% 显著。”
+\end{quote}
+
+更准确的表述是：
+
+\begin{quote}
+\textbf{The negative coefficient is stable across alternative clustering specifications, while the statistical significance becomes weaker under more conservative correlation structures.}
+\end{quote}
+
+这一区别非常重要，因为 clustering 的目的正是允许更多的 within-cluster correlation，从而避免把共同冲击错误地当成独立信息。
+
+\subsection{6. 为什么 audit-firm--industry clustering 特别重要？}
+
+Advisor 特别提出应当考虑 audit-firm 或 audit-firm--industry level clustering。
+
+其中，audit-firm--industry clustering 与本文 IMS 的处理变量结构尤其接近。
+
+IMS 是按照：
+
+\[
+\text{Audit Firm} \times \text{Industry} \times \text{Year}
+\]
+
+构造的。
+
+因此，同一家审计事务所服务于同一行业的多个客户，其 IMS 可能来自相同的 underlying industry expertise measure。
+
+本文在 audit-firm--industry level clustering 下得到：
+
+\[
+\beta_{IMS}=-0.4829,\qquad
+SE=0.2277
+\]
+
+即在传统 cluster-robust inference 下，IMS 仍然在 5\% 水平显著。
+
+需要注意的是，本文没有将 clustering 直接设为 audit-firm--industry--year。
+
+原因在于，如果按照每一个 audit-firm--industry--year cell 单独 clustering，会把同一 audit-firm--industry 在不同年份之间可能存在的 serial correlation 切断，而且会产生大量非常小的 clusters。
+
+因此，audit-firm--industry clustering 更适合本文的结构：它允许同一 audit-firm--industry combination 内存在任意相关性，同时允许这种相关性跨年份持续存在。
+
+本文共有：
+
+\[
+1,205
+\]
+
+个 audit-firm--industry clusters，因此相比 industry clustering 的 47 个 clusters，其 asymptotic inference 更可靠。
+
+\subsection{7. Two-way clustering：进一步允许多个共同冲击}
+
+除了 one-way clustering，本文进一步考虑 crossed dimensions 下的 two-way clustering。
+
+对于两个 clustering dimensions，multiway cluster-robust variance estimator 的基本形式为：
+
+\[
+V_{A,B}=V_A+V_B-V_{A\cap B}.
+\]
+
+其直观含义是：同时允许两个维度上的 residual correlation，并扣除重复计算的交叉部分。
+
+本文考虑了：
+
+\begin{itemize}
+    \item Firm + audit firm；
+    \item Audit firm + industry。
+\end{itemize}
+
+结果如下：
+
+\begin{itemize}
+    \item Firm + audit firm：IMS coefficient = $-0.4829$，SE = 0.2470；
+    \item Audit firm + industry：IMS coefficient = $-0.4829$，SE = 0.2770。
+\end{itemize}
+
+在 audit-firm + industry clustering 下，standard error 达到 0.2770，是正式报告的 clustering specifications 中最大的 IMS standard error。
+
+即使在这一更加保守的 inference specification 下：
+
+\[
+\beta_{IMS}=-0.4829
+\]
+
+仍然保持不变，并在 10\% 水平显著。
+
+因此，two-way clustering 并没有改变主要经济关系，但确实表明统计显著性对更严格的 residual correlation assumptions 较为敏感。
+
+\subsection{8. Small-cluster problem：为什么需要 Wild Cluster Bootstrap？}
+
+Industry clustering 只有：
+
+\[
+G=47
+\]
+
+个 clusters；audit-firm clustering 有：
+
+\[
+G=96
+\]
+
+个 clusters。
+
+特别是 audit-firm clusters 的规模高度不均衡，因此本文进一步使用 wild cluster bootstrap（WCR）作为 small-cluster robustness check。
+
+Wild cluster bootstrap 的优势在于，它不完全依赖传统 cluster-robust asymptotic approximation，而是通过在 cluster level 重新赋予随机权重来构造有限样本下更可靠的 reference distribution。
+
+本文的 WCR 设置为：
+
+\begin{itemize}
+    \item Restricted wild cluster bootstrap；
+    \item Null hypothesis：$H_0:\beta_{IMS}=0$ 或 $H_0:\beta_{IMS\_D}=0$；
+    \item Webb six-point weights：
+    \[
+    \left\{
+    \pm\sqrt{1.5},
+    \pm1,
+    \pm\sqrt{0.5}
+    \right\};
+    \]
+    \item 999 bootstrap replications；
+    \item two-sided test；
+    \item plus-one adjusted p-value：
+    \[
+    p=
+    \frac{1+\#\left(|t^*|\geq |t|\right)}
+    {1000};
+    \]
+    \item random seed = 20260921。
+\end{itemize}
+
+此外，本文使用 unrestricted wild-cluster bootstrap percentile interval 构造 95\% confidence interval。
+
+\subsection{9. Wild Cluster Bootstrap 结果}
+
+\begin{table}[htbp]
+\centering
+\caption{Wild Cluster Bootstrap Inference}
+\begin{tabular}{lcccccc}
+\toprule
+Cluster & $G$ & IMS & Sandwich $p$ & WCR $p$ & IMS 95\% CI & IMS\_D WCR $p$ \\
+\midrule
+Industry & 47 
+& $-0.4829$
+& 0.0672
+& 0.0730
+& $[-0.9567,-0.0078]$
+& 0.1330 \\
+Audit firm & 96
+& $-0.4829$
+& 0.0467
+& 0.0910
+& $[-0.9354,-0.0132]$
+& 0.1730 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+为了完整展示 binary specification 的结果，IMS\_D 的 corresponding 95\% confidence intervals 为：
+
+\begin{itemize}
+    \item Industry clustering：
+    \[
+    [-0.3094,\;0.0313];
+    \]
+    \item Audit-firm clustering：
+    \[
+    [-0.3178,\;0.0333].
+    \]
+\end{itemize}
+
+\subsection{10. 如何理解 WCR 结果？}
+
+\paragraph{Industry clustering.}
+
+传统 sandwich inference 给出的 IMS $p$ value 为：
+
+\[
+p=0.0672.
+\]
+
+Wild cluster bootstrap 后：
+
+\[
+p=0.0730.
+\]
+
+两者非常接近。
+
+而且 WCR 95\% confidence interval 为：
+
+\[
+[-0.9567,-0.0078],
+\]
+
+仍然不包含 0。
+
+因此，考虑到只有 47 个 industry clusters 后，IMS 的负向关系仍然得到大约 10\% 水平的统计支持。
+
+\paragraph{Audit-firm clustering.}
+
+传统 sandwich inference 给出的：
+
+\[
+p=0.0467,
+\]
+
+看起来刚好达到 5\% 显著性。
+
+但是 wild cluster bootstrap 后：
+
+\[
+p=0.0910.
+\]
+
+这意味着，如果采用更加保守的 small-cluster inference，原本刚好低于 5\% 的结果不再达到 5\% 水平，而是落在约 10\% 的范围。
+
+不过，其 WCR 95\% confidence interval：
+
+\[
+[-0.9354,-0.0132]
+\]
+
+仍然排除了 0。
+
+因此，audit-firm clustering 下更准确的表述并不是“结果在 5\% 水平上稳健”，而是：
+
+\begin{quote}
+The negative association remains statistically supported under small-cluster-robust inference, although the evidence is closer to the 10\% level than the conventional 5\% level.
+\end{quote}
+
+\subsection{11. Binary IMS\_D 为什么更加敏感？}
+
+本文同时使用：
+
+\[
+IMS\_D=1\{IMS\geq0.20\}
+\]
+
+作为 binary measure。
+
+其 coefficient 始终为：
+
+\[
+\beta_{IMS\_D}=-0.1434.
+\]
+
+但是，与连续 IMS 相比，IMS\_D 的 inference 明显更加敏感。
+
+在 one-way clustering 下：
+
+\begin{itemize}
+    \item Firm clustering：$p=0.071$ 左右，对应 10\% 显著；
+    \item Audit-firm clustering：不显著；
+    \item Audit-firm--industry clustering：10\% 显著；
+    \item Two-way clustering：不显著；
+    \item Industry clustering：不显著。
+\end{itemize}
+
+在 wild cluster bootstrap 下：
+
+\begin{itemize}
+    \item Industry clustering：$p=0.1330$；
+    \item Audit-firm clustering：$p=0.1730$。
+\end{itemize}
+
+相应的 95\% confidence intervals 均包含 0。
+
+这意味着 binary measure 的统计证据明显弱于 continuous IMS。
+
+一个可能的原因是，IMS\_D 将连续的 industry expertise information 压缩成一个 0/1 indicator，而且达到 20\% threshold 的 treatment group 约占样本的 5.7\%。
+
+因此，binary specification 的有效 variation 更少，也更容易受到 clustering choice 和 finite-sample inference 的影响。
+
+基于这一结果，本文更适合将 continuous IMS 作为主要 treatment measure，而将 IMS\_D 作为 alternative measurement / robustness specification，而不是把二元指标作为主要证据。
+
+\subsection{12. 这些结果最终告诉我们什么？}
+
+将所有 clustering specifications 放在一起，可以得到三个比较清晰的结论。
+
+\paragraph{第一，经济关系本身非常稳定。}
+
+无论使用何种 clustering：
+
+\[
+\boxed{\beta_{IMS}=-0.4829}
+\]
+
+始终完全不变。
+
+因此，结果并不是由某一种 standard error specification 产生的。
+
+\paragraph{第二，IMS 的负向关系对更严格的 inference assumptions 具有一定稳健性。}
+
+即使允许：
+
+\begin{itemize}
+    \item 同一企业内部的 serial correlation；
+    \item 同一审计事务所客户之间的共同冲击；
+    \item 同一行业企业之间的共同冲击；
+    \item audit-firm 和 industry 两个维度的 crossed correlation；
+\end{itemize}
+
+IMS 的 coefficient 仍然保持 $-0.4829$。
+
+在 small-cluster wild bootstrap 下：
+
+\[
+p_{Industry}=0.0730,
+\]
+
+\[
+p_{AuditFirm}=0.0910.
+\]
+
+因此，更谨慎的结论是：
+
+\begin{quote}
+\textbf{The negative association between auditor industry expertise and corporate greenwashing is stable in direction and magnitude, while its statistical significance is closer to the 10\% level under conservative inference.}
+\end{quote}
+
+\paragraph{第三，不能把结果表述为“所有 clustering 下均达到 5\% 显著”。}
+
+这是本次 robustness analysis 最重要的表述调整。
+
+更准确的证据层级是：
+
+\begin{enumerate}
+    \item coefficient direction：非常稳定；
+    \item coefficient magnitude：非常稳定；
+    \item conventional cluster-robust inference：多数 specification 支持 5\%--10\% 水平；
+    \item small-cluster WCR inference：支持程度约为 10\% 水平；
+    \item binary IMS\_D：证据明显更加脆弱。
+\end{enumerate}
+
+因此，本文不需要通过选择最有利的 clustering specification 来“追求显著”，而是应该透明地报告不同 inference assumptions 下结果如何变化。
+
+\subsection{13. 一个重要的数据检查：IMS 是否在 treatment cell 内完全唯一？}
+
+理论上，IMS 是按照：
+
+\[
+AuditFirm \times Industry \times Year
+\]
+
+计算的，因此同一个 treatment cell 中的企业应该共享相同的 IMS。
+
+本文进一步检查了这一点。
+
+在：
+
+\[
+3,827
+\]
+
+个 audit-firm--industry--year cells 中，有：
+
+\[
+243
+\]
+
+个 cells 在：
+
+\[
+3,037
+\]
+
+个 observations 中出现 IMS 非完全唯一的情况。
+
+进一步检查发现：
+
+\begin{itemize}
+    \item 其中 238 个 cells 的差异仅约为 $10^{-12}$ 量级；
+    \item 这些差异主要属于 floating-point numerical noise；
+    \item 真正存在 substantive IMS differences 的只有 5 个 cells，共涉及 15 个 observations；
+    \item 这 15 个 observations 约占整个样本的 0.1\%；
+    \item 这些 substantive discrepancies 均出现在 industry clusters 中。
+\end{itemize}
+
+因此，不能严格声称 IMS 在每一个 audit-firm--industry--year cell 中都完全唯一。
+
+但由于真正存在 substantive discrepancy 的 observation 仅有 15 个，占比约 0.1\%，它们不太可能解释整个样本中的主要 coefficient：
+
+\[
+\beta_{IMS}=-0.4829.
+\]
+
+不过，因为这些 observation 均属于 industry clustering 所涉及的 clusters，因此在正式论文中不应忽略这一点，而应将其作为 measurement/data construction limitation 进行说明。
+
+\subsection{14. Industry fixed effects 和 Industry clustering 是两件不同的事情}
+
+需要特别区分：
+
+\begin{quote}
+\textbf{Industry fixed effects $\neq$ Industry clustering.}
+\end{quote}
+
+Industry fixed effects 的作用是控制不同行业之间的平均水平差异。
+
+例如，不同行业本身可能具有不同的 Greenwashing baseline。
+
+Industry clustering 则解决另一个问题：
+
+\begin{quote}
+即使控制了 industry fixed effects，同一个行业中的企业是否仍然可能因为共同的年度冲击而产生 correlated residuals？
+\end{quote}
+
+例如，同一行业可能同时受到：
+
+\begin{itemize}
+    \item 环境监管变化；
+    \item 行业需求变化；
+    \item 行业竞争；
+    \item ESG disclosure regulation；
+    \item 行业层面的信息披露趋势
+\end{itemize}
+
+等因素影响。
+
+因此，industry fixed effects 和 industry clustering 可以同时存在，并且解决的是两个不同的问题。
+
+\subsection{15. 为什么不正式使用 Year clustering？}
+
+Year clustering 的 cluster 数量只有：
+
+\[
+G=4.
+\]
+
+这远低于通常认为适合 conventional cluster-robust inference 的数量。
+
+因此，虽然程序中可以计算 industry + year two-way clustering，但由于 year dimension 只有 4 个 clusters，这一结果不适合作为正式 inference。
+
+作为 diagnostic，其结果为：
+
+\[
+SE(IMS)=0.2348,\qquad p=0.0397,
+\]
+
+而：
+
+\[
+SE(IMS\_D)=0.0986,\qquad p=0.1459.
+\]
+
+这些结果可以作为附加信息保留，但不应作为本文主要的 statistical inference。
+
+\subsection{16. Nested clustering 与 crossed clustering 的区别}
+
+本文还需要注意 clustering dimensions 是否 nested。
+
+Audit-firm--industry cluster 是 audit-firm cluster 的子集，即：
+
+\[
+AuditFirm \times Industry \subset AuditFirm.
+\]
+
+因此，audit-firm--industry clustering 和 audit-firm clustering 并不是两个完全独立的 dimensions。
+
+这意味着不能机械地认为：
+
+\[
+AuditFirm + AuditFirm\text{-}Industry
+\]
+
+就是一个合理的 two-way clustering。
+
+相反，真正具有不同来源的 crossed dimensions 是：
+
+\[
+Firm + AuditFirm
+\]
+
+以及：
+
+\[
+AuditFirm + Industry.
+\]
+
+因此，本文将后两者作为 two-way clustering 的正式 specifications，而将 audit-firm--industry clustering 作为与 treatment assignment structure 最接近的 one-way clustering specification。
+
+\subsection{17. 最终结论}
+
+综合 conventional cluster-robust standard errors、two-way clustering 和 wild cluster bootstrap，可以将本次 robustness analysis 总结如下：
+
+\begin{enumerate}
+    \item IMS 的 estimated coefficient 在所有 clustering specifications 下均为：
+    \[
+    -0.4829.
+    \]
+
+    \item 因此，clustering choice 不改变 IMS 与 Greenwashing 之间的估计方向和经济量级。
+
+    \item Audit-firm--industry clustering 是与 IMS treatment assignment structure 最接近的 specification。在该 clustering 下：
+    \[
+    SE=0.2277,
+    \]
+    IMS 在 5\% 水平显著。
+
+    \item 在更加保守的 two-way clustering 下，IMS 仍保持负向，并在 10\% 水平具有统计支持：
+    \[
+    SE_{Firm+AuditFirm}=0.2470,
+    \]
+    \[
+    SE_{AuditFirm+Industry}=0.2770.
+    \]
+
+    \item Industry clustering 只有 47 个 clusters，因此进一步使用 WCR。WCR 得到：
+    \[
+    p=0.0730.
+    \]
+
+    \item Audit-firm clustering 有 96 个 clusters，但 cluster sizes 极不均衡，因此同样进行 WCR。WCR 得到：
+    \[
+    p=0.0910.
+    \]
+
+    \item 因此，在最保守的 inference 下，IMS 的负向关系更适合描述为\textbf{approximately 10\% statistical evidence}，而不是声称在所有情况下均达到 5\%。
+
+    \item Binary IMS\_D 的结果明显更加敏感。其 WCR $p$ values 为 0.1330（industry）和 0.1730（audit firm），95\% confidence intervals 均包含 0。因此，IMS\_D 更适合作为 robustness measure，而不是主要 inference。
+\end{enumerate}
+
+最终，本文的结论并不是：
+
+\begin{quote}
+“IMS 在任何 clustering specification 下都显著。”
+\end{quote}
+
+而是：
+
+\begin{quote}
+\textbf{The estimated negative association between auditor industry expertise and corporate greenwashing is highly stable in sign and magnitude across alternative clustering structures. However, statistical significance becomes weaker when more conservative correlation structures and small-cluster-robust inference are imposed. Under these conservative specifications, the evidence is approximately at the 10\% level.}
+\end{quote}
+
+这一表述更加符合实际结果，也能够直接回应“inference may not reflect the treatment structure”的 concern。
+
+\subsection{18. 研究限制与解释边界}
+
+最后，需要明确本部分 analysis 的作用边界。
+
+\begin{enumerate}
+    \item \textbf{Clustering does not solve endogeneity.}
+
+    Clustering 只解决 residual dependence 和 inference 问题，不能解决 auditor self-selection、reverse causality 或 omitted variables。
+
+    因此，本部分不能被解释为 causal identification strategy。
+
+    \item \textbf{Clustering does not change the coefficient.}
+
+    所有 clustering specifications 都得到相同的 $-0.4829$，因为它们使用相同的 regression model 和 sample。
+
+    \item \textbf{Small-cluster inference remains important.}
+
+    Industry 只有 47 个 clusters，audit firm 有 96 个但高度不均衡，因此 WCR 是必要的 supplementary inference check。
+
+    \item \textbf{Year clustering is not reliable with only four clusters.}
+
+    因此 industry + year two-way clustering 只作为 diagnostic，不作为正式 inference。
+
+    \item \textbf{Treatment-cell uniqueness is not mathematically perfect.}
+
+    绝大多数非唯一情况只是 floating-point noise，但仍存在 5 个 substantive cells、15 个 observations 的差异，因此不应声称 treatment assignment 完全 deterministic at the cell level。
+
+    \item \textbf{Binary treatment measure is less informative.}
+
+    IMS\_D 将连续的 expertise measure 压缩成 binary treatment，并且 treatment group 约占 5.7\%，因此其 inference 对 clustering specification 更敏感。
+\end{enumerate}
+
+\subsection{Appendix A. Additional Diagnostic: Industry + Year Clustering}
+
+虽然 year clustering 不适合作为正式 inference，但作为 diagnostic，industry + year two-way clustering 的结果为：
+
+\[
+\beta_{IMS}=-0.4829,\qquad SE=0.2348,\qquad p=0.0397.
+\]
+
+对于 IMS\_D：
+
+\[
+\beta_{IMS\_D}=-0.1434,\qquad SE=0.0986,\qquad p=0.1459.
+\]
+
+由于 year dimension 只有四个 clusters，因此上述结果不作为本文正式 inference 的依据。
+
+\subsection{Appendix B. Summary of Inference Specifications}
+
+\begin{table}[htbp]
+\centering
+\caption{Summary of Inference Specifications for IMS}
+\begin{tabular}{lccc}
+\toprule
+Specification & Clusters & SE & $p$-value \\
+\midrule
+Firm & 4,604 & 0.2362 & $<0.05$ \\
+Audit firm & 96 & 0.2428 & $<0.05$ \\
+Audit firm--industry & 1,205 & 0.2277 & $<0.05$ \\
+Firm + audit firm & -- & 0.2470 & $<0.10$ \\
+Audit firm + industry & -- & 0.2770 & $<0.10$ \\
+Industry & 47 & 0.2639 & $<0.10$ \\
+Industry WCR & 47 & -- & 0.0730 \\
+Audit-firm WCR & 96 & -- & 0.0910 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\end{document}

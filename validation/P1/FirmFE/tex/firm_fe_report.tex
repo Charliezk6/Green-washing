@@ -1,0 +1,741 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{threeparttable}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{ctex}
+\usepackage[hidelinks]{hyperref}
+\emergencystretch=3em
+
+\title{企业固定效应与签字合伙人专长：方法、变量与结果}
+\author{}
+\date{2026-09-22}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{工作定位}
+
+正文主回归用行业固定效应和年份固定效应，比较的是同一行业、同一年里，聘请行业专长较强的事务所的公司，漂绿是否更低。这个比较留下一个选择问题：有些公司本身更规范、漂绿更低，同时也更可能聘请专长事务所。若如此，主回归里的负向关联有一部分来自公司与公司之间的差异。
+
+本目录把识别收紧到公司内部。样本、因变量、专长度量、控制变量、缩尾和聚类与基准回归相同，只把行业固定效应换成企业固定效应，看同一家公司在不同年份之间，专长变化是否还对应漂绿变化。随后用方差分解、切换统计、功效、Mundlak 分解和测量误差修正说明：事务所份额的企业固定效应不显著，来自组内信息少和功效不足。按 Goodwin and Wu（2014）把专长下沉到签字合伙人之后，事先写定的行业--年度第 90 百分位指标在企业固定效应下显著；连续合伙人份额和行业领导者指标没有给出同样稳的组内证据。
+
+全目录按下面的顺序做完，后一步使用前一步已经固定的样本和变量，不事后改 20\% 切点，也不只保留切换公司来追显著性。
+
+\begin{enumerate}
+\item 企业固定效应主回归：行业固定效应替换为企业固定效应。
+\item 组内变异、二元专长切换，以及 demean 与 \texttt{PanelOLS} 的交叉验证。
+\item 功效、与基准系数的相等性检验，以及事先规定的三个规格扩展。
+\item Mundlak 分解：把专长拆成公司内离差和公司均值。
+\item 测量误差：审计收费份额、资产平方根份额的信度比、古典修正和组内工具变量。
+\item 签字合伙人专长：构造、企业固定效应、事务所聚类和 wild cluster bootstrap。
+\item 换签字人的差分与事件研究。
+\end{enumerate}
+
+\section{样本、数据与估计约定}
+\label{sec:sample}
+
+\subsection{分析样本}
+
+事务所层面的企业固定效应与基准回归共用同一样本：因变量、\(IMS\)、\(IMS\_D\)、行业代码及全部基准控制非缺失，共 15,381 个公司--年度观测，4,604 家公司，年份 2021--2024，47 个行业。每家公司平均 3.34 年、中位数 4 年；只有 1 年观测的公司 369 家。脚本要求行数恰好为 15,381。
+
+连续基准控制在该共同样本上按 1\% 与 99\% 分位数缩尾。\(IMS\)、\(IMS\_D\) 与因变量不缩尾。标准误默认按证券代码聚类。
+
+合伙人回归在同一共同样本上左连合伙人指标。合伙人指标缺失的观测被丢掉，进入回归的是 15,380 条、仍为 4,604 家公司。测量误差修正要求收费份额和资产份额同时非缺失，样本为 15,279 条、4,580 家公司。leave-one-out 事务所份额要求本公司营收可以从分子和分母中减去且分母仍为正，样本为 15,277 条、4,580 家公司。
+
+\subsection{企业固定效应怎么实现}
+
+记 \(Y_{i,t}\) 为漂绿，\(S_{i,t}\) 为专长，\(X_{i,t}\) 为控制，\(\alpha_i\) 为企业固定效应，\(\lambda_t\) 为年份固定效应。估计的方程是
+\begin{equation}
+Y_{i,t}=\alpha_i+\lambda_t+\beta S_{i,t}+\delta'X_{i,t}+\varepsilon_{i,t}.
+\label{eq:firmfe}
+\end{equation}
+实现上先对 \(Y\)、\(S\) 和 \(X\) 做公司内去均值，再加入年份虚拟变量，用公司聚类 OLS。行业固定效应在这一规格里被替换掉，不与企业固定效应叠在同一条方程上。
+
+\texttt{linearmodels.PanelOLS} 用企业效应加时间效应重估同一条方程，并丢掉只有一年观测的公司，故样本变为 15,012 条、4,235 家公司。它把被吸收的企业哑变量计入自由度，标准误比去均值后的 statsmodels 标准误更宽。两个程序的系数用来核对实现；推断以各自报告的标准误为准。
+
+\subsection{控制进入的层次}
+
+与基准回归相同，核心变量交替取 \(IMS\) 与 \(IMS\_D\)，控制分四层累加：
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+规格 & 控制 \\
+\midrule
+(1) 一元回归 & 无 \\
+(2) 财务控制 & \(Size\), \(Lev\), \(ROA\), \(CFO\), \(Growth\), \(FirmAge\) \\
+(3) 财务与治理 & (2) 加 \(SOE\), \(Dual\), \(BoardSize\), \(IndependentDirectorRatio\) \\
+(4) 全部控制 & (3) 加 \(Big4\), \(LnAuditFee\), \(AuditorTenure\), \(IsChangeFirm\) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+下文若未另加说明，系数都来自第 (4) 层。
+
+\section{变量定义}
+
+\subsection{因变量}
+
+\texttt{Greenwashing连续\_基准}。沟通侧为绿色信息含量的行业--年 \(z\) 分数，绩效侧为华证环境评分的行业--年 \(z\) 分数。行业分类与专长所用 \texttt{ExpertiseIndustryCode} 相同。\(z\) 分数使用对应行业--年均值与样本标准差（\(ddof=1\)）：
+\[
+Greenwashing_{i,t}=GI\_z_{i,t}-ESGE\_z_{i,t}.
+\]
+
+\subsection{事务所行业专长}
+
+事务所以 CSMAR \texttt{InstitutionID} 识别。专长在全 A 股审计市场上按客户营业收入计算。制造业保留证监会行业代码中以 C 开头的次类，非制造业取门类首字母；综合类 O 不进入专长分母。
+\begin{equation}
+IMS_{a,j,t}=\frac{\sum_{i\in(a,j,t)}Revenue_{i,t}}{\sum_{i\in(j,t)}Revenue_{i,t}}.
+\label{eq:ims}
+\end{equation}
+\texttt{IMS\_D}\(=1\{IMS\ge 0.20\}\)，否则为 0。阈值沿用面板上已经写定的 20\% 强专长切点。
+
+leave-one-out 份额 \(IMS\_LOO\) 从式~\eqref{eq:ims} 的分子和分母中都减去本公司当年营业收入，避免客户自己的规模同时进入两边。\(IMS\_LOO\_D=1\{IMS\_LOO\ge 0.20\}\)。
+
+\subsection{基准控制}
+
+\begin{center}
+\begin{threeparttable}
+\caption{基准控制变量}
+\begin{tabular}{llp{9.2cm}}
+\toprule
+组别 & 变量 & 定义 \\
+\midrule
+财务 & \(Size\) & \(\ln(\text{TotalAssets})\)，总资产须为正 \\
+ & \(Lev\) & 总负债 / 总资产 \\
+ & \(ROA\) & 净利润 / 总资产 \\
+ & \(CFO\) & 经营净现金流 / 总资产 \\
+ & \(Growth\) & 全市场营业收入的相邻年同比；上年收入非正或年份不连续则缺失 \\
+ & \(FirmAge\) & 上市年限，负值作缺失 \\
+治理 & \(SOE\) & 同年任一实际控制人属于国有类别则为 1 \\
+ & \(Dual\) & 两职合一 \\
+ & \(BoardSize\) & \(\ln(\text{董事人数})\)，人数须为正 \\
+ & \(IndependentDirectorRatio\) & 独立董事比例 \\
+审计 & \(Big4\) & 国际四大 \\
+ & \(LnAuditFee\) & \(\ln(\text{TotalAuditFee})\)，费用须为正 \\
+ & \(AuditorTenure\) & 审计任期 \\
+ & \(IsChangeFirm\) & 相对上年更换事务所为 1，否则为 0 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 缩尾变量：\(Size\), \(Lev\), \(ROA\), \(CFO\), \(Growth\), \(FirmAge\), \(BoardSize\), \(IndependentDirectorRatio\), \(LnAuditFee\), \(AuditorTenure\)。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\subsection{另外两个事务所份额}
+
+测量误差一节用两个度量同一构念的份额，分母仍是行业--年，分子改为该事务所在该行业--年的对应规模合计。
+
+\begin{center}
+\begin{threeparttable}
+\caption{替代专长度量}
+\begin{tabular}{lp{10.5cm}}
+\toprule
+变量 & 定义 \\
+\midrule
+\texttt{IMS\_fee} & 客户审计收费合计 / 该行业--年审计收费合计。收费取自审计意见文件，同一公司--年保留收费最高的一条。 \\
+\texttt{IMS\_asset} & 客户总资产平方根合计 / 该行业--年资产平方根合计。总资产须为正。 \\
+\bottomrule
+\end{tabular}
+\end{threeparttable}
+\end{center}
+
+\subsection{签字合伙人专长}
+
+签字人姓名取自审计意见文件的 \texttt{Auditor} 字段，按逗号、顿号拆开。没有合伙人身份证号，同名不同人会并在一起。市场范围为 2021--2024、营业收入为正、行业不是 O 的公司--年。构造文件覆盖 20,288 个公司--年、8,553 个姓名、39,441 个合伙人--行业--年；平均每条公司--年 2.09 个签字人。
+
+合伙人 \(p\) 在行业 \(j\)、年份 \(t\) 的份额为
+\begin{equation}
+PIMS_{p,j,t}=\frac{\sum_{i\in(p,j,t)}Revenue_{i,t}}{\sum_{i\in(j,t)}Revenue_{i,t}}.
+\label{eq:pims}
+\end{equation}
+同一客户的营业收入会计入每一位签字合伙人，所以一个行业--年里各合伙人份额之和可以大于 1。这不是把市场切成互斥的块。
+
+合伙人--行业--年度份额的中位数为 0.16\%，第 90 百分位约 2.0\%，均值 1.0\%。20\% 的事务所切点因此不用于合伙人。两个二元规则在看回归之前写进配置：
+
+\begin{center}
+\begin{threeparttable}
+\caption{合伙人指标：先在合伙人--行业--年上定义，再汇总到公司--年}
+\label{tab:pims-def}
+\begin{tabular}{lp{10.2cm}}
+\toprule
+变量 & 定义 \\
+\midrule
+\texttt{PIMS\_max} & 该公司当年全体签字合伙人份额的最大值。主连续口径。 \\
+\texttt{PIMS\_mean} & 签字合伙人份额的简单平均。 \\
+\texttt{PIMS\_LOO\_max} & 从式~\eqref{eq:pims} 的分子和分母减去本公司营收后的份额，再取签字人中的最大值。 \\
+\texttt{PIMS\_LOO\_mean} & 同一 leave-one-out 份额的签字人平均。 \\
+\texttt{PIMS\_D\_leader} & 该行业--年度份额最高的合伙人；并列最高都算领导者。公司当年任一签字人是领导者则取 1。这样的公司--年占构造样本的 1.1\%。 \\
+\texttt{PIMS\_D\_p90} & 合伙人份额不低于该行业--年度合伙人份额的第 90 百分位。公司当年任一签字人达到该切点则取 1。这样的公司--年占 13.2\%。 \\
+\bottomrule
+\end{tabular}
+\end{threeparttable}
+\end{center}
+
+公司--年 \texttt{PIMS\_max} 的中位数为 0.19\%，第 90 百分位为 2.2\%。
+去掉本公司营收后，\texttt{PIMS\_LOO\_max} 的中位数为 0：很多合伙人在该行业的营业收入主要就是眼前这家客户。
+
+\section{企业固定效应主回归}
+\label{sec:main}
+
+\subsection{方法与作用}
+
+这一步回答的问题是：去掉公司不随时间改变的特征之后，事务所专长与漂绿的斜率还剩多少。\(\beta\) 的识别只来自同一公司内部 \(S_{i,t}\) 的变动。若负向关联主要是``少漂绿的公司选专长事务所''，\(\beta\) 会向零收缩。若关联主要是专长随时间变化之后漂绿也变化，\(\beta\) 应留在零的左侧并保持显著。
+
+变量是 \(Y=\) \texttt{Greenwashing连续\_基准}，\(S\in\{IMS,IMS\_D\}\)，控制为上一节的四层。固定效应为企业与年份。标准误为公司聚类。
+
+\subsection{结果}
+
+\begin{center}
+\begin{threeparttable}
+\caption{行业固定效应与企业固定效应}
+\label{tab:main}
+\begin{tabular}{llcccc}
+\toprule
+变量 & 规格 & 基准系数 & 基准 \(p\) & 企业 FE 系数 & 企业 FE \(p\) \\
+\midrule
+\(IMS\) & (1) 一元 & \(-1.049^{***}\) & \(<0.001\) & \(-0.261\) & 0.261 \\
+ & & (0.233) & & (0.232) & \\
+\(IMS\) & (2) 财务 & \(-0.540^{**}\) & 0.022 & \(-0.221\) & 0.339 \\
+ & & (0.235) & & (0.231) & \\
+\(IMS\) & (3) 财务与治理 & \(-0.543^{**}\) & 0.021 & \(-0.227\) & 0.325 \\
+ & & (0.235) & & (0.231) & \\
+\(IMS\) & (4) 全部控制 & \(-0.483^{**}\) & 0.041 & \(-0.241\) & 0.294 \\
+ & & (0.236) & & (0.230) & \\
+\midrule
+\(IMS\_D\) & (1) 一元 & \(-0.294^{***}\) & \(<0.001\) & \(-0.096\) & 0.140 \\
+ & & (0.082) & & (0.065) & \\
+\(IMS\_D\) & (2) 财务 & \(-0.171^{**}\) & 0.031 & \(-0.093\) & 0.151 \\
+ & & (0.080) & & (0.065) & \\
+\(IMS\_D\) & (3) 财务与治理 & \(-0.171^{**}\) & 0.031 & \(-0.094\) & 0.148 \\
+ & & (0.080) & & (0.065) & \\
+\(IMS\_D\) & (4) 全部控制 & \(-0.143^{*}\) & 0.071 & \(-0.100\) & 0.123 \\
+ & & (0.079) & & (0.065) & \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：括号内为公司聚类标准误。\(N=15{,}381\)。基准列为行业 + 年份固定效应；企业 FE 列为企业 + 年份固定效应。\(^{*}\)、\(^{**}\)、\(^{***}\) 分别表示 \(p<0.10\)、\(0.05\)、\(0.01\)。全部控制下调整 \(R^2\) 从基准的 0.022 降到企业固定效应的 0.004。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\subsection{解读}
+
+全部控制下，\(IMS\) 从 \(-0.483\)（\(p=0.041\)）变为 \(-0.241\)（\(p=0.294\)），\(IMS\_D\) 从 \(-0.143\)（\(p=0.071\)）变为 \(-0.100\)（\(p=0.123\)）。两列标准误几乎一样：\(IMS\) 从 0.236 到 0.230。点估计大约缩小一半，推断变宽不是这张表不显著的原因。四个控制层次的企业固定效应系数都在 \(-0.22\) 到 \(-0.26\)（\(IMS\)）和 \(-0.09\) 到 \(-0.10\)（\(IMS\_D\)），符号保持为负。
+
+这一步只说明组内斜率更小、并且在 10\% 水平下不能拒绝零。它还没有回答组内估计有没有足够功效、以及它与基准系数是否统计上不同。那是第~\ref{sec:power}~节的内容。
+
+\section{组内变异、切换与实现核对}
+\label{sec:diag}
+
+\subsection{方差与相关分解}
+
+方法是把每个变量拆成公司均值和公司内离差。组内方差占比 \(=\) 离差方差 /（离差方差 + 公司均值的方差）。相关分解分别计算 \(Y\) 与 \(S\) 的总体相关、公司均值之间的相关，以及去均值之后的相关。
+
+作用是看企业固定效应还有多少可识别的变动。企业固定效应丢掉组间部分；若专长和漂绿的变动、以及二者的相关都主要在组间，组内 \(\beta\) 就会小且难估计。
+
+\begin{center}
+\begin{threeparttable}
+\caption{方差分解（共同样本）}
+\label{tab:var}
+\begin{tabular}{lrrrr}
+\toprule
+变量 & 组内方差占比 & 组间方差占比 & 组内标准差 & 组间标准差 \\
+\midrule
+漂绿 & 22.9\% & 77.1\% & 0.643 & 1.180 \\
+\(IMS\) & 15.3\% & 84.7\% & 0.032 & 0.075 \\
+\(IMS\_D\) & 27.8\% & 72.2\% & 0.123 & 0.198 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：组间标准差是公司均值的标准差，短面板下与组内标准差不可直接相加还原总体标准差。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\begin{center}
+\begin{threeparttable}
+\caption{漂绿与专长的相关分解}
+\label{tab:corr}
+\begin{tabular}{lrrr}
+\toprule
+变量 & 总体相关 & 组间相关 & 组内相关 \\
+\midrule
+\(IMS\) & \(-0.054\) & \(-0.065\) & \(-0.013\) \\
+\(IMS\_D\) & \(-0.041\) & \(-0.055\) & \(-0.018\) \\
+\bottomrule
+\end{tabular}
+\end{threeparttable}
+\end{center}
+
+解读：\(IMS\) 约 85\% 的方差在公司之间，组内标准差只有 0.032，相当于份额每年在公司内部大约摆动三个百分点。漂绿同样以组间为主。二者的负相关主要出现在公司均值之间（\(-0.065\)），去均值之后只剩 \(-0.013\)。企业固定效应看到的就是这层很弱的组内相关。
+
+部分控制在公司内部几乎不动。组内方差占比低于约 8\% 的有 \(Size\)（1.4\%）、\(FirmAge\)（1.4\%）、\(SOE\)（2.3\%）、\(LnAuditFee\)（4.3\%）、\(Lev\)（5.8\%）和 \(Big4\)（7.8\%）。第~\ref{sec:power}~节的稀疏控制规格会把这六项拿掉。\(Growth\) 与 \(IsChangeFirm\) 的组内占比分别为 65\% 和 67\%，留在方程里。
+
+\subsection{二元专长是否切换}
+
+对每家公司数 \(IMS\_D\) 的不同取值。取值始终只有一个，记为从不切换。相邻年份（年份差恰好为 1）上 \(IMS\_D\) 发生 0/1 翻转的次数另记。
+
+\begin{center}
+\begin{threeparttable}
+\caption{\(IMS\_D\) 的公司内切换}
+\label{tab:switch}
+\begin{tabular}{lr}
+\toprule
+项目 & 数量 \\
+\midrule
+公司数 & 4,604 \\
+仅 1 年观测 & 369 \\
+四年内从不切换 & 4,300（93.4\%） \\
+\quad 始终为 0 & 4,170 \\
+\quad 始终为 1 & 130 \\
+至少切换一次 & 304（6.6\%） \\
+\(IMS\) 数值在公司内有变动 & 4,235（92.0\%） \\
+\bottomrule
+\end{tabular}
+\end{threeparttable}
+\end{center}
+
+解读：连续 \(IMS\) 在 92\% 的公司里不是常数，但幅度只有组内标准差 0.032。二元指标则高度粘滞，93.4\% 的公司在四年里状态不变。企业固定效应下的 \(IMS\_D\) 只能由那 304 家公司识别。
+
+只保留组内有变动的公司再估式~\eqref{eq:firmfe}、全部控制：\(IMS\) 在 4,235 家公司、15,012 条上为 \(-0.240\)（0.230），\(p=0.296\)，与全样本几乎相同。\(IMS\_D\) 在 304 家公司、1,120 条上为 \(-0.031\)（0.070），\(p=0.661\)。把样本收成切换者之后，二元专长的组内斜率更接近零。因此不把``只留切换公司''当作主规格。
+
+\subsection{去均值与 PanelOLS}
+
+同一共同样本上，statsmodels 去均值与 \texttt{PanelOLS}（企业效应 + 时间效应，公司聚类）的系数差为：\(IMS\) 约 0.005，\(IMS\_D\) 约 0.003。\texttt{PanelOLS} 丢掉单年公司后 \(N=15{,}012\)。系数对齐说明去均值没有把一个本来显著的 \(\beta\) 算丢。标准误不同是因为 \texttt{PanelOLS} 计入了被吸收哑变量的自由度：全部控制的 \(IMS\) 标准误从 0.230 升到 0.271，\(p\) 值从 0.294 升到 0.384。
+
+\section{功效、相等性检验与规格扩展}
+\label{sec:power}
+
+\subsection{方法与作用}
+
+企业固定效应的 \(IMS\) 标准误约为 0.23。在这个标准误下，双侧检验能稳妥检出的效应有多大，以及 \(-0.241\) 与基准 \(-0.483\) 是否还能被视为同一个系数，是这一节要算的两件事。
+
+最小可检测效应按正态近似
+\begin{equation}
+\mathrm{MDE}=\big(z_{1-\alpha/2}+z_{\pi}\big)\times SE,
+\label{eq:mde}
+\end{equation}
+其中 \(\pi\) 为功效。把基准系数当作真实效应时，实际功效为
+\[
+\Phi\big(|\beta_{\mathrm{base}}|/SE-z_{1-\alpha/2}\big)+\Phi\big(-|\beta_{\mathrm{base}}|/SE-z_{1-\alpha/2}\big).
+\]
+95\% 置信区间是否盖住基准点估计，用 \(\hat\beta_{\mathrm{FE}}\pm 1.96\,SE\) 直接看。
+
+``企业固定效应系数等于基准系数''的 Wald 检验使用两个回归的公司聚类得分交叉协方差，使系数差的标准误和各自报告的聚类标准误用同一套有限样本修正。稀疏控制、行业\(\times\)年固定效应和 leave-one-out 这三行没有重算交叉协方差，系数差按两个估计相互独立来算，表中单独注明。
+
+三个扩展规格在出结果之前写定，用来排除三种别的解释：
+
+\begin{enumerate}
+\item 近似不随时间变化的控制吃掉组内变异。
+去掉 \(Size\)、\(Lev\)、\(FirmAge\)、\(SOE\)、\(Big4\)、\(LnAuditFee\)，其余控制仍在。
+\item 行业--年共同冲击。在企业固定效应上再加入行业\(\times\)年份效应；该效应已经吸收年份效应。估计用 \texttt{PanelOLS}，单年公司被丢掉。
+\item 本公司营收同时进入 \(IMS\) 的分子和分母。处理变量改为 \(IMS\_LOO\) 与 \(IMS\_LOO\_D\)。
+\end{enumerate}
+
+\subsection{结果}
+
+\begin{center}
+\begin{threeparttable}
+\caption{功效与``等于基准''的检验（全部控制）}
+\label{tab:power}
+\begin{tabular}{lccccc}
+\toprule
+规格 & 系数 & \(SE\) & \(p\) & MDE & 对基准的功效 \\
+\midrule
+企业 + 年份，去均值，\(IMS\) & \(-0.241\) & 0.230 & 0.294 & 0.643 & 55.7\% \\
+企业 + 年份，PanelOLS，\(IMS\) & \(-0.236\) & 0.271 & 0.384 & 0.760 & 42.9\% \\
+企业 + 年份，去均值，\(IMS\_D\) & \(-0.100\) & 0.065 & 0.123 & 0.182 & 59.9\% \\
+企业 + 年份，PanelOLS，\(IMS\_D\) & \(-0.097\) & 0.077 & 0.205 & 0.215 & 46.4\% \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：MDE 与功效均为双侧 5\%、功效目标 80\% 下的 MDE，以及把基准系数当作真实效应时的实际功效。去均值 \(IMS\) 的 95\% 区间为 \([-0.691,\ 0.209]\)，覆盖基准 \(-0.483\)。含聚类交叉协方差的 Wald 检验中，\(H_0:\) 企业固定效应系数 \(=\) 基准系数，\(IMS\) 的 \(p=0.419\)，\(IMS\_D\) 的 \(p=0.624\)。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\begin{center}
+\begin{threeparttable}
+\caption{事先规定的规格扩展}
+\label{tab:ext}
+\begin{tabular}{llcccc}
+\toprule
+规格 & 变量 & 系数 & \(SE\) & \(p\) & \(N\) \\
+\midrule
+剔除近似时不变控制 & \(IMS\) & \(-0.271\) & 0.232 & 0.243 & 15,381 \\
+企业 FE + 行业\(\times\)年 FE & \(IMS\) & \(-0.269\) & 0.287 & 0.349 & 15,012 \\
+leave-one-out & \(IMS\_LOO\) & \(-0.191\) & 0.223 & 0.391 & 15,277 \\
+剔除近似时不变控制 & \(IMS\_D\) & \(-0.101\) & 0.065 & 0.120 & 15,381 \\
+企业 FE + 行业\(\times\)年 FE & \(IMS\_D\) & \(-0.126\) & 0.082 & 0.124 & 15,012 \\
+leave-one-out & \(IMS\_LOO\_D\) & \(-0.094\) & 0.066 & 0.156 & 15,277 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：行业\(\times\)年规格的公司数为 4,235。leave-one-out 的公司数为 4,580。这三行相对基准的 Wald 检验按独立估计计算，\(IMS\) 的 \(p\) 值分别为 0.521、0.565 和 0.369。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\subsection{解读}
+
+去均值规格下，双侧 5\%、80\% 功效的最小可检测效应是 0.64。基准效应 0.48 小于这个门槛，按基准系数计算的实际功效约为 56\%。95\% 区间 \([-0.691,\ 0.209]\) 包含 \(-0.483\)。把两个估计的聚类协方差算进去之后，``企业固定效应系数等于基准系数''的 \(p\) 值为 0.42。因此这张表同时做不到两件事：不能拒绝零，也不能拒绝基准。写成``企业固定效应推翻了基准''与这组数字不符。
+
+\texttt{PanelOLS} 的自由度修正把标准误放到 0.271，最小可检测效应升到 0.76，功效降到约 43\%。它让区间更宽，不是把结果修回显著的办法。
+
+三个扩展的 \(IMS\) 系数落在 \(-0.19\) 到 \(-0.27\)，\(p\) 值都在 0.24 以上。拿掉粘滞控制、吸收行业--年冲击、或改用 leave-one-out 份额，都没有产生一个显著的组内斜率。事务所层面 \(IMS\) 的主规格因此继续用行业 + 年份固定效应；企业固定效应作为功效不足的组内检验披露。
+
+\section{Mundlak 分解}
+\label{sec:mundlak}
+
+\subsection{方法与作用}
+
+Mundlak（1978）把专长拆成公司内离差和公司均值，放进同一条行业 + 年份固定效应回归：
+\begin{equation}
+Y_{i,t}=\beta_w(S_{i,t}-\bar S_i)+\beta_b\bar S_i+\delta'X_{i,t}+\lambda_t+\delta_j+\varepsilon_{i,t}.
+\label{eq:mundlak}
+\end{equation}
+\(\beta_b\) 描述公司与公司之间的专长差异对应的漂绿差异，\(\beta_w\) 描述公司内部偏离自己均值的那部分。对 \(\beta_w-\beta_b=0\) 的 \(t\) 检验记为表中的 Hausman 行；它是这条方程里的聚类稳健对比，不是两个分开估计量的经典 Hausman 统计量。
+
+作用是把``效应在组间''写成同一张表里的两个系数，并检验短面板有没有足够信息拒绝``组内斜率等于组间斜率''。控制变量没有同步拆开，行业固定效应也还在，所以这里的 \(\beta_w\) 不等于式~\eqref{eq:firmfe} 的纯企业固定效应系数。
+
+\subsection{结果与解读}
+
+\begin{center}
+\begin{threeparttable}
+\caption{Mundlak 分解}
+\label{tab:mundlak}
+\begin{tabular}{llcccc}
+\toprule
+变量 & 成分 & 系数 & \(SE\) & \(p\) & \(\beta_w=\beta_b\) 的 \(p\) \\
+\midrule
+\(IMS\) & 组内 & \(-0.290\) & 0.230 & 0.208 & 0.519 \\
+\(IMS\) & 组间 & \(-0.529^{*}\) & 0.288 & 0.066 & \\
+\(IMS\_D\) & 组内 & \(-0.109^{*}\) & 0.065 & 0.096 & 0.697 \\
+\(IMS\_D\) & 组间 & \(-0.161\) & 0.117 & 0.167 & \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：行业 + 年份固定效应，全部控制，公司聚类，\(N=15{,}381\)。组间成分是公司均值 \(\bar S_i\)。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\(IMS\) 的组间系数 \(-0.529\) 接近基准 \(-0.483\)，并在 10\% 水平显著。组内系数 \(-0.290\) 更小，\(p=0.208\)，和纯企业固定效应的 \(-0.241\) 同向。两者之差的 \(p=0.519\)：四年面板没有足够信息拒绝``组内效应和组间效应相同''。\(IMS\_D\) 的组内系数在 10\% 水平为负（\(-0.109\)，\(p=0.096\)），组间系数 \(-0.161\)（\(p=0.167\)），相等性检验的 \(p=0.697\)。
+
+读法是：能在 10\% 水平看到的 \(IMS\) 负向关联坐落在公司之间；公司内部的点估计仍为负，但既不能单独拒绝零（连续 \(IMS\)），也不能拒绝它与组间系数相等。\(IMS\_D\) 的组内一行在 10\% 水平触及显著，幅度仍小于基准的 \(-0.143\)，而且第~\ref{sec:diag}~节已经表明这个二元指标只有 304 家公司在切换。
+
+\section{测量误差}
+\label{sec:eiv}
+
+\subsection{方法与作用}
+
+Griliches and Hausman（1986）说明，组内变换会提高测量误差相对于真实信号的比重，固定效应系数会向零收缩。若营业收入份额、审计收费份额和资产平方根份额度量的是同一个专长构念，可以用它们估计信度比。
+
+在公司内去均值之后，
+\begin{equation}
+\lambda=\frac{\mathrm{Cov}(IMS,\ IMS^{\mathrm{alt}})}{\mathrm{Var}(IMS)}.
+\label{eq:lambda}
+\end{equation}
+古典测量误差修正把企业固定效应系数和它的标准误同时除以 \(\lambda\)（仅当 \(0<\lambda\le 1\)）。标准误按同一比例放大，所以 \(t\) 值不变；修正改变的是系数相对于某个外部基准的位置，不改变这一行自己的显著性。
+
+组内工具变量把去均值后的替代份额当作 \(IMS\) 的工具，控制与年份虚拟变量仍在方程里，公司聚类。一阶段 \(F\) 是工具变量在去均值后的 \(IMS\) 方程里的 \(t\) 值平方。工具变量样本同样要求三个份额同时非缺失，因此下面的未修正企业固定效应系数是 \(-0.213\)，不是全样本的 \(-0.241\)。
+
+\subsection{结果}
+
+\begin{center}
+\begin{threeparttable}
+\caption{信度比}
+\label{tab:lambda}
+\begin{tabular}{llrr}
+\toprule
+范围 & 参照度量 & 与 \(IMS\) 的相关 & \(\lambda\) \\
+\midrule
+总体 & \texttt{IMS\_fee} & 0.800 & 0.634 \\
+总体 & \texttt{IMS\_asset} & 0.828 & 0.656 \\
+组内 & \texttt{IMS\_fee} & 0.746 & 0.532 \\
+组内 & \texttt{IMS\_asset} & 0.805 & 0.578 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：\(N=15{,}279\)，4,580 家公司。组内相关和 \(\lambda\) 在公司内去均值之后计算。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\begin{center}
+\begin{threeparttable}
+\caption{古典修正与组内工具变量}
+\label{tab:eiv}
+\begin{tabular}{llcccc}
+\toprule
+方法 & 参照或工具 & 系数 & \(SE\) & \(p\) & 一阶段 \(F\) \\
+\midrule
+未修正企业 FE & --- & \(-0.213\) & 0.231 & & \\
+古典修正 & \texttt{IMS\_fee} & \(-0.400\) & 0.435 & & \\
+古典修正 & \texttt{IMS\_asset} & \(-0.368\) & 0.400 & & \\
+组内 IV & 工具 \texttt{IMS\_fee} & \(-0.043\) & 0.306 & 0.887 & 1,296 \\
+组内 IV & 工具 \texttt{IMS\_asset} & \(-0.069\) & 0.267 & 0.795 & 2,317 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：古典修正的 \(t\) 值与未修正行相同，故不单列 \(p\)。\(|\hat\beta/\widehat{SE}|\) 约为 0.92。IV 在公司内去均值后估计，公司聚类。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\subsection{解读}
+
+组内信度比约 0.53 和 0.58，低于总体信度比 0.63 和 0.66，符合固定效应提高噪声占比的预期。把 \(-0.213\) 除以这两个 \(\lambda\)，系数回到约 \(-0.40\) 和 \(-0.37\)，方向上靠近基准 \(-0.483\)，标准误同步放到 0.43 和 0.40，仍然不显著。
+
+两个替代份额作为工具时一阶段 \(F\) 远大于 10，第二阶段系数却接近 0（\(-0.043\) 与 \(-0.069\)），\(p\) 值在 0.80 左右。古典修正说的是：若衰减只来自古典测量误差，真实斜率可以更接近基准。工具变量说的是：两个份额在公司内部的共同变动，并不对应漂绿的公司内变动。衰减可以解释企业固定效应系数为什么变小，不能把这个系数修成一个显著结果。
+
+\section{签字合伙人专长}
+\label{sec:partner}
+
+\subsection{为什么换到这一层}
+
+事务所份额的企业固定效应功效不足：组内标准差 0.032，80\% 功效下最小能检出的效应是 0.64，大于基准 0.48。Goodwin and Wu（2014）的对应做法是把专长从事务所或分所下沉到签字合伙人。他们的理由是，事务所份额在客户固定效应里太嘈杂，行业知识主要在签字合伙人的人力资本上。Gul、Wu and Yang（2013）用中国签字会计师数据说明，个人对审计结果有独立解释力。
+
+本样本里事务所二元专长很少切换（6.6\% 的公司），签字人组合则经常变。合伙人度量文件共 5,460 家公司，其中 4,865 家（89.1\%）在相邻年份更换过签字人组合。组内识别因此有原料。阈值不用 20\%，而用第~\ref{tab:pims-def}~节写定的领导者规则和第 90 百分位规则。
+
+\subsection{组内有多少信息}
+
+回归样本 15,380 条、4,604 家公司。组内标准差是公司内去均值后的标准差。
+
+\begin{center}
+\begin{threeparttable}
+\caption{合伙人指标的组内变动}
+\label{tab:p-within}
+\begin{tabular}{lrr}
+\toprule
+变量 & 组内标准差 & 组内有变动的公司 \\
+\midrule
+\(IMS\) & 0.032 & 4,235（92.0\%） \\
+\texttt{PIMS\_max} & 0.006 & 4,235（92.0\%） \\
+\texttt{PIMS\_LOO\_max} & 0.005 & 1,636（35.5\%） \\
+\texttt{PIMS\_D\_leader} & 0.036 & 27（0.6\%） \\
+\texttt{PIMS\_D\_p90} & 0.142 & 404（8.8\%） \\
+\bottomrule
+\end{tabular}
+\end{threeparttable}
+\end{center}
+
+\texttt{PIMS\_max} 的组内标准差比 \(IMS\) 更小。去掉本公司营收后，只有 35.5\% 的公司还有变动。领导者虚拟变量几乎不切换。第 90 百分位虚拟变量的切换公司比 \(IMS\_D\) 多（404 对 304），组内标准差也更大（0.142 对 0.123）。若组内证据能出现，事先更有信息的是 \texttt{PIMS\_D\_p90}，不是领导者，也不是连续份额。
+
+\subsection{回归规格}
+
+全部控制，公司聚类。四列主对照是：
+
+\begin{enumerate}
+\item 行业 + 年份固定效应，核心变量为 \(IMS\)。
+\item 行业 + 年份固定效应，核心变量为 \texttt{PIMS\_max}。
+\item 企业 + 年份固定效应，核心变量为 \texttt{PIMS\_max}。
+\item 企业 + 年份固定效应，\texttt{PIMS\_max} 与 \(IMS\) 同时进入。
+\end{enumerate}
+
+其余连续口径和两个二元规则用同一函数。
+二元规则与事务所专长同场时，放入的是 \(IMS\_D\) 而不是 \(IMS\)。
+企业固定效应另按 \texttt{InstitutionID} 聚类，共 96 个事务所。
+
+受限 wild cluster bootstrap 在企业固定效应、全部控制的去均值方程上做。聚类单位是事务所。权重为 Webb 六点 \(\{\pm\sqrt{1.5},\pm 1,\pm\sqrt{0.5}\}\)，999 次，原假设是核心变量系数为 0。\(p\) 值等于 \((1+\#\{|\hat\beta^{*}|\ge|\hat\beta|\})/(999+1)\)。表中同时给出不对原假设施加约束的百分位区间；该区间与受限 \(p\) 值不是同一个检验。事先用来判断``是否拒绝零''的是受限 \(p\) 值。
+
+\subsection{结果}
+
+\begin{center}
+\begin{threeparttable}
+\caption{事务所份额与连续合伙人份额}
+\label{tab:p-cont}
+\begin{tabular}{llccc}
+\toprule
+规格 & 变量 & 系数 & \(SE\) & \(p\) \\
+\midrule
+行业 + 年份 & \(IMS\) & \(-0.483^{**}\) & 0.236 & 0.041 \\
+行业 + 年份 & \texttt{PIMS\_max} & \(-3.081^{***}\) & 0.882 & \(<0.001\) \\
+企业 + 年份，公司聚类 & \texttt{PIMS\_max} & \(-1.627\) & 1.230 & 0.186 \\
+企业 + 年份，事务所聚类 & \texttt{PIMS\_max} & \(-1.627^{*}\) & 0.906 & 0.072 \\
+企业 + 年份，两者同时放入 & \texttt{PIMS\_max} & \(-1.500\) & 1.235 & 0.225 \\
+企业 + 年份，两者同时放入 & \(IMS\) & \(-0.204\) & 0.231 & 0.378 \\
+\midrule
+行业 + 年份 & \texttt{PIMS\_mean} & \(-3.188^{***}\) & 0.953 & \(<0.001\) \\
+企业 + 年份，公司聚类 & \texttt{PIMS\_mean} & \(-2.102\) & 1.796 & 0.242 \\
+行业 + 年份 & \texttt{PIMS\_LOO\_max} & \(-2.581^{*}\) & 1.476 & 0.080 \\
+企业 + 年份，公司聚类 & \texttt{PIMS\_LOO\_max} & \(-1.068\) & 1.347 & 0.428 \\
+行业 + 年份 & \texttt{PIMS\_LOO\_mean} & \(-4.311\) & 2.870 & 0.133 \\
+企业 + 年份，公司聚类 & \texttt{PIMS\_LOO\_mean} & \(-1.494\) & 2.891 & 0.605 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：\(N=15{,}380\)。连续份额的系数对应的是``份额从 0 到 1''的变化。合伙人份额中位数只有约 0.2\%，所以 \(-3.08\) 不能按``每提高 1 个事务所 \(IMS\) 单位''去和 \(-0.48\) 比大小。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\begin{center}
+\begin{threeparttable}
+\caption{二元合伙人规则}
+\label{tab:p-bin}
+\begin{tabular}{llccc}
+\toprule
+规格 & 变量 & 系数 & \(SE\) & \(p\) \\
+\midrule
+行业 + 年份 & \texttt{PIMS\_D\_p90} & \(-0.326^{***}\) & 0.061 & \(<0.001\) \\
+企业 + 年份，公司聚类 & \texttt{PIMS\_D\_p90} & \(-0.108^{**}\) & 0.052 & 0.036 \\
+企业 + 年份，事务所聚类 & \texttt{PIMS\_D\_p90} & \(-0.108^{**}\) & 0.044 & 0.015 \\
+企业 + 年份，同时放入 \(IMS\_D\) & \texttt{PIMS\_D\_p90} & \(-0.106^{**}\) & 0.052 & 0.039 \\
+企业 + 年份，同时放入 \(IMS\_D\) & \(IMS\_D\) & \(-0.097\) & 0.065 & 0.133 \\
+\midrule
+行业 + 年份 & \texttt{PIMS\_D\_leader} & \(-0.462^{**}\) & 0.227 & 0.042 \\
+企业 + 年份，公司聚类 & \texttt{PIMS\_D\_leader} & \(-0.555^{**}\) & 0.241 & 0.021 \\
+企业 + 年份，事务所聚类 & \texttt{PIMS\_D\_leader} & \(-0.555^{**}\) & 0.269 & 0.039 \\
+企业 + 年份，同时放入 \(IMS\_D\) & \texttt{PIMS\_D\_leader} & \(-0.533^{**}\) & 0.243 & 0.028 \\
+企业 + 年份，同时放入 \(IMS\_D\) & \(IMS\_D\) & \(-0.089\) & 0.065 & 0.173 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：\(N=15{,}380\)。同场比较时公司聚类。领导者公司--年约占 1\%，第 90 百分位公司--年约占 13\%。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\begin{center}
+\begin{threeparttable}
+\caption{事务所聚类的受限 wild cluster bootstrap}
+\label{tab:wcb}
+\begin{tabular}{lccc}
+\toprule
+变量 & 系数 & 受限 \(p\) & 无约束 95\% 区间 \\
+\midrule
+\texttt{PIMS\_max} & \(-1.628\) & 0.107 & \([-3.371,\ -0.013]\) \\
+\texttt{PIMS\_LOO\_max} & \(-1.068\) & 0.178 & \([-2.464,\ 0.246]\) \\
+\texttt{PIMS\_D\_leader} & \(-0.555\) & 0.127 & \([-1.055,\ -0.052]\) \\
+\texttt{PIMS\_D\_p90} & \(-0.108\) & 0.035 & \([-0.188,\ -0.020]\) \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：企业 + 年份固定效应，全部控制，999 次 Webb 权重，96 个事务所。系数是 bootstrap 程序里的最小二乘点估计，与上表 statsmodels 系数在第三位小数上可能差 0.001。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\subsection{解读}
+
+行业 + 年份固定效应下，\texttt{PIMS\_max} 为 \(-3.081\)（\(p<0.001\)），\texttt{PIMS\_mean} 为 \(-3.188\)（\(p<0.001\)）。连续合伙人份额在截面上与更低的漂绿相关。换成企业固定效应后，\texttt{PIMS\_max} 仍为 \(-1.627\)，公司聚类 \(p=0.186\)。事务所聚类把标准误收到 0.906，\(p=0.072\)；受限 bootstrap 的 \(p=0.107\)。无约束区间的下端为负、上端也略小于零，但事先规定的显著性判断用受限 \(p\) 值，连续份额在企业固定效应下不作为显著结果。leave-one-out 的连续份额在企业固定效应下为 \(-1.068\)（\(p=0.428\)），bootstrap \(p=0.178\)。连续份额的组内变动里有一大块是客户自己的规模，去掉之后组内关联不再可辨。
+
+\texttt{PIMS\_D\_p90} 的企业固定效应为 \(-0.108\)（0.052），\(p=0.036\)。事务所聚类 \(p=0.015\)，受限 bootstrap \(p=0.035\)，无约束区间为 \([-0.188,\ -0.020]\)。与 \(IMS\_D\) 同时放入后，第 90 百分位仍为 \(-0.106\)（\(p=0.039\)），\(IMS\_D\) 为 \(-0.097\)（\(p=0.133\)）。更细的专长度量留下，事务所二元专长退出。这是 Goodwin and Wu 在客户固定效应里描述的格局。系数 \(-0.108\) 的含义是：同一公司从``当年没有签字人达到行业--年度合伙人份额第 90 百分位''变为``至少有一位达到''，漂绿低约 0.11 个单位。因变量是行业--年内的 \(z\) 分数之差，0.11 大约是组内漂绿标准差 0.64 的六分之一。
+
+\texttt{PIMS\_D\_leader} 的传统标准误显著（企业固定效应 \(-0.555\)，\(p=0.021\)；与 \(IMS\_D\) 同场后仍为 \(-0.533\)，\(p=0.028\)）。只有 27 家公司在这个指标上切换，受限 bootstrap \(p=0.127\)。无约束区间虽然落在零的左侧，受限检验在 10\% 水平不拒绝零。这个星号不作为稳健的组内证据。
+
+\section{换签字人差分}
+\label{sec:did}
+
+\subsection{方法与作用}
+
+全样本企业固定效应把所有公司内变动都算进 \(\beta\)，包括签字人没换、只是客户或同业收入变化带来的份额波动。这一步只保留签字人组合发生更换的公司，并比较两种更换。
+
+签字人组合用姓名排序后拼接。仅当同一公司相邻两年相差恰好 1 年、且组合与上年不同，才记为更换。处理组是专长状态从 0 变为 1。对照组是更换之后的专长状态为 0，其中既包括换完仍为 0，也包括从 1 变为 0。每家公司只取第一次符合上述条件的更换。没有这种更换的公司不进入该规格。方程为
+\begin{equation}
+Y_{i,t}=\alpha_i+\lambda_t+\gamma(\mathrm{Treat}_i\times\mathrm{Post}_{i,t})+\delta'X_{i,t}+\varepsilon_{i,t},
+\label{eq:did}
+\end{equation}
+\(\mathrm{Post}\) 在事件年及之后为 1。\(\gamma\) 是换入专长合伙人的公司，相对换入非专长合伙人的公司，漂绿在更换之后的差异。固定效应为企业与年份，标准误按公司聚类。无控制与全部控制各估一次。
+
+事件研究把处理组在相对时点 \(-2\)、\(0\)、\(+1\)、\(+2\) 的指示变量放进同一条企业 + 年份方程，省略 \(-1\)。这一列不含控制变量。相对时点 \(-2\) 用来看更换之前处理组与对照组的差距是否已经存在。
+
+分队列的当期效应按进入年份把处理组拆开。每一队列与全部对照组放在一起，只估计事件当年（相对时点 0）的系数，再用该队列的处理公司数加权。加权平均没有做队列之间的协方差，因此不报告标准误。这不是把全部相对时点与队列做成饱和交互的完整 Sun--Abraham 估计。领导者定义下处理公司只有 7 家，事件研究里远期系数会因为格子太小而极显著，该定义的事件研究不采用。
+
+\subsection{结果}
+
+共同样本里有 5,928 个更换签字人的公司--年。第 90 百分位定义下进入回归的是 3,332 家公司（处理 113、对照 3,219），\(N=12{,}061\)。领导者定义下是 3,633 家公司（处理 7、对照 3,626），\(N=13{,}154\)。
+
+\begin{center}
+\begin{threeparttable}
+\caption{换入第 90 百分位合伙人}
+\label{tab:did}
+\begin{tabular}{lcccc}
+\toprule
+规格 & 系数 & \(SE\) & \(p\) & 处理公司 \\
+\midrule
+企业 + 年份，\(\mathrm{Treat}\times\mathrm{Post}\) & \(-0.258^{**}\) & 0.102 & 0.011 & 113 \\
+加上全部控制 & \(-0.253^{**}\) & 0.103 & 0.014 & 113 \\
+事件研究，相对时点 \(-2\) & \(0.197^{*}\) & 0.110 & 0.072 & 113 \\
+事件研究，时点 \(0\) & \(-0.225^{**}\) & 0.107 & 0.034 & 113 \\
+事件研究，时点 \(+1\) & \(-0.128\) & 0.134 & 0.339 & 113 \\
+事件研究，时点 \(+2\) & \(-0.425^{**}\) & 0.178 & 0.017 & 113 \\
+\midrule
+2022 队列，事件当期 & \(0.022\) & 0.124 & 0.857 & 57 \\
+2023 队列，事件当期 & \(-0.102\) & 0.168 & 0.544 & 25 \\
+2024 队列，事件当期 & \(-0.522^{**}\) & 0.235 & 0.026 & 31 \\
+三队列按公司数加权 & \(-0.155\) & & & 113 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：对照组 3,219 家。事件研究省略相对时点 \(-1\)，不含控制变量。加权平均没有标准误。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+领导者定义的 \(\mathrm{Treat}\times\mathrm{Post}\) 为 \(-0.625\)（0.386），\(p=0.105\)；加入控制后为 \(-0.612\)（0.386），\(p=0.113\)。2023 队列只有 1 家处理公司。该定义不进入事件研究的解读。
+
+\subsection{解读}
+
+第 90 百分位定义下，换入这类合伙人的公司相对换入其他签字人的公司，漂绿低约 0.25（\(p=0.011\)）；加入全部控制后为 \(-0.253\)（\(p=0.014\)）。事件当年的系数是 \(-0.225\)（\(p=0.034\)），时点 \(+1\) 为 \(-0.128\)（\(p=0.339\)），时点 \(+2\) 为 \(-0.425\)（\(p=0.017\)）。更换之后的点估计为负，但不是每一期都显著。
+
+相对时点 \(-2\) 的系数是 \(+0.197\)（\(p=0.072\)）。更换前两年，处理组的漂绿已经高于省略的前一年。平行趋势在这张表里不成立。分队列之后，2022 年进入的 57 家公司当期效应接近 0（\(p=0.857\)），2023 年的 25 家为 \(-0.102\)（\(p=0.544\)），2024 年的 31 家为 \(-0.522\)（\(p=0.026\)）。加权平均 \(-0.155\) 小于合并的 \(-0.258\)，因为最早、也最大的一队接近零。
+
+这张表可以和全样本企业固定效应的 \(-0.108\) 对照着看：换人并且进入第 90 百分位的那一部分，点估计更负。它不能单独写成已经排除了``哪些公司换入这类合伙人''的选择。领导者定义只有 7 家处理公司，合并系数的 \(p\) 值在 0.10 以上，事件研究不采用。
+
+\section{结果怎样连起来读}
+\label{sec:read}
+
+文献里的固定效应用法，和上面的数字是对齐的。周楷唐、李英、吴联生（2020）的主表是行业 + 年份固定效应加倾向得分匹配，公司固定效应写在稳健性里；因变量是审计工时，样本期 2004--2011，专长是行业--年度审计收费份额第一名。工时对换所敏感，面板也更长，所以他们的公司固定效应仍可以显著。Minutti-Meza（2013）的 Table 7 是全样本客户固定效应，不是只留换所公司；份额专长在那张表里不显著。他据此认为 within-industry market share 难以把专长从客户特征里分离出来。Goodwin and Wu（2014）把同一现象归因于度量层次：分所或事务所份额在客户固定效应下失效，签字合伙人份额仍然显著。
+
+本目录的事务所 \(IMS\) 复现的是 Minutti-Meza 这一侧：行业 + 年份下 \(IMS\) 为 \(-0.483\)（\(p=0.041\)），企业固定效应下为 \(-0.241\)（\(p=0.294\)）。95\% 区间包含基准点估计，相等性检验的 \(p=0.42\)，对基准效应的功效约 56\%。Mundlak 分解里，10\% 水平可见的负向关联在组间。测量误差修正把组内系数向基准方向推，标准误同步放大，组内工具变量的第二阶段接近零。这组结果支持的句子是：事务所份额的企业固定效应没有足够功效区分零和基准，主规格继续用行业 + 年份固定效应。
+
+合伙人第 90 百分位支持的句子是：事先规定的相对专长在企业固定效应下为 \(-0.108\)，公司聚类、事务所聚类和受限 wild bootstrap 的 \(p\) 值分别为 0.036、0.015 和 0.035；与 \(IMS\_D\) 同场后仍为 \(-0.106\)（\(p=0.039\)）。换入这类合伙人相对换入其他签字人，\(\mathrm{Treat}\times\mathrm{Post}\) 为 \(-0.253\)（\(p=0.014\)），但相对时点 \(-2\) 已经为 \(+0.197\)（\(p=0.072\)）。
+
+连续 \texttt{PIMS\_max} 的企业固定效应、leave-one-out 连续份额，以及只有 27 家公司切换的领导者指标，按原计划报告。它们的组内证据弱于第 90 百分位：受限 bootstrap 的 \(p\) 值分别为 0.107、0.178 和 0.127。
+
+\section{脚本与产出对照}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+脚本 & 主要产出 & 本报告 \\
+\midrule
+\texttt{run\_firm\_fe\_regression.py} & \texttt{firm\_fe\_coefficients.csv} & 表~\ref{tab:main} \\
+\texttt{generate\_comparison\_tables.py} & \texttt{firm\_fe\_vs\_baseline\_core.csv} & 表~\ref{tab:main} \\
+\texttt{diagnose\_firm\_fe\_attenuation.py} & \texttt{variance\_decomposition.csv} 等 & 表~\ref{tab:var}--\ref{tab:switch} \\
+\texttt{diagnose\_firm\_fe\_power.py} & \texttt{firm\_fe\_power\_and\_mde.csv} & 表~\ref{tab:power}--\ref{tab:mundlak} \\
+\texttt{measurement\_error\_correction.py} & \texttt{measurement\_error\_correction.csv} & 表~\ref{tab:lambda}、\ref{tab:eiv} \\
+\texttt{build\_partner\_ims.py} & \texttt{partner\_ims\_company\_year.csv} & 表~\ref{tab:pims-def} \\
+\texttt{run\_partner\_fe\_regression.py} & \texttt{partner\_fe\_all\_measures.csv} & 表~\ref{tab:p-cont}--\ref{tab:wcb} \\
+\texttt{run\_partner\_switch\_did.py} & \texttt{partner\_switch\_did.csv} & 表~\ref{tab:did} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+配置文件是 \texttt{firm\_fe\_config.json} 与 \texttt{partner\_ims\_config.json}。
+前者规定共同样本 15,381、20\% 切点、企业固定效应替换行业固定效应、公司聚类。
+后者规定连续主口径为 \texttt{PIMS\_max}，二元规则为行业--年度领导者和第 90 百分位，并写明阈值在看回归结果之前按相对排名确定。
+
+\section{参考文献}
+
+\begin{itemize}
+\item Goodwin, J., and D.~Wu. 2014. Is the effect of industry expertise on audit pricing an office-level or a partner-level phenomenon? \textit{Review of Accounting Studies} 19 (4): 1532--1578.
+\item Griliches, Z., and J.~A.~Hausman. 1986. Errors in variables in panel data. \textit{Journal of Econometrics} 31 (1): 93--118.
+\item Gul, F.~A., D.~Wu, and Z.~Yang. 2013. Do individual auditors affect audit quality? Evidence from archival data. \textit{The Accounting Review} 88 (6): 1993--2023.
+\item Minutti-Meza, M. 2013. Does auditor industry specialization improve audit quality? \textit{Journal of Accounting Research} 51 (4): 779--817.
+\item Mundlak, Y. 1978. On the pooling of time series and cross section data. \textit{Econometrica} 46 (1): 69--85.
+\item Webb, M.~D. 2014. Reworking wild bootstrap based inference for clustered errors. Queen's Economics Department Working Paper No.~1315.
+\item Whited, R.~L., Q.~T.~Swanquist, J.~E.~Shipman, and J.~R.~Moon, Jr. 2022. Out of control: The (over)use of controls in accounting research. \textit{The Accounting Review} 97 (3): 395--413.
+\item 周楷唐、李英、吴联生. 2020. 行业专长与审计生产效率. \textit{会计研究} (9).
+\end{itemize}
+
+\end{document}

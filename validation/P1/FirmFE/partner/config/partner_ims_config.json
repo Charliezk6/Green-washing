@@ -1,0 +1,15 @@
+{
+  "years": [2021, 2022, 2023, 2024],
+  "scale_variable": "OperatingRevenue",
+  "primary_continuous": "PIMS_max",
+  "alternative_continuous": ["PIMS_mean", "PIMS_LOO_max", "PIMS_LOO_mean"],
+  "binary_rules": {
+    "PIMS_D_leader": "行业-年度内合伙人营收份额最高者；并列最高者都记为领导者。公司当年任一签字合伙人是领导者则取1。",
+    "PIMS_D_p90": "行业-年度内合伙人营收份额不低于第90百分位。公司当年任一签字合伙人达到该切点则取1。"
+  },
+  "aggregation": {
+    "PIMS_max": "签字合伙人份额的最大值，对应主签字合伙人口径",
+    "PIMS_mean": "签字合伙人份额的简单平均"
+  },
+  "notes": "合伙人份额不是划分：同一客户的营收会计入每一位签字合伙人，因此行业内合伙人份额之和可以大于1。20%的事务所切点不用于合伙人。阈值规则在看回归结果之前按相对排名写定。"
+}

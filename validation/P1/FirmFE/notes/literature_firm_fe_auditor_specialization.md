@@ -103,6 +103,14 @@
 
 **很少**有严肃论文主张：「凡研究行业专长，公司 FE 必须比行业 FE 系数更负且更显著。」
 
+### 3.4 客户固定效应在顶刊里的具体做法
+
+Minutti-Meza（2013, JAR）的 Table 7 不是只保留换所公司。他对全样本加入客户固定效应，二元因变量则用固定效应 logit，并丢掉因变量在公司内部从不变化的观测。表里的份额专长系数不显著。作者把这个结果和匹配、换所样本放在一起，用来说明 within-industry market share 很难从客户特征里分离出来。
+
+Goodwin and Wu（2014, *Review of Accounting Studies* 19(4): 1532–1578）给出的对应做法是把专长下沉到签字合伙人。他们发现，一旦同时控制合伙人专长，分所或事务所层面的专长溢价消失，合伙人层面的溢价仍然显著。他们明确把 Minutti-Meza 的客户固定效应零结果，归因于事务所/分所份额太嘈杂，而不是行业知识本身不存在。Bell and Bryan（2021）以及英国合伙人专长研究沿用了同一层的度量。Gul、Wu and Yang（2013, *The Accounting Review*）用中国签字会计师数据说明，个人审计师固定效应对审计结果有独立解释力。
+
+Griliches and Hausman（1986, *Journal of Econometrics*）说明，组内变换会提高测量误差相对于真实信号的比重，所以固定效应系数变小，不一定是效应不存在。多个度量同一构念的指标可以估计信度比。Whited、Swanquist、Shipman and Moon（2022, *The Accounting Review*）则提醒，在固定效应里继续堆几乎不随时间变化的控制变量，会吃掉本就很少的组内变异。这两点都是稳健性设计问题，不是事后挑选显著规格的理由。
+
 ---
 
 ## 4. 国内 A 股（CSMAR）文献的常见模式
@@ -190,15 +198,20 @@
 **若需要更强的组内叙事（另开任务）：**
 
 - 依赖已有换所 / LOO 设计（`validation/P1/auditor change`、`validation/P1/LOO`），而不是强迫全样本 Firm FE「修回显著」。
+- 按 Goodwin and Wu（2014）把专长做到签字合伙人层面。这一步的结果见 [`partner_level_memo.md`](partner_level_memo.md)：事务所层面的企业固定效应仍然没有功效；事先规定的合伙人 90 分位指标在企业固定效应下显著，行业领导者指标则因为只有极少数公司切换而不稳。
 
 ---
 
 ## 8. 主要参考文献（本报告依据）
 
 1. 周楷唐、李英、吴联生，2020，行业专长与审计生产效率，《会计研究》(9)。（主规格：行业+年份 FE + PSM；公司 FE 为稳健性；DV：审计工时。）  
-2. Minutti-Meza, M., 2013, Does auditor industry specialization improve audit quality? *Journal of Accounting Research* 51(4): 779–817.（匹配/客户 FE 后份额专长效应常消失。）  
-3. Gaver, J., Utke, S., 2019 及相关回应文献（专长任期、匹配敏感性争论）。  
-4. 本项目诊断：`validation/P1/FirmFE/notes/firm_fe_memo.md` 与 `outputs/diagnostics/*.csv`。
+2. Minutti-Meza, M., 2013, Does auditor industry specialization improve audit quality? *Journal of Accounting Research* 51(4): 779–817.（Table 7 为全样本客户固定效应；匹配/客户 FE 后份额专长效应常消失。）  
+3. Goodwin, J., Wu, D., 2014, Is the effect of industry expertise on audit pricing an office-level or a partner-level phenomenon? *Review of Accounting Studies* 19(4): 1532–1578.（合伙人专长在同时控制事务所/分所专长后仍然显著。）  
+4. Gul, F. A., Wu, D., Yang, Z., 2013, Do individual auditors affect audit quality? Evidence from archival data. *The Accounting Review* 88(6): 1993–2023.  
+5. Griliches, Z., Hausman, J. A., 1986, Errors in variables in panel data. *Journal of Econometrics* 31(1): 93–118.  
+6. Whited, R. L., Swanquist, Q. T., Shipman, J. E., Moon, J. R., 2022, Out of control: The (over)use of controls in accounting research. *The Accounting Review*.  
+7. Gaver, J., Utke, S., 2019 及相关回应文献（专长任期、匹配敏感性争论）。  
+8. 本项目诊断：`validation/P1/FirmFE/notes/firm_fe_memo.md` 与 `outputs/diagnostics/*.csv`。
 
 ---
 

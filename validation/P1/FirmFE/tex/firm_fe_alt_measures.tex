@@ -1,0 +1,192 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{threeparttable}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{ctex}
+\usepackage[hidelinks]{hyperref}
+\emergencystretch=3em
+
+\title{基准 IMS 与替代专长变量的企业固定效应}
+\author{}
+\date{2026-09-23}
+
+\begin{document}
+\maketitle
+
+本文把基准行业专长和全部替代专长度量放在同一条主规格下。每条回归只放一个自变量。数字来自 \texttt{outputs/tables/} 下的 \texttt{firm\_fe\_alt\_measures.csv}，由 \texttt{scripts/} 下的 \texttt{run\_alt\_measures\_firm\_fe.py} 生成。已有结果的变量与原先的系数表一致。
+
+\section{估计规格}
+\label{sec:spec}
+
+因变量为 \texttt{Greenwashing连续\_基准}。沟通侧是绿色信息含量的行业--年 \(z\) 分数，绩效侧是华证环境评分的行业--年 \(z\) 分数，行业分类与专长所用的 \texttt{ExpertiseIndustryCode} 相同。\(z\) 分数使用对应行业--年的均值和样本标准差（\(ddof=1\)）：
+\[
+Y_{i,t}=GI\_z_{i,t}-ESGE\_z_{i,t}.
+\]
+
+主规格把行业固定效应换成企业固定效应，年份固定效应保留。\(S_{i,t}\) 为下面定义的某一个专长度量，\(X_{i,t}\) 为全部基准控制，\(\alpha_i\) 为企业固定效应，\(\lambda_t\) 为年份固定效应：
+\begin{equation}
+Y_{i,t}=\alpha_i+\lambda_t+\beta S_{i,t}+\delta'X_{i,t}+\varepsilon_{i,t}.
+\label{eq:firmfe}
+\end{equation}
+实现上先对 \(Y\)、\(S\) 和 \(X\) 做公司内去均值，再加入年份虚拟变量，用公司聚类的 OLS。下面每一行的系数、标准误和显著性都来自这条方程，控制都是全部控制，不混用其他层次。
+
+连续控制在各自回归所用的共同样本上按 1\% 与 99\% 分位数缩尾。专长度量和因变量不缩尾。
+
+\begin{center}
+\begin{threeparttable}
+\caption{全部控制变量}
+\begin{tabular}{llp{8.6cm}}
+\toprule
+组别 & 变量 & 定义 \\
+\midrule
+财务 & \(Size\) & \(\ln(\text{TotalAssets})\)，总资产须为正 \\
+ & \(Lev\) & 总负债 / 总资产 \\
+ & \(ROA\) & 净利润 / 总资产 \\
+ & \(CFO\) & 经营净现金流 / 总资产 \\
+ & \(Growth\) & 全市场营业收入的相邻年同比；上年收入非正或年份不连续则缺失 \\
+ & \(FirmAge\) & 上市年限，负值作缺失 \\
+治理 & \(SOE\) & 同年任一实际控制人属于国有类别则为 1 \\
+ & \(Dual\) & 两职合一 \\
+ & \(BoardSize\) & \(\ln(\text{董事人数})\)，人数须为正 \\
+ & \(IndependentDirectorRatio\) & 独立董事比例 \\
+审计 & \(Big4\) & 国际四大 \\
+ & \(LnAuditFee\) & \(\ln(\text{TotalAuditFee})\)，费用须为正 \\
+ & \(AuditorTenure\) & 审计任期 \\
+ & \(IsChangeFirm\) & 相对上年更换事务所为 1，否则为 0 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 缩尾变量：\(Size\), \(Lev\), \(ROA\), \(CFO\), \(Growth\), \(FirmAge\), \(BoardSize\), \(IndependentDirectorRatio\), \(LnAuditFee\), \(AuditorTenure\)。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\section{自变量怎么计算}
+\label{sec:x}
+
+事务所以 CSMAR \texttt{InstitutionID} 识别。行业口径为 \texttt{ExpertiseIndustryCode}：制造业保留证监会行业代码中以 C 开头的次类，非制造业取门类首字母，综合类 O 不进入分母。市场范围为 2021--2024 年全 A 股审计市场。事务所份额的分母是该行业--年，分子是同一家事务所在该行业--年的对应规模合计。
+
+\subsection{事务所连续份额}
+
+基准口径按客户营业收入：
+\begin{equation}
+IMS_{a,j,t}=\frac{\sum_{i\in(a,j,t)}Revenue_{i,t}}{\sum_{i\in(j,t)}Revenue_{i,t}}.
+\label{eq:ims}
+\end{equation}
+
+另外两个口径只换规模变量，行业和年份不变。
+\begin{align}
+IMS\_fee_{a,j,t}&=\frac{\sum_{i\in(a,j,t)}Fee_{i,t}}{\sum_{i\in(j,t)}Fee_{i,t}}, \label{eq:imsfee}\\
+IMS\_asset_{a,j,t}&=\frac{\sum_{i\in(a,j,t)}\sqrt{Asset_{i,t}}}{\sum_{i\in(j,t)}\sqrt{Asset_{i,t}}}. \label{eq:imsasset}
+\end{align}
+审计收费取自审计意见文件 \texttt{AIQ\_FinAuditOpinY}。同一公司--年若有多条记录，保留收费最高的一条，且收费须为正。资产平方根要求总资产为正。
+
+leave-one-out 份额从式~\eqref{eq:ims} 的分子和分母中都减去本公司当年营业收入，避免客户自己的规模同时进入两边。分子须非负、分母须为正，否则该观测缺失：
+\begin{equation}
+IMS\_LOO_{i,t}=\frac{\sum_{k\in(a,j,t)}Revenue_{k,t}-Revenue_{i,t}}{\sum_{k\in(j,t)}Revenue_{k,t}-Revenue_{i,t}}.
+\label{eq:imsloo}
+\end{equation}
+
+\subsection{事务所二元份额}
+
+四个二元变量都使用面板上已经写定的 20\% 强专长切点。连续份额缺失时，对应二元变量也缺失。
+\begin{align*}
+IMS\_D&=1\{IMS\ge 0.20\},\\
+IMS\_fee\_D&=1\{IMS\_fee\ge 0.20\},\\
+IMS\_asset\_D&=1\{IMS\_asset\ge 0.20\},\\
+IMS\_LOO\_D&=1\{IMS\_LOO\ge 0.20\}.
+\end{align*}
+
+\subsection{签字合伙人专长}
+
+签字人姓名取自审计意见文件的 \texttt{Auditor} 字段，按逗号、顿号拆开。没有合伙人身份证号，同名不同人会并在一起。市场范围与事务所份额相同：2021--2024 年、营业收入为正、行业不是 O。
+
+合伙人 \(p\) 在行业 \(j\)、年份 \(t\) 的份额为
+\begin{equation}
+PIMS_{p,j,t}=\frac{\sum_{i\in(p,j,t)}Revenue_{i,t}}{\sum_{i\in(j,t)}Revenue_{i,t}}.
+\label{eq:pims}
+\end{equation}
+同一客户的营业收入会计入每一位签字合伙人，所以一个行业--年里各合伙人份额之和可以大于 1。这不是把市场切成互斥的块。合伙人份额的中位数远低于 20\%，因此 20\% 切点不用于合伙人。
+
+公司--年指标由当年全体签字合伙人的份额汇总而来。
+
+\begin{center}
+\begin{threeparttable}
+\caption{合伙人指标}
+\label{tab:pims-def}
+\begin{tabular}{lp{10.4cm}}
+\toprule
+变量 & 定义 \\
+\midrule
+\texttt{PIMS\_max} & 该公司当年全体签字合伙人份额的最大值。 \\
+\texttt{PIMS\_mean} & 签字合伙人份额的简单平均。 \\
+\texttt{PIMS\_LOO\_max} & 从式~\eqref{eq:pims} 的分子和分母减去本公司营收后的份额，再取签字人中的最大值。 \\
+\texttt{PIMS\_LOO\_mean} & 同一 leave-one-out 份额的签字人平均。 \\
+\texttt{PIMS\_D\_leader} & 该行业--年度份额最高的合伙人；并列最高都算领导者。公司当年任一签字人是领导者则取 1。 \\
+\texttt{PIMS\_D\_p90} & 合伙人份额不低于该行业--年度合伙人份额的第 90 百分位。公司当年任一签字人达到该切点则取 1。 \\
+\bottomrule
+\end{tabular}
+\end{threeparttable}
+\end{center}
+
+两个二元规则在看回归之前按相对排名写定，不是 20\% 切点。
+
+\section{结果}
+\label{sec:results}
+
+每个变量单独进入式~\eqref{eq:firmfe}。收费份额或资产份额缺失的观测不进入对应回归，所以这两列的样本是 15,279 条、4,580 家公司。leave-one-out 事务所份额还要求本公司营收可以从分子和分母中减去且分母仍为正，样本是 15,277 条、4,580 家公司。合伙人指标缺 1 条，样本是 15,380 条、仍为 4,604 家公司。基准 \(IMS\) 与 \(IMS\_D\) 用完整共同样本 15,381 条、4,604 家公司。
+
+\begin{center}
+\begin{threeparttable}
+\caption{企业固定效应主规格：基准 IMS 与替代专长}
+\label{tab:alt}
+\small
+\begin{tabular}{lcccccc}
+\toprule
+变量 & 系数 & 标准误 & \(p\) 值 & \(N\) & 公司数 & 组内标准差 \\
+\midrule
+\multicolumn{7}{l}{\textit{Panel A. 事务所连续份额}} \\
+\addlinespace
+\texttt{IMS} & $-0.241$ & (0.230) & 0.294 & 15,381 & 4,604 & 0.032 \\
+\texttt{IMS\_fee} & $-0.046$ & (0.320) & 0.887 & 15,279 & 4,580 & 0.023 \\
+\texttt{IMS\_asset} & $-0.079$ & (0.304) & 0.795 & 15,279 & 4,580 & 0.023 \\
+\texttt{IMS\_LOO} & $-0.191$ & (0.223) & 0.391 & 15,277 & 4,580 & 0.032 \\
+\addlinespace
+\multicolumn{7}{l}{\textit{Panel B. 事务所二元份额，切点 20\%}} \\
+\addlinespace
+\texttt{IMS\_D} & $-0.100$ & (0.065) & 0.123 & 15,381 & 4,604 & 0.123 \\
+\texttt{IMS\_fee\_D} & 0.020 & (0.085) & 0.818 & 15,279 & 4,580 & 0.084 \\
+\texttt{IMS\_asset\_D} & $-0.010$ & (0.078) & 0.903 & 15,279 & 4,580 & 0.087 \\
+\texttt{IMS\_LOO\_D} & $-0.094$ & (0.066) & 0.156 & 15,277 & 4,580 & 0.115 \\
+\addlinespace
+\multicolumn{7}{l}{\textit{Panel C. 签字合伙人连续份额}} \\
+\addlinespace
+\texttt{PIMS\_max} & $-1.627$ & (1.230) & 0.186 & 15,380 & 4,604 & 0.006 \\
+\texttt{PIMS\_mean} & $-2.102$ & (1.796) & 0.242 & 15,380 & 4,604 & 0.005 \\
+\texttt{PIMS\_LOO\_max} & $-1.068$ & (1.347) & 0.428 & 15,380 & 4,604 & 0.005 \\
+\texttt{PIMS\_LOO\_mean} & $-1.494$ & (2.891) & 0.605 & 15,380 & 4,604 & 0.003 \\
+\addlinespace
+\multicolumn{7}{l}{\textit{Panel D. 签字合伙人二元指标}} \\
+\addlinespace
+\texttt{PIMS\_D\_leader} & $-0.555^{**}$ & (0.241) & 0.021 & 15,380 & 4,604 & 0.036 \\
+\texttt{PIMS\_D\_p90} & $-0.108^{**}$ & (0.052) & 0.036 & 15,380 & 4,604 & 0.142 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：每行单独估计式~\eqref{eq:firmfe}。固定效应为企业与年份，控制为全部基准控制，括号内为公司聚类标准误。\(^{*}\)、\(^{**}\)、\(^{***}\) 分别表示 \(p<0.10\)、\(0.05\)、\(0.01\)。组内标准差是回归样本上该自变量的公司内离差标准差。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\subsection{读表}
+
+事务所层面的八个变量都不显著。基准 \(IMS\) 为 \(-0.241\)（标准误 0.230，\(p=0.294\)），\(IMS\_D\) 为 \(-0.100\)（0.065，\(p=0.123\)）。审计收费份额 \(IMS\_fee\) 为 \(-0.046\)（0.320，\(p=0.887\)），资产平方根份额 \(IMS\_asset\) 为 \(-0.079\)（0.304，\(p=0.795\)），都比营业收入口径更接近零。两者的组内标准差都是 0.023，营业收入 \(IMS\) 是 0.032。对应的 20\% 二元变量分别是 \(0.020\)（\(p=0.818\)）和 \(-0.010\)（\(p=0.903\)）。去掉本公司营收后，\(IMS\_LOO\) 为 \(-0.191\)（0.223，\(p=0.391\)），\(IMS\_LOO\_D\) 为 \(-0.094\)（0.066，\(p=0.156\)）。
+
+签字合伙人的四个连续份额都为负，公司聚类下都不显著：\(PIMS\_max\) 为 \(-1.627\)（1.230，\(p=0.186\)），\(PIMS\_mean\) 为 \(-2.102\)（1.796，\(p=0.242\)），两个 leave-one-out 口径的 \(p\) 值分别为 0.428 和 0.605。连续合伙人份额的组内标准差只有 0.003 到 0.006。
+
+二元合伙人指标里，\(PIMS\_D\_p90\) 为 \(-0.108\)（0.052，\(p=0.036\)），\(PIMS\_D\_leader\) 为 \(-0.555\)（0.241，\(p=0.021\)）。领导者指标在样本期内只有 27 家公司发生过切换，组内标准差为 0.036。90 分位指标有 404 家公司发生过切换，组内标准差为 0.142。
+
+\end{document}

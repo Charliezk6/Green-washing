@@ -1,0 +1,17 @@
+{
+  "dependent": "Greenwashing连续_基准",
+  "core_variables": ["SPEC"],
+  "financial_controls": ["Size", "Lev", "ROA", "CFO", "Growth", "FirmAge"],
+  "governance_controls": ["SOE", "Dual", "BoardSize", "IndependentDirectorRatio"],
+  "audit_controls": ["Big4", "LnAuditFee", "AuditorTenure", "IsChangeFirm"],
+  "input_panel": "test/data/combined_greenwashing_auditor_expertise_panel_spec.csv",
+  "input_revenue": "Regression/data/input/full_market_financial_revenue_2020_2024.csv",
+  "baseline_coefficients": "test/02_baseline/outputs/SPEC基准回归完整系数.csv",
+  "output_dir": "outputs",
+  "expected_common_sample": 15381,
+  "firm_fe": true,
+  "year_fe": true,
+  "industry_fe": false,
+  "standard_errors": "firm_clustered",
+  "notes": "Same as validation/P1/FirmFE except the core variable is SPEC (audit-fee industry-year share leader). Paths are relative to the repository root."
+}

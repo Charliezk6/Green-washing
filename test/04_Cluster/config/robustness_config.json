@@ -1,0 +1,15 @@
+{
+  "project": "treatment-structure-clustering-spec",
+  "input_panel": "data/common_sample_15381_soe_imputed_spec.csv",
+  "dependent": "Greenwashing连续_基准",
+  "core_variables": ["SPEC"],
+  "firm_id": "证券代码",
+  "year": "时间",
+  "auditor_id": "InstitutionID",
+  "auditor_name": "AccountingFirmName",
+  "industry": "ExpertiseIndustryCode",
+  "controls": ["Size", "Lev", "ROA", "CFO", "Growth", "FirmAge", "SOE", "Dual", "BoardSize", "IndependentDirectorRatio", "Big4", "LnAuditFee", "AuditorTenure", "IsChangeFirm"],
+  "n_boot": 999,
+  "boot_seed": 20260921,
+  "notes": "Same clustering design as validation/P1/Cluster with the core variable replaced by SPEC (audit-fee industry-year share leader). input_panel is relative to test/."
+}

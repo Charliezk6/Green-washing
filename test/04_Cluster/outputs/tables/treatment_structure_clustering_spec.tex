@@ -1,0 +1,23 @@
+\begin{table}[H]
+    \centering
+    \caption{Baseline SPEC Estimates under Treatment-Structure Clustering}
+    \label{tab:treatment_structure_clustering_spec}
+    \begin{tabular}{lccc}
+        \toprule
+        Clustering & \(SPEC\) & Clusters & N \\
+        \midrule
+        (1) Firm & -0.0957* (0.0505) & 4604 & 15,381 \\
+        (2) Audit firm & -0.0957** (0.0456) & 96 & 15,381 \\
+        (3) Audit-firm–industry & -0.0957** (0.0389) & 1205 & 15,381 \\
+        (4) Firm + audit firm & -0.0957** (0.0454) & 4604 × 96 & 15,381 \\
+        (5) Audit firm + industry & -0.0957* (0.0525) & 96 × 47 & 15,381 \\
+        (6) Industry & -0.0957** (0.0468) & 47 & 15,381 \\
+        (7) Industry + year & -0.0957** (0.0387) & 47 × 4 & 15,381 \\
+        \bottomrule
+    \end{tabular}
+    \par\smallskip
+    \begin{minipage}{0.95\textwidth}
+        \footnotesize
+        \textit{Notes:} Same baseline specification with all controls and year and industry fixed effects. Only the standard-error clustering changes. Two-way rows report Cameron--Gelbach--Miller multiway clustering. ***, **, and * denote two-tailed significance at 1, 5, and 10 percent.
+    \end{minipage}
+\end{table}

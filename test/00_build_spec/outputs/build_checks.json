@@ -1,0 +1,42 @@
+{
+  "industry_years": 188,
+  "industry_years_without_leader": 0,
+  "industry_years_with_tied_leader": 1,
+  "max_abs_share_sum_minus_1": 2.220446049250313e-16,
+  "market_rows": 20768,
+  "market_rows_with_positive_fee": 20675,
+  "combined_greenwashing_auditor_expertise_panel_spec.csv": {
+    "rows": 18077,
+    "spec_nonmissing": 18077,
+    "spec_mean": 0.1296675333296454,
+    "spec_loo_nonmissing": 18077,
+    "spec_loo_mean": 0.11727609669746086,
+    "industry_code_mismatch_vs_market": 0,
+    "panel_institution_id_differs_from_market": 188
+  },
+  "combined_regression_panel_15381_spec.csv": {
+    "rows": 15381,
+    "spec_nonmissing": 15381,
+    "spec_mean": 0.12782003770886158,
+    "spec_loo_nonmissing": 15381,
+    "spec_loo_mean": 0.11624731811975815,
+    "industry_code_mismatch_vs_market": 0,
+    "panel_institution_id_differs_from_market": 103
+  },
+  "common_sample_15381_soe_imputed_spec.csv": {
+    "rows": 15381,
+    "spec_nonmissing": 15381,
+    "spec_mean": 0.12782003770886158,
+    "spec_loo_nonmissing": 15381,
+    "spec_loo_mean": 0.11624731811975815,
+    "industry_code_mismatch_vs_market": 0,
+    "panel_institution_id_differs_from_market": 103
+  },
+  "firmfe_ims_fee_crosscheck": {
+    "cells_both": 4127,
+    "cells_only_spec": 0,
+    "cells_only_firmfe": 123,
+    "max_abs_share_difference": 5.551115123125783e-17,
+    "leader_agreement_rate": 1.0
+  }
+}

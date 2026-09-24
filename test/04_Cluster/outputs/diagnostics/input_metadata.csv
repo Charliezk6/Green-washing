@@ -1,0 +1,15 @@
+﻿item,value
+input_panel,D:\Charlie 应用\Documents\zkk\Research Project\greenwashing\test\data\common_sample_15381_soe_imputed_spec.csv
+raw_rows,15381
+firms,4604
+auditors,96
+auditor_industry,1205
+auditor_industry_year,3827
+industries,47
+years,4
+fixed_effects,industry + year
+oneway,firm_clustered;auditor_clustered;auditor_industry_clustered;industry_clustered
+twoway,firm_auditor_clustered;auditor_industry_twoway;industry_year_clustered
+wcr,industry_clustered;auditor_clustered
+n_boot,999
+boot_seed,20260921

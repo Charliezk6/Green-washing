@@ -1,0 +1,9 @@
+input=D:\Charlie 应用\Documents\zkk\Research Project\greenwashing\test\data\common_sample_15381_soe_imputed_spec.csv
+rows=15381
+models=7
+fixed_effects=industry_year
+oneway=['firm_clustered', 'auditor_clustered', 'auditor_industry_clustered', 'industry_clustered']
+twoway=['firm_auditor_clustered', 'auditor_industry_twoway', 'industry_year_clustered']
+wcr=['industry_clustered', 'auditor_clustered']
+n_boot=999
+boot_seed=20260921

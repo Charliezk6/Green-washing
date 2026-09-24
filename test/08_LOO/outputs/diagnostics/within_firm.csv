@@ -1,0 +1,3 @@
+﻿variable,firms_with_observations,firms_with_within_variation,mean_within_std
+SPEC,4604,529,0.06767295221861913
+SPEC_LOO,4604,485,0.06169217777583364

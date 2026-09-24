@@ -1,0 +1,8 @@
+﻿model,n,cluster,core
+SPEC_firm_clustered,15381,firm_clustered,SPEC
+SPEC_auditor_clustered,15381,auditor_clustered,SPEC
+SPEC_auditor_industry_clustered,15381,auditor_industry_clustered,SPEC
+SPEC_industry_clustered,15381,industry_clustered,SPEC
+SPEC_firm_auditor_clustered,15381,firm_auditor_clustered,SPEC
+SPEC_auditor_industry_twoway,15381,auditor_industry_twoway,SPEC
+SPEC_industry_year_clustered,15381,industry_year_clustered,SPEC

@@ -1,0 +1,3 @@
+﻿cluster_label,cluster,n_clusters,n_boot,SPEC,SPEC_sandwich_p,SPEC_wcr_p,SPEC_CI
+Industry,industry_clustered,47,999,-0.0957,0.0409939516302849,0.069,"[-0.1830, -0.0005]"
+Audit firm,auditor_clustered,96,999,-0.0957,0.0359435553065175,0.059,"[-0.1801, -0.0125]"

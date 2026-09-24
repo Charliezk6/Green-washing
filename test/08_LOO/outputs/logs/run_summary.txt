@@ -1,0 +1,5 @@
+input=D:\Charlie 应用\Documents\zkk\Research Project\greenwashing\test\data\combined_regression_panel_15381_spec.csv
+rows=15381
+loo_definition=exclude_focal_client_fee_from_its_auditor_industry_year_total_then_check_leadership
+auditor_identifier=SPEC_AuditorID (full-market file)
+models=1

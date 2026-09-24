@@ -1,0 +1,2 @@
+﻿model,dependent,n,firms,industries,years,fixed_effects,cluster
+SPEC_LOO_industry_year_fe,Greenwashing连续_基准,15381,4604,47,4,industry_year,firm

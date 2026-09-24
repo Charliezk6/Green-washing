@@ -1,0 +1,3 @@
+﻿variable,cluster,n_clusters,n_boot,seed,coefficient,sandwich_se,sandwich_t,sandwich_p,wcr_p,ci_low,ci_high,method,ci_method,n
+SPEC,industry_clustered,47,999,20260921,-0.09567570295003043,0.04681743786415416,-2.0435911770234796,0.04099395163028494,0.069,-0.18296963188910478,-0.0004612339278553226,restricted_webb_wcr,unrestricted_webb_percentile,15381
+SPEC,auditor_clustered,96,999,20260921,-0.09567570295003043,0.04561273917631237,-2.0975653880422245,0.0359435553065175,0.059,-0.18008632232230284,-0.012463015596404557,restricted_webb_wcr,unrestricted_webb_percentile,15381

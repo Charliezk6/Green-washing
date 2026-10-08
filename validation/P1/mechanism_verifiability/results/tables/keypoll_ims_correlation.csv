@@ -1,0 +1,38 @@
+﻿block,variable,statistic,value,std_error,p_value,n,notes
+association,IMS,pearson,0.07168368319637819,,5.537017551025152e-19,15381,not cluster-robust
+association,IMS,spearman,0.0951593985592801,,2.8115899701444053e-32,15381,not cluster-robust
+association,IMS_D,pearson,0.0567220774494568,,1.925475118864115e-12,15381,not cluster-robust
+association,IMS_D,spearman,0.05672207744945683,,1.925475118863999e-12,15381,not cluster-robust
+residual_industry_year,IMS,pearson,0.06586148941262447,,2.925310344394934e-16,15381,residuals after listed FE; p not cluster-robust
+residual_industry_year,IMS,spearman,0.06511964501041853,,6.263863040102241e-16,15381,residuals after listed FE; p not cluster-robust
+residual_industry_year,IMS_D,pearson,0.053375513304279046,,3.50024988090166e-11,15381,residuals after listed FE; p not cluster-robust
+residual_industry_year,IMS_D,spearman,0.034007842377559355,,2.4589436832236387e-05,15381,residuals after listed FE; p not cluster-robust
+residual_industry,IMS,pearson,0.06623867570566243,,1.9798677299619682e-16,15381,residuals after listed FE; p not cluster-robust
+residual_industry,IMS,spearman,0.06305037696753282,,5.009624505045792e-15,15381,residuals after listed FE; p not cluster-robust
+residual_industry,IMS_D,pearson,0.05467118224775077,,1.162055520168598e-11,15381,residuals after listed FE; p not cluster-robust
+residual_industry,IMS_D,spearman,0.003586808468847867,,0.6564629668887754,15381,residuals after listed FE; p not cluster-robust
+group_moment,IMS,mean,0.07716946125675594,,,5941,KeyPollMonUnit=1
+group_moment,IMS,median,0.0485148039936088,,,5941,KeyPollMonUnit=1
+group_moment,IMS,std,0.08253550220392372,,,5941,KeyPollMonUnit=1
+group_moment,IMS,mean,0.06513679509649335,,,9440,KeyPollMonUnit=0
+group_moment,IMS,median,0.0392854612802545,,,9440,KeyPollMonUnit=0
+group_moment,IMS,std,0.08087999106988444,,,9440,KeyPollMonUnit=0
+mean_difference_cluster,IMS,KeyPoll1_minus_0,0.01203266616026212,0.0022340224356110754,7.200328554213435e-08,15381,OLS coefficient on KeyPollMonUnit; firm-clustered SE
+ranksum,IMS,mannwhitney_u,31205699.5,,3.8433552187808097e-32,15381,not cluster-robust
+group_moment,IMS_D,mean,0.07389328395892947,,,5941,KeyPollMonUnit=1
+group_moment,IMS_D,median,0.0,,,5941,KeyPollMonUnit=1
+group_moment,IMS_D,std,0.2616191645559782,,,5941,KeyPollMonUnit=1
+group_moment,IMS_D,mean,0.04682203389830508,,,9440,KeyPollMonUnit=0
+group_moment,IMS_D,median,0.0,,,9440,KeyPollMonUnit=0
+group_moment,IMS_D,std,0.2112686897449508,,,9440,KeyPollMonUnit=0
+mean_difference_cluster,IMS_D,KeyPoll1_minus_0,0.027071250060623386,0.006122730517634251,9.804792688852678e-06,15381,OLS coefficient on KeyPollMonUnit; firm-clustered SE
+ranksum,IMS_D,mannwhitney_u,28800639.0,,2.0005170109797074e-12,15381,not cluster-robust
+crosstab,IMS_D,count,8998.0,,,15381,KeyPollMonUnit=0; IMS_D=0
+crosstab,IMS_D,row_share,0.9531779661016949,,,9440,KeyPollMonUnit=0; IMS_D=0
+crosstab,IMS_D,count,442.0,,,15381,KeyPollMonUnit=0; IMS_D=1
+crosstab,IMS_D,row_share,0.04682203389830508,,,9440,KeyPollMonUnit=0; IMS_D=1
+crosstab,IMS_D,count,5502.0,,,15381,KeyPollMonUnit=1; IMS_D=0
+crosstab,IMS_D,row_share,0.9261067160410705,,,5941,KeyPollMonUnit=1; IMS_D=0
+crosstab,IMS_D,count,439.0,,,15381,KeyPollMonUnit=1; IMS_D=1
+crosstab,IMS_D,row_share,0.07389328395892947,,,5941,KeyPollMonUnit=1; IMS_D=1
+crosstab,IMS_D,chi2,48.98666657278572,,2.5770839949610613e-12,15381,df=1; not cluster-robust

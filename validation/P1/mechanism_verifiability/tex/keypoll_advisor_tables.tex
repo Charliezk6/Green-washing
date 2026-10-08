@@ -1,0 +1,228 @@
+\begin{center}
+\begin{threeparttable}
+\caption{重点排污单位与行业专长的相关}
+\label{tab:keypoll-corr}
+\begin{tabular}{lcc}
+\toprule
+ & \texttt{IMS} & \texttt{IMS\_D} \\
+\midrule
+Pearson & 0.072 & 0.057 \\
+Spearman & 0.095 & 0.057 \\
+行业与年份残差后的 Pearson & 0.066 & 0.053 \\
+\midrule
+重点单位均值 & 0.077 & 0.074 \\
+非重点单位均值 & 0.065 & 0.047 \\
+重点单位中位数 & 0.049 & 0 \\
+非重点单位中位数 & 0.039 & 0 \\
+重点单位标准差 & 0.083 & 0.262 \\
+非重点单位标准差 & 0.081 & 0.211 \\
+均值差（重点减非重点，公司聚类） & $0.012^{***}$ & $0.027^{***}$ \\
+均值差的标准误 & 0.002 & 0.006 \\
+\midrule
+\texttt{IMS\_D}$=0$，非重点 & \multicolumn{2}{c}{8{,}998（95.3\%）} \\
+\texttt{IMS\_D}$=1$，非重点 & \multicolumn{2}{c}{442（4.7\%）} \\
+\texttt{IMS\_D}$=0$，重点 & \multicolumn{2}{c}{5{,}502（92.6\%）} \\
+\texttt{IMS\_D}$=1$，重点 & \multicolumn{2}{c}{439（7.4\%）} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：共同样本 $N=15{,}381$。均值差来自以 \texttt{KeyPollMonUnit} 为唯一回归元的 OLS，标准误按公司聚类。Pearson、Spearman 与交叉表的 $p$ 值没有按公司聚类；残差相关是先对行业和年份虚拟变量回归后再算 Pearson。\texttt{IMS\_D} 的均值是组内取 1 的比例。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\begin{center}
+\begin{threeparttable}
+\caption{当期重点排污单位：\texttt{IMS} 的组斜率}
+\label{tab:keypoll-slopes-advisor}
+\begin{tabular}{lcccccc}
+\toprule
+ & \multicolumn{2}{c}{约束交互} & \multicolumn{2}{c}{完全交互} & \multicolumn{2}{c}{分组回归} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+ & 系数 & 标准误 & 系数 & 标准误 & 系数 & 标准误 \\
+\midrule
+非重点单位斜率 \(\beta\) & $0.053$ & 0.284 & $-0.459^{*}$ & 0.279 & $-0.459^{*}$ & 0.279 \\
+重点单位斜率 \(\beta+\gamma\) & $-1.308^{***}$ & 0.355 & $-0.497$ & 0.341 & $-0.497$ & 0.341 \\
+斜率差 \(\gamma\) & $-1.361^{***}$ & 0.428 & $-0.038$ & 0.434 & -- & -- \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：完全交互让控制变量、年份固定效应和行业固定效应都与 \texttt{KeyPollMonUnit} 相乘。联合检验拒绝其他交互项为零，推断用完全交互一列。该列的 \(\beta\) 与 \(\beta+\gamma\) 等于分组回归的两个系数。分组回归不检验 \(\gamma\)。公司聚类。$N=15{,}381$。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\begin{center}
+\begin{threeparttable}
+\caption{重点单位专长斜率的线性组合检验}
+\label{tab:keypoll-lincom}
+\begin{tabular}{llccccc}
+\toprule
+核心变量 & 规格 & \(\beta+\gamma\) & 标准误 & \(t\) & \(p\) & 用于推断 \\
+\midrule
+\texttt{IMS} & 约束交互 & $-1.308^{***}$ & 0.355 & -3.68 & $<$0.001 & 否 \\
+\texttt{IMS} & 完全交互 & $-0.497$ & 0.341 & -1.46 & 0.145 & 是 \\
+\texttt{IMS\_D} & 约束交互 & $-0.294^{***}$ & 0.108 & -2.72 & 0.007 & 否 \\
+\texttt{IMS\_D} & 完全交互 & $-0.057$ & 0.104 & -0.55 & 0.584 & 是 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：原假设是 \(\beta+\gamma=0\)，即重点排污单位组的专长斜率为零。标准误与 \(t\) 来自公司聚类协方差上的线性组合，对应 Stata 的 \texttt{lincom}。两行「完全交互」是推断所用规格。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\begin{center}
+\begin{threeparttable}
+\caption{完全交互的其他项：控制变量与年份}
+\label{tab:keypoll-other}
+\begin{tabular}{lccc}
+\toprule
+项 & 系数 & 标准误 & \(p\) \\
+\midrule
+\multicolumn{4}{l}{\textit{控制变量 $\times V$}} \\
+\texttt{Size} $\times V$ & $-0.208^{***}$ & 0.048 & $<$0.001 \\
+\texttt{Lev} $\times V$ & $0.313$ & 0.220 & 0.156 \\
+\texttt{ROA} $\times V$ & $-1.304^{**}$ & 0.557 & 0.019 \\
+\texttt{CFO} $\times V$ & $-0.241$ & 0.490 & 0.622 \\
+\texttt{Growth} $\times V$ & $0.122$ & 0.085 & 0.152 \\
+\texttt{FirmAge} $\times V$ & $0.004$ & 0.005 & 0.459 \\
+\texttt{SOE} $\times V$ & $-0.091$ & 0.096 & 0.347 \\
+\texttt{Dual} $\times V$ & $-0.062$ & 0.072 & 0.394 \\
+\texttt{BoardSize} $\times V$ & $-0.435^{***}$ & 0.159 & 0.006 \\
+\texttt{IndependentDirectorRatio} $\times V$ & $-1.535^{***}$ & 0.576 & 0.008 \\
+\texttt{Big4} $\times V$ & $-0.407^{**}$ & 0.180 & 0.024 \\
+\texttt{LnAuditFee} $\times V$ & $-0.191^{**}$ & 0.090 & 0.033 \\
+\texttt{AuditorTenure} $\times V$ & $-0.001$ & 0.006 & 0.858 \\
+\texttt{IsChangeFirm} $\times V$ & $0.066$ & 0.077 & 0.391 \\
+\midrule
+\multicolumn{4}{l}{\textit{年份 $\times V$，参照 2021}} \\
+2022 $\times V$ & $0.037$ & 0.046 & 0.420 \\
+2023 $\times V$ & $-0.063$ & 0.054 & 0.242 \\
+2024 $\times V$ & $-0.138^{**}$ & 0.059 & 0.020 \\
+\midrule
+\multicolumn{4}{l}{\textit{调节变量主效应（参照水平上的截距差）}} \\
+\texttt{KeyPollMonUnit} & $9.743^{***}$ & 1.147 & $<$0.001 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：样本为当期 \texttt{IMS} 与 \texttt{KeyPollMonUnit}，$N=15{,}381$。\texttt{KeyPollMonUnit} 主效应是控制变量和固定效应取参照水平时的截距差，不是重点单位的平均漂绿差距。行业交互见表~\ref{tab:keypoll-industry}，联合检验见表~\ref{tab:keypoll-wald}。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\begin{center}
+\begin{threeparttable}
+\caption{其他交互项的联合检验}
+\label{tab:keypoll-wald}
+\begin{tabular}{lccc}
+\toprule
+原假设 & $\chi^2$ & 自由度 & \(p\) \\
+\midrule
+控制 $\times V=0$ & 113.67 & 14 & $<$0.001 \\
+年份与行业 $\times V=0$ & 234.50 & 49 & $<$0.001 \\
+全部其他交互 $=0$ & 362.73 & 63 & $<$0.001 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：公司聚类下的 $\chi^2$ Wald，不含 \(S\times V\)。全部其他交互在 5\% 水平拒绝，表~\ref{tab:keypoll-slopes-advisor} 的推断用完全交互。自由度是协方差矩阵的秩。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\begin{center}
+\begin{threeparttable}
+\caption{完全交互的行业虚拟变量 $\times$ 重点排污单位}
+\label{tab:keypoll-industry}
+\footnotesize
+\begin{tabular}{lccc}
+\toprule
+项 & 系数 & 标准误 & \(p\) \\
+\midrule
+\texttt{B} $\times V$ & $0.058$ & 0.382 & 0.879 \\
+\texttt{C13} $\times V$ & $-0.272$ & 0.382 & 0.476 \\
+\texttt{C14} $\times V$ & $-1.258^{***}$ & 0.419 & 0.003 \\
+\texttt{C15} $\times V$ & $-0.892^{*}$ & 0.457 & 0.051 \\
+\texttt{C17} $\times V$ & $-1.267^{***}$ & 0.416 & 0.002 \\
+\texttt{C18} $\times V$ & $-0.121$ & 0.483 & 0.802 \\
+\texttt{C19} $\times V$ & $-0.353$ & 0.691 & 0.609 \\
+\texttt{C20} $\times V$ & $-1.567^{***}$ & 0.539 & 0.004 \\
+\texttt{C21} $\times V$ & $-0.936^{*}$ & 0.504 & 0.063 \\
+\texttt{C22} $\times V$ & $-0.885^{**}$ & 0.419 & 0.035 \\
+\texttt{C23} $\times V$ & $-0.316$ & 0.488 & 0.517 \\
+\texttt{C24} $\times V$ & $-0.416$ & 0.623 & 0.504 \\
+\texttt{C25} $\times V$ & $0.127$ & 0.439 & 0.773 \\
+\texttt{C26} $\times V$ & $-0.308$ & 0.334 & 0.356 \\
+\texttt{C27} $\times V$ & $-0.305$ & 0.322 & 0.343 \\
+\texttt{C28} $\times V$ & $-0.841$ & 0.570 & 0.140 \\
+\texttt{C29} $\times V$ & $-0.966^{***}$ & 0.373 & 0.010 \\
+\texttt{C30} $\times V$ & $-1.003^{***}$ & 0.365 & 0.006 \\
+\texttt{C31} $\times V$ & $0.149$ & 0.402 & 0.711 \\
+\texttt{C32} $\times V$ & $-0.232$ & 0.382 & 0.543 \\
+\texttt{C33} $\times V$ & $-0.656^{*}$ & 0.372 & 0.078 \\
+\texttt{C34} $\times V$ & $-0.573^{*}$ & 0.340 & 0.092 \\
+\texttt{C35} $\times V$ & $-0.296$ & 0.333 & 0.374 \\
+\bottomrule
+\end{tabular}
+\end{threeparttable}
+\end{center}
+
+\begin{center}
+\begin{threeparttable}
+\caption{完全交互的行业虚拟变量 $\times$ 重点排污单位（续）}
+\footnotesize
+\begin{tabular}{lccc}
+\toprule
+项 & 系数 & 标准误 & \(p\) \\
+\midrule
+\texttt{C36} $\times V$ & $-0.660^{*}$ & 0.341 & 0.053 \\
+\texttt{C37} $\times V$ & $-0.010$ & 0.386 & 0.979 \\
+\texttt{C38} $\times V$ & $-0.497$ & 0.321 & 0.121 \\
+\texttt{C39} $\times V$ & $-0.175$ & 0.308 & 0.570 \\
+\texttt{C40} $\times V$ & $0.842^{*}$ & 0.487 & 0.084 \\
+\texttt{C41} $\times V$ & $-1.240^{*}$ & 0.641 & 0.053 \\
+\texttt{C42} $\times V$ & $-0.417$ & 0.484 & 0.388 \\
+\texttt{C43} $\times V$ & $-1.199^{***}$ & 0.440 & 0.006 \\
+\texttt{D} $\times V$ & $-0.547$ & 0.345 & 0.113 \\
+\texttt{E} $\times V$ & $-0.180$ & 0.428 & 0.675 \\
+\texttt{F} $\times V$ & $0.612$ & 0.386 & 0.112 \\
+\texttt{G} $\times V$ & $-0.196$ & 0.402 & 0.626 \\
+\texttt{H} $\times V$ & $-1.195^{**}$ & 0.505 & 0.018 \\
+\texttt{I} $\times V$ & $-0.376$ & 0.599 & 0.531 \\
+\texttt{J} $\times V$ & $1.935^{***}$ & 0.429 & $<$0.001 \\
+\texttt{K} $\times V$ & $0.903$ & 0.619 & 0.145 \\
+\texttt{L} $\times V$ & $0.443$ & 0.352 & 0.208 \\
+\texttt{M} $\times V$ & $-0.084$ & 0.387 & 0.828 \\
+\texttt{N} $\times V$ & $0.380$ & 0.376 & 0.313 \\
+\texttt{P} $\times V$ & $0.669$ & 0.425 & 0.115 \\
+\texttt{Q} $\times V$ & $-0.487$ & 0.529 & 0.358 \\
+\texttt{R} $\times V$ & $0.658^{*}$ & 0.362 & 0.069 \\
+\texttt{S} $\times V$ & $-0.512$ & 0.881 & 0.561 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：参照行业为代码 A。系数是该行业重点单位相对参照行业的截距差，不是专长斜率。共 46 项，其中 $p<0.10$ 的有 17 项，$p<0.05$ 的有 9 项，$p<0.01$ 的有 7 项。单项显著不单独决定用哪一个规格。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}
+
+\begin{center}
+\begin{threeparttable}
+\caption{附录：\texttt{IMS\_D}、滞后身份与剔除处罚当年}
+\label{tab:keypoll-advisor-appendix}
+\begin{tabular}{llcccc}
+\toprule
+样本 & 核心 & 其他项联合 $p$ & 完全交互 \(\beta\) & 完全交互 \(\beta+\gamma\) & 完全交互 \(\gamma\) \\
+\midrule
+当期 & \texttt{IMS\_D} & $<$0.001 & $-0.175^{*}$ & $-0.057$ & $0.118$ \\
+滞后 KeyPoll & \texttt{IMS} & $<$0.001 & $-0.553^{*}$ & $-0.432$ & $0.121$ \\
+滞后 KeyPoll & \texttt{IMS\_D} & $<$0.001 & $-0.152$ & $-0.039$ & $0.113$ \\
+剔除处罚当年 & \texttt{IMS} & $<$0.001 & $-0.498^{*}$ & $-0.393$ & $0.105$ \\
+剔除处罚当年 & \texttt{IMS\_D} & $<$0.001 & $-0.178^{*}$ & $-0.031$ & $0.147$ \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：每一行的联合检验都在 5\% 水平拒绝，推断用完全交互，表中系数即该规格。标准误按公司聚类。组斜率的标准误见 \texttt{keypoll\_advisor\_slopes.csv}，逐项系数见 \texttt{keypoll\_full\_other\_terms.csv}。剔除处罚当年、\texttt{IMS} 的全部其他交互约束 63 个，协方差秩为 62；剔除处罚当年、\texttt{IMS\_D} 的全部其他交互约束 63 个，协方差秩为 62，$p$ 值按该秩计算。
+\end{tablenotes}
+\end{threeparttable}
+\end{center}

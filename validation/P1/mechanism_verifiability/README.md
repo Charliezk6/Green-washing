@@ -50,6 +50,20 @@ KeyPoll 另估完全交互 + 行业×年固定效应。
 
 写出：`results/tables/keypoll_full_interact_coefficients.csv`
 
+### `run_keypoll_advisor_diagnostics.py`
+
+重点排污单位的补充估计。完全交互在这个脚本里单独写公式：控制变量、年份固定效应和行业固定效应都与调节变量相乘，不调用 `full_interact_formula`。
+
+除 `S×V` 以外的交互项若联合显著，推断用该完全交互的 `β`、`γ` 和 `β+γ`；否则退回约束交互。`β+γ` 用聚类协方差上的线性组合检验。
+
+写出：
+
+- `results/tables/keypoll_advisor_slopes.csv`
+- `results/tables/keypoll_advisor_lincom.csv`
+- `results/tables/keypoll_full_other_terms.csv`
+- `results/tables/keypoll_ims_correlation.csv`
+- `tex/keypoll_advisor_tables.tex`
+
 ### `run_financial_hetero.py`
 
 对应 pdf 表 3（财务交叉）。调节平行进入、不同时进同一方程：
@@ -78,5 +92,5 @@ KeyPoll 另估完全交互 + 行业×年固定效应。
 因变量 `Greenwashing连续_基准`。控制变量与基准回归相同。
 年份 FE 为 `C(时间)`，行业 FE 为 `C(ExpertiseIndustryCode)`。
 若调节已在控制集中（如 `SOE`），从控制向量中剔除后再进入主效应与交互。
-推断以完全交互中 `IMS × V`（或 `IMS_D × V`）的系数为组间斜率差的正式检验；
-分组回归只报告各组 `IMS` / `IMS_D` 系数。
+财务交叉和文献调节里，组间斜率差看只让控制变量与 `V` 相乘的交互项；分组回归只报告各组 `IMS` / `IMS_D` 系数。
+重点排污单位另按 `run_keypoll_advisor_diagnostics.py`：其他交互项联合显著时，推断改用含固定效应交互的完全交互，重点组效应是 `β+γ`。

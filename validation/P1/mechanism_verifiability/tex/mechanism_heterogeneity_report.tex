@@ -222,18 +222,23 @@ D46 & 水的生产和供应业 \\
 Y_{i,t}=\alpha+\beta S_{i,t}+\theta V_{i,t}+\gamma (S_{i,t}\times V_{i,t})+\delta'X_{i,t}+\lambda_t+\delta_j+\varepsilon_{i,t}.
 \label{eq:constrained}
 \end{equation}
-对应 \texttt{hetero\_common.constrained\_formula}。
+对应 \texttt{hetero\_common.constrained\_formula}。\(V\) 为 0/1 时，\(\partial Y/\partial S|_{V=0}=\beta\)，\(\partial Y/\partial S|_{V=1}=\beta+\gamma\)。\(\gamma\) 只是两组专长斜率之差。
 
 \subsection{完全交互}
 
-全部控制也与 \(V\) 相乘：
+分组回归在 \(V=1\) 与 \(V=0\) 两个子样本里各有一套控制斜率，也各有一套年份固定效应和行业固定效应。与这两组子样本对应的合并规格是
 \begin{equation}
-Y_{i,t}=\alpha+\beta S_{i,t}+\theta V_{i,t}+\gamma (S_{i,t}\times V_{i,t})+\delta'X_{i,t}+\eta'(X_{i,t}\times V_{i,t})+\lambda_t+\delta_j+\varepsilon_{i,t}.
+\begin{aligned}
+Y_{i,t}=&\ \alpha+\beta S_{i,t}+\theta V_{i,t}+\gamma (S_{i,t}\times V_{i,t})+\delta'X_{i,t}+\eta'(X_{i,t}\times V_{i,t})\\
+&+\lambda_t+\phi'(D_t V_{i,t})+\delta_j+\psi'(D_j V_{i,t})+\varepsilon_{i,t}.
+\end{aligned}
 \label{eq:full}
 \end{equation}
-对应 \texttt{hetero\_common.full\_interact\_formula}。\(\gamma\) 的 \(p\) 值为 \(V=1\) 与 \(V=0\) 两组专长斜率之差的正式检验。连续调节（如 \texttt{Capex\_TA}、\texttt{CI}）使用同一函数形式，此时 \(\gamma\) 为专长斜率随 \(V\) 的变化。
+\(D_t\) 与 \(D_j\) 是年份、行业虚拟变量，参照类在公式里省略。\(\gamma\) 仍是两组专长斜率之差。\(\theta\) 是控制变量和固定效应都取参照水平时的截距差，不是 \(V=1\) 组的平均结果差距。
 
-KeyPoll 另估在式~\eqref{eq:full} 上加入行业\(\times\)年固定效应 \(C(\text{时间}):C(\text{ExpertiseIndustryCode})\) 的规格。
+式~\eqref{eq:full} 由 \texttt{run\_keypoll\_advisor\_diagnostics.py} 估计，不调用 \texttt{full\_interact\_formula}。\texttt{hetero\_common.full\_interact\_formula} 只放入 \(X\times V\)，年份和行业固定效应仍两组共用。表~\ref{tab:keypoll} 至表~\ref{tab:lit} 里标为「完全交互」的系数来自后一个函数。连续调节（\texttt{Capex\_TA}、\texttt{CI}）也使用后一个函数：那里的 \(\gamma\) 是专长斜率随连续 \(V\) 的变化，不是两个子样本各自的固定效应。
+
+重点排污单位是否改用式~\eqref{eq:full}，由除 \(S\times V\) 以外的交互项联合检验决定，见第~\ref{sec:keypoll-advisor}~节。表~\ref{tab:keypoll} 中「完全交互 + 行业\(\times\)年 FE」是在只让控制变量与 \(V\) 相乘的规格上加入 \(C(\text{时间}):C(\text{ExpertiseIndustryCode})\)，不是式~\eqref{eq:full}。补充估计不再把行业\(\times\)年固定效应与 \(V\) 相乘。
 
 \subsection{分组回归}
 
@@ -244,7 +249,7 @@ Y_{i,t}=\alpha+\beta S_{i,t}+\delta'X_{i,t}+\lambda_t+\delta_j+\varepsilon_{i,t}
 \end{equation}
 其中 \(X\) 为完整基准控制。对应 \texttt{hetero\_common.subsample\_formula} 与 \texttt{run\_split}。分组回归不对 \(\beta\) 的组间差异做检验。
 
-每条主线报告上述三层；表中交互项为 \(\gamma\)，分组行报告子样本中的 \(\beta\)。
+每条主线报告上述三层；表中交互项为 \(\gamma\)，分组行报告子样本中的 \(\beta\)。重点排污单位的非重点组斜率、重点组斜率 \(\beta+\gamma\)，以及用哪一个规格做推断，见第~\ref{sec:keypoll-advisor}~节。
 
 \section{各表检验的假设}
 \label{sec:hypotheses}
@@ -260,7 +265,7 @@ Y_{i,t}=\alpha+\beta S_{i,t}+\delta'X_{i,t}+\lambda_t+\delta_j+\varepsilon_{i,t}
 \gamma=\frac{\partial Y}{\partial S}\Big|_{V=1}-\frac{\partial Y}{\partial S}\Big|_{V=0}<0
 \qquad\text{（}S\times\texttt{KeyPollMonUnit}\text{）}.
 \]
-表中约束交互、完全交互和分组三行都在回答同一问题：两组的专长斜率是否不同；完全交互中的 \(\gamma\) 是组间差异的正式检验。
+表中三行都在看两组专长斜率是否不同。这些行里的「完全交互」只让控制变量与 \(V\) 相乘。重点排污单位改用式~\eqref{eq:full} 之后的 \(\beta\)、\(\gamma\) 和 \(\beta+\gamma\)，见第~\ref{sec:keypoll-advisor}~节。
 
 \textbf{滞后 KeyPoll（表~\ref{tab:keypoll}--\ref{tab:keypoll-d} 中标注``滞后 KeyPoll''的行）。}
 当期 \texttt{KeyPollMonUnit} 与当期漂绿、当期环境披露写在同一年，身份本身也可能随当年监管和披露同时变化。滞后规格改用上一年的重点排污身份 \(V=\texttt{L\_KeyPollMonUnit}\)，使调节在时间上先于当期 \(Y\) 和当期 \(S\)。仅当同一公司相邻两年相差恰好 1 年时才能构造滞后项，故样本从 15,381 减为 10,488。问的仍是：\emph{上年}已被列为重点排污单位的公司，\emph{当年}专长与漂绿的负向关联是否更强，预测仍为 \(\gamma<0\)。
@@ -268,7 +273,7 @@ Y_{i,t}=\alpha+\beta S_{i,t}+\delta'X_{i,t}+\lambda_t+\delta_j+\varepsilon_{i,t}
 \textbf{剔除处罚当年（表~\ref{tab:keypoll}--\ref{tab:keypoll-d} 中标注``剔除处罚当年''的行）。}
 重点排污单位更容易在同一年收到环保处罚。处罚当年企业面临执法压力，披露和外部关注也可能随之改变，因而当期 \(IMS\times\texttt{KeyPollMonUnit}\) 可能混进``被处罚''而不是``监管身份提供核对机会''。该规格把 \texttt{Penalty\_D}\(=1\) 的 1,059 条拿掉，在其余 14,322 条上仍用当期 \texttt{KeyPollMonUnit} 做调节。调节变量没有换成处罚，只是不让处罚当年进入估计。预测仍为 \(\gamma<0\)。
 
-行业\(\times\)年固定效应规格在完全交互上再加入 \(C(\text{时间}):C(\text{ExpertiseIndustryCode})\)，吸收行业--年共同冲击；符号预测与主检验相同。
+表中「完全交互 + 行业\(\times\)年 FE」加在只交互控制变量的规格上，用来吸收行业--年共同冲击。符号预测与主检验相同。
 
 \subsection{表~\ref{tab:penalty}：环保处罚对照}
 
@@ -349,7 +354,7 @@ Reynolds and Francis (2000) 讨论事务所（分所）对重要客户的经济�
 \bottomrule
 \end{tabular}
 \begin{tablenotes}\footnotesize
-\item 注：除标明外，固定效应为年份与行业；公司聚类。``滞后 KeyPoll''用 \(V=\texttt{L\_KeyPollMonUnit}\)，须相邻年份。``剔除处罚当年''仍用当期 \texttt{KeyPollMonUnit}，但样本限于 \texttt{Penalty\_D}\(=0\)。规格含义见第~\ref{sec:hypotheses}~节。
+\item 注：除标明外，固定效应为年份与行业；公司聚类。``滞后 KeyPoll''用 \(V=\texttt{L\_KeyPollMonUnit}\)，须相邻年份。``剔除处罚当年''仍用当期 \texttt{KeyPollMonUnit}，但样本限于 \texttt{Penalty\_D}\(=0\)。本表「完全交互」只让控制变量与 \(V\) 相乘。含固定效应交互的规格、其他项系数和 \(\beta+\gamma\) 检验见第~\ref{sec:keypoll-advisor}~节。
 \end{tablenotes}
 \end{threeparttable}
 \end{center}
@@ -376,6 +381,29 @@ Reynolds and Francis (2000) 讨论事务所（分所）对重要客户的经济�
 \end{tabular}
 \end{threeparttable}
 \end{center}
+
+\subsection{重点排污单位的组斜率、相关与规格选择}
+\label{sec:keypoll-advisor}
+
+表~\ref{tab:keypoll} 与表~\ref{tab:keypoll-d} 报告的是斜率差 \(\gamma\)。\(V\) 为 0/1 时，非重点排污单位的专长斜率是 \(\beta\)，重点排污单位的专长斜率是 \(\beta+\gamma\)。这一节补上这两项、重点单位与 \(IMS\) 的相关，以及约束交互和式~\eqref{eq:full} 的取舍。主线是当期 \texttt{KeyPollMonUnit} 与 \(IMS\)。\texttt{IMS\_D}、滞后身份和剔除处罚当年放在表~\ref{tab:keypoll-advisor-appendix}。
+
+规格不按 \(\gamma\) 是否显著来选。先估计式~\eqref{eq:full}，再检验除 \(S\times V\) 以外的交互项是否同时为零。公司聚类下这是 \(\chi^2\) 检验。5\% 水平不拒绝，说明控制斜率和固定效应并没有随重点身份改变，推断退回约束交互。5\% 水平拒绝，约束交互会把这些差异算进 \(\gamma\)，推断改用完全交互的 \(\beta\)、\(\gamma\) 和 \(\beta+\gamma\)。重点单位斜率是否为零，是在选定规格上对 \(\beta+\gamma=0\) 做线性组合检验，标准误来自同一套公司聚类协方差。
+
+当期 \(IMS\) 拒绝「其他交互项联合为零」。控制 \(\times V\) 的 \(\chi^2(14)=113.67\)，年份与行业 \(\times V\) 的 \(\chi^2(49)=234.50\)，全部其他交互的 \(\chi^2(63)=362.73\)，三个 \(p\) 值都小于 0.001（表~\ref{tab:keypoll-wald}）。推断用完全交互。
+
+在这个规格上，非重点单位的 \(IMS\) 斜率为 \(-0.459\)（标准误 0.279，\(p=0.100\)），重点单位为 \(-0.497\)（标准误 0.341，\(p=0.145\)），差为 \(-0.038\)（标准误 0.434，\(p=0.930\)）。前两个系数与分组回归相同（表~\ref{tab:keypoll-slopes-advisor}）。重点单位斜率的线性组合检验为 \(t=-1.46\)，\(p=0.145\)（表~\ref{tab:keypoll-lincom}）。
+
+约束交互的对应数字不用于推断：非重点斜率 \(0.053\)（\(p=0.852\)），重点斜率 \(-1.308\)（\(p<0.001\)），差 \(-1.361\)（\(p=0.001\)）。表~\ref{tab:keypoll} 里显著的约束交互就是这个差。把它和重点组主效应相加，得到的 \(-1.308\) 是「控制斜率与固定效应在两组相同」时的重点组斜率；联合检验拒绝这一限制之后，不再把它当作重点单位的 \(IMS\) 效应。
+
+其他项里，\texttt{Size}、\texttt{BoardSize} 和 \texttt{IndependentDirectorRatio} 与 \(V\) 的交互在 1\% 水平显著，\texttt{ROA}、\texttt{Big4} 和 \texttt{LnAuditFee} 的交互在 5\% 水平显著。年份交互中，只有 2024 相对 2021 在 5\% 水平显著。46 个行业交互里，\(p<0.10\) 的有 17 个，\(p<0.05\) 的有 9 个，\(p<0.01\) 的有 7 个（表~\ref{tab:keypoll-other}、表~\ref{tab:keypoll-industry}）。这些单项用来看联合检验拒绝的是哪些斜率。是否改用完全交互，只看表~\ref{tab:keypoll-wald} 的第三行。
+
+\texttt{KeyPollMonUnit} 的主效应为 9.743（\(p<0.001\)）。它是其余变量取参照水平时的截距差，不是重点单位平均漂绿更高。
+
+重点单位与专长正相关，相关系数不大（表~\ref{tab:keypoll-corr}）。\(IMS\) 的 Pearson 相关为 0.072，去掉行业和年份之后为 0.066。重点单位的 \(IMS\) 均值为 0.077，非重点为 0.065，公司聚类下的均值差为 0.012（标准误 0.002）。\texttt{IMS\_D}\(=1\) 的比例分别为 7.4\% 与 4.7\%，聚类均值差为 0.027（标准误 0.006）。
+
+\texttt{IMS\_D}、滞后 \texttt{L\_KeyPollMonUnit} 和剔除处罚当年同样拒绝其他交互项联合为零，推断仍用完全交互。这些规格上的 \(\beta+\gamma\) 都不显著（表~\ref{tab:keypoll-advisor-appendix}）。剔除处罚当年的全部其他交互有 63 个约束，协方差秩为 62，\(p\) 值按这个秩计算。
+
+\input{keypoll_advisor_tables.tex}
 
 \subsection{环保处罚对照}
 
@@ -545,11 +573,13 @@ Reynolds and Francis (2000) 讨论事务所（分所）对重要客户的经济�
 \section{脚本与产出对照}
 
 \begin{center}
+\footnotesize
 \begin{tabular}{lll}
 \toprule
 脚本 & 系数表 & 本报告表格 \\
 \midrule
 \texttt{run\_keypoll\_full\_interact.py} & \texttt{keypoll\_full\_interact\_coefficients.csv} & 表~\ref{tab:keypoll}、\ref{tab:keypoll-d}、\ref{tab:penalty} \\
+\texttt{run\_keypoll\_advisor\_diagnostics.py} & \texttt{keypoll\_advisor\_*.csv} & 第~\ref{sec:keypoll-advisor}~节 \\
 \texttt{run\_financial\_hetero.py} & \texttt{financial\_hetero\_coefficients.csv} & 表~\ref{tab:financial} \\
 \texttt{run\_lit\_hetero.py} & \texttt{lit\_hetero\_coefficients.csv} & 表~\ref{tab:lit} \\
 \bottomrule

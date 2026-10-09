@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1789893012.30082 "d:/Charlie 应用/Documents/zkk/Research Project/greenwashing/paper_overleaf/Paper.tex" "Paper.pdf" "Paper" 1789893013.45075 0
+["pdflatex"] 1791515027.75076 "d:/Charlie 应用/Documents/zkk/Research Project/greenwashing/paper_overleaf/Paper.tex" "Paper.pdf" "Paper" 1791515030.58611 0
   "C:/Users/ZZfvr/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1789265531 83486 9208647d054da4672a050e7ed94c9aa5 ""
   "C:/Users/ZZfvr/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1783732796 10187282 66205b7e4798d22acb0d24f3ccac7728 ""
   "C:/Users/ZZfvr/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc" 1256929440 2375 baa924870cfb487815765f9094cf3728 ""
@@ -114,10 +114,10 @@
   "C:/Users/ZZfvr/AppData/Local/Programs/MiKTeX/tex/latex/rerunfilecheck/rerunfilecheck.sty" 1751104012 9684 a33a14b82ce60d6e77cb9be689d79ee6 ""
   "C:/Users/ZZfvr/AppData/Local/Programs/MiKTeX/tex/latex/setspace/setspace.sty" 1670403145 22490 8cac309b79a4c53a4ffce4b1b07aead0 ""
   "C:/Users/ZZfvr/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
-  "Paper.aux" 1789893013 14610 a3b664c4b3d5d332645aa7b3b3db3eb8 "pdflatex"
-  "Paper.out" 1789893013 5592 59b2ff1d624ed7b979bc692a997c917c "pdflatex"
-  "Paper.tex" 1789893007 85037 7fbdd2919a66190732d360384a331426 ""
-  "d:/Charlie 应用/Documents/zkk/Research Project/greenwashing/paper_overleaf/Paper.tex" 1789893007 85037 7fbdd2919a66190732d360384a331426 ""
+  "Paper.aux" 1791515030 14610 a3b664c4b3d5d332645aa7b3b3db3eb8 "pdflatex"
+  "Paper.out" 1791515030 5592 59b2ff1d624ed7b979bc692a997c917c "pdflatex"
+  "Paper.tex" 1791515026 85028 91959dad9aeb06b1cfc4cb5f487fd8d0 ""
+  "d:/Charlie 应用/Documents/zkk/Research Project/greenwashing/paper_overleaf/Paper.tex" 1791515026 85028 91959dad9aeb06b1cfc4cb5f487fd8d0 ""
   "figures/layer_a_validation.pdf" 1785739916 27508 37bd4b30ede355f2f4c51053d31f0cc5 ""
   "figures/layer_b_validation.pdf" 1785739917 27310 4d6025d3fc842a4fe106468dfa5ed5e0 ""
   "tables/baseline_regression_table_ims.tex" 1789635535 2536 5f8989d69cc44d5f6f57d48fe724af3f ""

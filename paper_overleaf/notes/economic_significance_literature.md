@@ -1,6 +1,6 @@
 # 经济显著性备忘录：写法、换算、文献句、导师回复
 
-用途：回应导师“Economic significance is modest，应与文献量级对照”。**不改正文、不加新表。**
+用途：回应导师“Economic significance is modest，应与文献量级对照”。正文基线结果段已按 P25→P75 主口径改定（见附）。**不加新表。**
 
 数据来源：`tables/descriptive_rows.tex`；`tables/baseline_regression_table_ims.tex` 列 (4)；`tables/baseline_regression_table_ims_d.tex` 列 (4)。
 
@@ -26,7 +26,7 @@
 
 另一篇 RAST（审计办公室专长知识共享，2025）同样用 1 SD → 百分点，再换成占无条件概率/均值的百分比（他们得到占均值约 8%–26%，并称 economically significant）。
 
-**对本文：** 主翻译应是 IMS +1 SD（0.0817），不是只报 +0.10。+0.10 可作为补充（市场份额提高 10 个百分点），但该增量已约 1.22 个 IMS 标准差，不是“小幅提高”。
+**对本文：** 正文主口径是 IMS 从 P25 到 P75（0.0831），同一句对照 +1 SD（0.0817）；两者几乎相同，都约为 0.03 SD of Y。+0.10 约为 1.22 个 IMS 标准差，正文不再并列这一增量。
 
 ### 1.2 虚拟变量：专家 vs 非专家的原生单位
 
@@ -102,9 +102,9 @@ IMS：均值 0.0698，SD 0.0817，P25 0.0152，P75 0.0983。+0.10 是 0.10 / 0.0
 
 | 增量                           | \Delta X | \beta\times\Delta X（Y 单位） | / SD(Y)   | / IQR(Y) |
 | ---------------------------- | -------- | ------------------------- | --------- | -------- |
-| IMS +1 SD（主口径）               | 0.0817   | 0.0395                    | **0.030** | 0.023    |
-| IMS +0.10（正文现用；>1 SD of IMS） | 0.10     | 0.0483                    | 0.036     | 0.028    |
-| IMS P25→P75                  | 0.0831   | 0.0401                    | 0.030     | 0.023    |
+| IMS P25→P75（正文主口径）            | 0.0831   | 0.0401                    | **0.030** | 0.023    |
+| IMS +1 SD（与 P25→P75 几乎相同）    | 0.0817   | 0.0395                    | **0.030** | 0.023    |
+| IMS +0.10（未写入正文；>1 SD of IMS） | 0.10     | 0.0483                    | 0.036     | 0.028    |
 | IMS_D（≥20% vs 其他）            | 1        | 0.1434                    | **0.107** | 0.083    |
 | 同表 Big4                      | 1        | 0.3613                    | **0.270** | 0.210    |
 | 同表 Size +1 SD（参考）            | 1.2148   | 0.1655                    | 0.124     | 0.096    |
@@ -114,8 +114,8 @@ IMS：均值 0.0698，SD 0.0817，P25 0.0152，P75 0.0983。+0.10 是 0.10 / 0.0
 
 ### 2.3 读法
 
-- 连续 IMS：1 个标准差的市场份额变动，对应 Greenwashing 下降约 0.04，即因变量离散度的 **3%**。相对四分位距也只有约 2%。量级小。
-- 正文现用的 +0.10 看起来像“十分之一”，其实已超过 1 个 IMS 标准差，对应仍只有 0.036 SD of Y。
+- 连续 IMS：正文主口径是 P25→P75（份额从 0.015 到 0.098），Greenwashing 下降 0.040，即约 **0.03** 个因变量标准差，相对 IQR(Y) 约 0.02。+1 SD（0.082）对应下降 0.039，同一量级。量级小。
+- +0.10 已超过 1 个 IMS 标准差（约 1.22 SD），正文不再并列这一增量；对应仍只有 0.036 SD of Y。
 - 与专长文献更可比的是 **IMS_D：约 0.11 SD of Y**（专家客户低 0.143）。
 - 同规格 Big4 约 0.27 SD of Y，Size 一个标准差约 0.12 SD of Y。专长小于品牌、也小于规模，符合“增量治理”而不是一阶治理工具。
 
@@ -230,7 +230,7 @@ IMS 增加 1 个标准差（0.0817），对应 Greenwashing 下降 0.0395，即�
 
 
 
-## 附：若日后改正文可用的英文骨架（本次不写入 Paper.tex）
+## 附：与 Paper.tex 基线结果段一致的英文
 
-> In column (4), the coefficient on IMS is -0.4829. A one-standard-deviation increase in IMS (0.082) is associated with a 0.039 decline in Greenwashing, or about 0.03 of the outcome’s standard deviation (1.337). A 10-percentage-point increase in industry market share—already larger than one standard deviation of IMS—corresponds to a 0.048 decline (0.036 of a standard deviation). Relative to other clients, firms audited by auditors meeting the 20 percent threshold (IMSD) have Greenwashing scores that are 0.143 lower, or about 0.11 of a standard deviation. By comparison, the same specification associates Big4 with a 0.36 decline (about 0.27 of a standard deviation). These magnitudes are modest. They are closer to the specialist-versus-nonspecialist contrasts reported for earnings quality (e.g., Krishnan 2003) than to a first-order sustainability-assurance effect, which is consistent with the limited reach of the other-information requirement in CAS 1521.
+> In column (4), the coefficient on IMS is -0.4829. Moving from the 25th to the 75th percentile of IMS—an increase of 0.083 in the auditor’s share of industry operating revenue, from 0.015 to 0.098—is associated with a 0.040 decline in Greenwashing. This interquartile increase is nearly identical to a one-standard-deviation increase of 0.082, which corresponds to a 0.039 decline. Either change is about 0.03 of the outcome’s standard deviation (1.337) and is small relative to the interquartile range of Greenwashing, which runs from -0.820 to 0.898. Relative to other clients, firms audited by auditors meeting the 20 percent threshold (IMS_D) have Greenwashing scores that are 0.143 lower, or about 0.11 of a standard deviation. Only 5.7 percent of firm-years meet this threshold, so the coefficient is a tail contrast. By comparison, the same specification associates Big4 with a 0.361 decline (about 0.27 of a standard deviation) and a one-standard-deviation increase in Size with a 0.165 decline (about 0.12 of a standard deviation). The continuous IMS association is statistically significant but modest in magnitude.
 

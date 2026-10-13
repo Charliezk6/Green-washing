@@ -399,78 +399,39 @@ This result improves the temporal ordering of the covariates and reduces the con
 
 \subsection{Generalized Propensity-Score Weighting for Continuous Specialization}
 
-The baseline regression conditions on observed firm, governance, and audit characteristics, but the allocation of clients to auditors with different levels of industry specialization may itself be systematic.
-Firms with different environmental disclosure histories, operating risks, governance structures, audit demands, or existing auditor relationships may sort into different auditors. 
-A comparison of the raw \(IMS\) coefficient could therefore combine the association of specialization with greenwashing and the association of client characteristics with both variables. 
-Propensity-score methods address this concern by modeling treatment assignment using observed pre-treatment characteristics and then constructing a reweighted sample in which firms with different treatment intensities are more comparable on those characteristics \citep{shipman2017psm}.
+The baseline regression conditions on observed firm, governance, and audit characteristics, but clients may still sort into auditors with different levels of industry specialization according to their disclosure histories, operating risks, governance structures, audit demands, or existing auditor relationships.
+Propensity-score methods address this concern by modeling treatment assignment from observed pre-treatment characteristics and reweighting the sample so that firms with different treatment intensities are more comparable on those characteristics \citep{shipman2017psm}.
 
-Because \(IMS\) is a continuous audit-market share, binary propensity-score matching would discard information by reducing different specialization intensities to a treated-versus-untreated indicator. 
-We therefore use the generalized propensity score (GPS), which replaces the binary treatment probability with the conditional density of a continuous treatment \citep{imbens2000,hiranoimbens2004}. 
-The GPS approach retains the continuous variation in specialization and reweights observations according to how plausible their observed treatment intensity is given their pre-treatment characteristics. 
-In this setting, the method is used as an observable-selection adjustment for the client--auditor matching process.
+Because \(IMS\) is a continuous audit-market share, reducing it to a treated-versus-untreated indicator would discard differences in specialization intensity.
+We therefore use the generalized propensity score (GPS), defined as the conditional density of a continuous treatment given pre-treatment covariates \citep{imbens2000,hiranoimbens2004}.
+An observation receives a larger weight when its realized specialization is less likely given its preceding-year characteristics, and the weights are stabilized by the marginal density of the transformed treatment \citep{robins2000msm}.
+The same approach has been used to address selection on observables when the treatment is continuous \citep{campello2014sideshow,brick2024internal}.
+In this setting, the GPS--IPW weights adjust the client--auditor comparison for observable selection.
 
-The GPS construction proceeds in three steps. 
-First, we form a common panel in which each observation has current Greenwashing, current \(IMS\), and complete preceding-year information. 
-The first-stage covariates are selected because they may jointly relate to the assignment of specialization and to the outcome: lagged Greenwashing captures persistence in disclosure--performance gaps and firms' reporting environment; 
-lagged financial and governance characteristics capture operating risk, complexity, monitoring needs, and disclosure incentives; 
-and lagged audit-selection variables capture observable aspects of the existing client--auditor relationship and the possibility of re-matching \citep{shipman2017psm}. 
-We require strictly consecutive firm-year observations when constructing lagged variables, so that a nominally preceding row is not treated as \(t-1\) when an intervening year is missing. 
-This procedure yields 10,488 firm-years from 4,168 firms. 
-Thus, the GPS panel is smaller than the 15,381-observation baseline sample because it requires valid pre-treatment information and strict temporal continuity.
+The first-stage covariates are lagged Greenwashing and the lagged financial, governance, and audit-selection variables from the baseline specification, together with year and industry fixed effects.
+Because \(IMS\) lies between zero and one, the treatment model is estimated on its logit transformation.
+We require strictly consecutive firm-year observations when constructing lagged variables, so that a nominally preceding row is not treated as \(t-1\) when an intervening year is missing.
+This procedure yields 10,488 firm-years from 4,168 firms, fewer than the 15,381 observations in the baseline sample because the GPS panel requires valid pre-treatment information and strict temporal continuity.
+Appendix~\ref{sec:gps-appendix} details the first-stage model, the construction of the stabilized weights, and the effective sample size.
 
-Second, because \(IMS\) lies between zero and one, we use its logit transformation,
-\[
-Z_{i,t}=\mathrm{logit}(IMS_{i,t})=\ln\left(\frac{IMS_{i,t}}{1-IMS_{i,t}}\right).
-\]
-Then, we estimate the conditional treatment model
-\[
-Z_{i,t}=\eta'X_{i,t-1}+\lambda_t+\delta_j+u_{i,t},
-\qquad u_{i,t}\sim N(0,\sigma^2),
-\]
-where \(X_{i,t-1}\) contains the lagged outcome, financial, governance, and audit-selection variables, and \(\lambda_t\) and \(\delta_j\) denote year and industry fixed effects. The estimated GPS is the conditional density
-\[
-\widehat r_{i,t}=\widehat f_{Z\mid X}\left(Z_{i,t}\mid X_{i,t-1},\lambda_t,\delta_j\right)
-=\phi\left(Z_{i,t};\widehat\mu_{i,t},\widehat\sigma\right),
-\]
-where \(\widehat\mu_{i,t}\) is the fitted value from the first-stage model. The lagged panel therefore supplies information about observable determinants of current treatment assignment without conditioning the first stage on variables that may be current-treatment consequences.
+Before estimating the weighted outcome regression, we assess whether the GPS weights improve comparability across specialization intensities.
+For this diagnostic only, we divide \(IMS\) into quintile dose groups and compare each group with the remaining observations using standardized mean differences (SMDs).
+Table~\ref{tab:gps-balance} reports, for every first-stage covariate, the mean and maximum absolute SMD across the five dose groups before and after weighting.
+The weighted mean absolute SMD is lower for 11 of the 15 covariates, and the maximum absolute SMD is also lower for 12 of the 15 covariates.
+These diagnostics indicate that the GPS weights improve observable comparability.
 
-Third, we construct stabilized inverse probability weights (IPW) adapted to the continuous-treatment setting. In binary treatment applications, inverse probability weighting gives greater weight to observations whose treatment status is less likely given their observed covariates, thereby creating a weighted pseudo-population with a more nearly independent treatment and covariate distribution. For a continuous treatment, the corresponding probability is a conditional density, so the GPS analogue uses the inverse conditional density rather than a binary treatment probability \citep{imbens2000,hiranoimbens2004}. We calculate
-\[
-w_{i,t}=\frac{\widehat f_Z(Z_{i,t})}{\widehat f_{Z\mid X}(Z_{i,t}\mid X_{i,t-1},\lambda_t,\delta_j)},
-\]
-where \(\widehat f_Z\) is the marginal density of the transformed specialization measure. Stabilization limits the influence of the marginal treatment distribution on the weighted sample, while the denominator adjusts for the observed assignment mechanism. The effective sample size is reported as
-\[
-ESS=\frac{\left(\sum_i w_{i,t}\right)^2}{\sum_i w_{i,t}^2}.
-\]
-We evaluate untrimmed weights in the main analysis. 
-The P0.5--P99.5 and P1--P99 weight-trimming results, together with binary entropy-balancing and propensity-score matching complements that treat specialization as \(IMS_D\) at the 20 percent threshold, are reported in Appendix~\ref{sec:gps-appendix}.
+After assessing balance, we re-estimate the baseline model using the GPS weights, with standard errors clustered by firm.
+Consistent with the staged reporting logic of the baseline regressions, Table~\ref{tab:endogeneity-regressions} reports this weighted model in two steps.
+Model (2) includes the specialization measure, GPS weights, and year and industry fixed effects but omits the outcome-equation controls.
+Model (3) adds the complete set of current financial, governance, and audit controls.
+The \(IMS\) coefficient is \(-0.8549\) in Model (2) (standard error = 0.2737; \(p=0.0018\)) and \(-0.2878\) in Model (3) (standard error = 0.1191; \(p=0.0157\)).
+Both models use 10,488 firm-years from 4,168 firms, and the untrimmed effective sample size is 7,485.
+The coefficient remains negative after the complete set of current controls is introduced, consistent with the baseline association after an observable-selection adjustment.
+Appendix~\ref{sec:gps-appendix} also reports the P0.5--P99.5 and P1--P99 weight-trimming results, together with binary entropy-balancing and propensity-score matching complements that treat specialization as \(IMS_D\) at the 20 percent threshold.
 
-Before constructing the weighted outcome regression, we assess whether the GPS weights improve comparability across specialization intensities. 
-We divide \(IMS\) into quintile dose groups \footnote{The five groups are the empirical quintiles of \(IMS\): Q1, \((-0.0009871,0.00997]\); Q2, \((0.00997,0.0285]\); Q3, \((0.0285,0.0608]\); Q4, \((0.0608,0.114]\); and Q5, \((0.114,0.731]\). The displayed lower bound of Q1 is a software-generated interval boundary; the observed \(IMS\) values are nonnegative. These quintile groups are used only to diagnose covariate balance and do not replace the continuous \(IMS\) treatment in the GPS estimation or outcome regression.}  solely for diagnostic purposes and compare each group with the remaining observations using standardized mean differences (SMDs). 
-Table~\ref{tab:gps-balance} reports, for every first-stage covariate, the mean and maximum absolute SMD across the five dose groups before and after weighting. 
-The weighted mean absolute SMD is lower for 11 of the 15 covariates, and the maximum absolute SMD is also lower for 12 of the 15 covariates. 
-The improvement is substantial overall, and these diagnostics indicate that the GPS weights improve observable comparability.
-
-
-After assessing balance, we construct and estimate the weighted GPS--IPW outcome model:
-\[
-Greenwashing_{i,t}=\alpha+\beta IMS_{i,t}+\gamma'Controls_{i,t}
-+\lambda_t+\delta_j+\varepsilon_{i,t},
-\]
-where \(Controls_{i,t}\) contains all three baseline classes of current controls. Standard errors are clustered by firm. 
-Consistent with the staged reporting logic of the baseline regressions, Table~\ref{tab:endogeneity-regressions} reports this model in two steps: 
-Model (2) includes the specialization measure, GPS weights, and year and industry fixed effects but omits the outcome-equation controls; 
-Model (3) adds the complete set of current financial, governance, and audit controls shown in the equation above. 
-Thus, the IPW step changes the relative contribution of observations according to the estimated continuous-treatment assignment density, whereas the controls in Model (3) further condition the weighted association on current client characteristics.
-
-Table~\ref{tab:endogeneity-regressions} reports the untrimmed results: 
-The \(IMS\) coefficient is \(-0.8549\) in Model (2) (standard error = 0.2737; \(p=0.0018\)) and \(-0.2878\) in Model (3) (standard error = 0.1191; \(p=0.0157\)). 
-Both models use 10,488 firm-years from 4,168 firms, and the untrimmed ESS is 7,485. 
-The coefficient remains negative after the complete set of current controls is introduced, consistent with the baseline association after an observable-selection adjustment. 
-
-This analysis mitigates observable-selection bias but does not eliminate endogeneity. 
-Residual imbalance at the distributional extremes, unobserved client--auditor matching factors, unmeasured auditor information, reverse causality, and common industry-year shocks may remain. 
-Accordingly, the GPS results are supplementary evidence consistent with a negative association.
+This analysis mitigates observable-selection bias.
+Residual imbalance at the distributional extremes, unobserved client--auditor matching factors, unmeasured auditor information, reverse causality, and common industry-year shocks may remain, and the GPS weights do not remove endogeneity from unobservable covariates \citep{brick2024internal}.
+The GPS results are therefore supplementary evidence consistent with a negative association.
 
 
 \subsection{Auditor-Switching Evidence}
@@ -682,6 +643,11 @@ Cai, C., and W. Xian. 2007.
 An empirical test of the association between accounting-firm industry specialization and audit quality: Evidence from the audit market of Chinese listed companies (in Chinese).
 \textit{Accounting Research} (6): 41--47, 95.
 
+\bibitem[Campello et~al.(2014)]{campello2014sideshow}
+Campello, M., R. P. Ribas, and A. Y. Wang. 2014.
+Is the stock market just a side show? Evidence from a structural reform.
+\textit{The Review of Corporate Finance Studies} 3 (1--2): 1--38. \url{https://doi.org/10.1093/rcfs/cfu006}.
+
 \bibitem[Cohen and Simnett(2015)]{cohen2015csr}
 Cohen, J. R., and R. Simnett. 2015.
 CSR and assurance services: A research agenda.
@@ -791,6 +757,11 @@ Minutti-Meza, M. 2013.
 Does auditor industry specialization improve audit quality?
 \textit{Journal of Accounting Research} 51 (4): 779--817. \url{https://doi.org/10.1111/1475-679X.12017}.
 
+\bibitem[Naimi et~al.(2014)]{naimi2014ipw}
+Naimi, A. I., E. E. M. Moodie, N. Auger, and J. S. Kaufman. 2014.
+Constructing inverse probability weights for continuous exposures: A comparison of methods.
+\textit{Epidemiology} 25 (2): 292--299. \url{https://doi.org/10.1097/EDE.0000000000000053}.
+
 \bibitem[Neal and Riley(2004)]{neal2004auditor}
 Neal, T. L., and R. R. Riley, Jr. 2004.
 Auditor industry specialist research design.
@@ -810,6 +781,11 @@ Impact of assurance and assurer's professional affiliation on financial analysts
 Reichelt, K. J., and D. Wang. 2010.
 National and office-specific measures of auditor industry expertise and effects on audit quality.
 \textit{Journal of Accounting Research} 48 (3): 647--686. \url{https://doi.org/10.1111/j.1475-679X.2009.00363.x}.
+
+\bibitem[Robins et~al.(2000)]{robins2000msm}
+Robins, J. M., M. A. Hern\'an, and B. Brumback. 2000.
+Marginal structural models and causal inference in epidemiology.
+\textit{Epidemiology} 11 (5): 550--560. \url{https://doi.org/10.1097/00001648-200009000-00011}.
 
 \bibitem[Rose-Green et~al.(2011)]{rosegreen2011association}
 Rose-Green, E., H.-W. Huang, and C.-C. Lee. 2011.
@@ -871,6 +847,11 @@ Bates, D. S. 2012.
 U.S. stock market crash risk, 1926--2010.
 \textit{Journal of Financial Economics} 105 (2): 229--259. \url{https://doi.org/10.1016/j.jfineco.2012.03.004}.
 
+\bibitem[Brick et~al.(2024)]{brick2024internal}
+Brick, I. E., D. Palia, and Y. Qiao. 2024.
+Impact of internal governance on investment policy: Evidence from CEO voluntary turnovers.
+\textit{Journal of Corporate Finance} 89: 102676. \url{https://doi.org/10.1016/j.jcorpfin.2024.102676}.
+
 \bibitem[Yu et~al.(2020)]{yu2020greenwashing}
 Yu, E. P.-Y., B. Van Luu, and C.-H. Chen. 2020.
 Greenwashing in environmental, social and governance disclosures.
@@ -885,11 +866,6 @@ Zhou, Y., L. Chen, Y. Zhang, and W. Li. 2024.
 Zhu, Y., X. Jin, and Y. Sun. 2025.
 Uncovering financial distress with textual risk disclosures in annual reports: Insights from large language models.
 \textit{Information Systems Frontiers}. \url{https://doi.org/10.1007/s10796-025-10637-8}.
-
-\bibitem[Robins et~al.(2000)]{robins2000msm}
-Robins, J. M., M. A. Hern\'an, and B. Brumback. 2000.
-Marginal structural models and causal inference in epidemiology.
-\textit{Epidemiology} 11 (5): 550--560. \url{https://doi.org/10.1097/00001648-200009000-00011}.
 
 \end{thebibliography}
 
@@ -930,6 +906,45 @@ Table~\ref{tab:baseline_se_robustness} reports the results. The coefficient on \
 \section{Additional GPS Specifications}
 \label{sec:gps-appendix}
 
+\subsection{GPS--IPW Construction}
+
+Because \(IMS\) lies between zero and one, we use its logit transformation,
+\[
+Z_{i,t}=\mathrm{logit}(IMS_{i,t})=\ln\left(\frac{IMS_{i,t}}{1-IMS_{i,t}}\right).
+\]
+We then estimate the conditional treatment model
+\[
+Z_{i,t}=\eta'X_{i,t-1}+\lambda_t+\delta_j+u_{i,t},
+\qquad u_{i,t}\sim N(0,\sigma^2),
+\]
+where \(X_{i,t-1}\) contains the lagged outcome, financial, governance, and audit-selection variables, and \(\lambda_t\) and \(\delta_j\) denote year and industry fixed effects. The estimated GPS is the conditional density
+\[
+\widehat r_{i,t}=\widehat f_{Z\mid X}\left(Z_{i,t}\mid X_{i,t-1},\lambda_t,\delta_j\right)
+=\phi\left(Z_{i,t};\widehat\mu_{i,t},\widehat\sigma\right),
+\]
+where \(\widehat\mu_{i,t}\) is the fitted value from the first-stage model and \(\widehat\sigma\) is the residual standard deviation. The lagged panel therefore supplies information about observable determinants of current treatment assignment without conditioning the first stage on variables that may be current-treatment consequences.
+
+The stabilized inverse probability weight is
+\[
+w_{i,t}=\frac{\widehat f_Z(Z_{i,t})}{\widehat f_{Z\mid X}(Z_{i,t}\mid X_{i,t-1},\lambda_t,\delta_j)},
+\]
+where the denominator is the estimated GPS and \(\widehat f_Z\) is the normal marginal density of \(Z\), evaluated at the sample mean and sample standard deviation of the logit-transformed treatment \citep{robins2000msm,naimi2014ipw}. Stabilization limits the influence of the marginal treatment distribution on the weighted sample, while the denominator adjusts for the observed assignment mechanism. The effective sample size is
+\[
+ESS=\frac{\left(\sum_i w_{i,t}\right)^2}{\sum_i w_{i,t}^2}.
+\]
+The main analysis uses the untrimmed weights.
+
+To assess covariate balance, we divide \(IMS\) into quintile dose groups and compare each group with the remaining observations using standardized mean differences.\footnote{The five groups are the empirical quintiles of \(IMS\): Q1, \((-0.0009871,0.00997]\); Q2, \((0.00997,0.0285]\); Q3, \((0.0285,0.0608]\); Q4, \((0.0608,0.114]\); and Q5, \((0.114,0.731]\). The displayed lower bound of Q1 is a software-generated interval boundary; the observed \(IMS\) values are nonnegative. These quintile groups are used only to diagnose covariate balance and do not replace the continuous \(IMS\) treatment in the GPS estimation or outcome regression.} Table~\ref{tab:gps-balance} reports, for every first-stage covariate, the mean and maximum absolute SMD across these five groups before and after weighting.
+
+The weighted outcome model is
+\[
+Greenwashing_{i,t}=\alpha+\beta IMS_{i,t}+\gamma'Controls_{i,t}
++\lambda_t+\delta_j+\varepsilon_{i,t},
+\]
+where \(Controls_{i,t}\) contains all three baseline classes of current controls and standard errors are clustered by firm. Model (2) of Table~\ref{tab:endogeneity-regressions} omits these controls, and Model (3) includes them.
+
+\subsection{Weight-Trimming Sensitivity}
+
 Table~\ref{tab:gps-ipw-sensitivity} reports weight-trimming sensitivity for the same specification. 
 The only difference across rows is the treatment of the estimated GPS weights. All GPS first-stage covariates are constructed after applying the baseline 1st--99th percentile winsorization to continuous controls in the complete baseline common sample.
 
@@ -958,6 +973,8 @@ The negative coefficient remains similar across the three weight treatments, pro
         \textit{Notes:} All models use 10,488 firm-years and 4,168 firms, include year and industry fixed effects, and use firm-clustered standard errors. ESS is the effective sample size. Weight trimming is applied to the estimated GPS weights.
     \end{minipage}
 \end{table}
+
+\subsection{Binary Complements}
 
 Because \(IMS\) is continuous, the GPS--IPW analysis retains variation in specialization intensity. 
 As a complementary check on observable selection, we recast specialization as the binary indicator \(IMS_D\) and re-estimate the association using entropy balancing \citep{hainmueller2012}

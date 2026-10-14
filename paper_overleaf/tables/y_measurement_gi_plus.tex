@@ -1,0 +1,24 @@
+\begin{table}[H]
+    \centering
+    \caption{Action-claim gap after adverse substantive sentences leave the numerator}
+    \label{tab:gi_plus}
+    \begin{tabular}{lrrrr}
+        \toprule
+        & \multicolumn{2}{c}{Baseline gap} & \multicolumn{2}{c}{Favorable-action gap} \\
+        \cmidrule(lr){2-3} \cmidrule(lr){4-5}
+        & (1) \(IMS\) & (2) \(IMS_D\) & (3) \(IMS\) & (4) \(IMS_D\) \\
+        \midrule
+        Specialization & \shortstack{-0.4829** \\ (0.2362)} & \shortstack{-0.1434* \\ (0.0794)} & \shortstack{-0.4730** \\ (0.2361)} & \shortstack{-0.1363* \\ (0.0791)} \\
+        Controls & Yes & Yes & Yes & Yes \\
+        Observations & 15,381 & 15,381 & 15,380 & 15,380 \\
+        Adjusted $R^2$ & 0.0220 & 0.0219 & 0.0220 & 0.0218 \\
+        Year fixed effects & Yes & Yes & Yes & Yes \\
+        Industry fixed effects & Yes & Yes & Yes & Yes \\
+        \bottomrule
+    \end{tabular}
+    \par\smallskip
+    \begin{minipage}{0.95\textwidth}
+        \footnotesize
+        \textit{Notes:} Columns (1) and (2) use \(Greenwashing=GI\_z-ESGE\_z\). Columns (3) and (4) replace \(GI\) with \(GI^+\), which removes non-negated adverse substantive pairs from the numerator and retains them in the denominator. All columns include the baseline financial, governance, and audit controls. Standard errors clustered by firm are in parentheses. ***, **, and * indicate two-tailed significance at 1, 5, and 10 percent.
+    \end{minipage}
+\end{table}

@@ -1,0 +1,214 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,booktabs,array,graphicx}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue,
+  pdftitle={因变量测度稳健性汇报}
+}
+
+\title{因变量测度稳健性汇报}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{思考标准与理由}
+
+导师第 8--10 条针对的是同一件事。本文因变量
+\begin{equation}
+Greenwashing_{i,t}=GI\_z_{i,t}-ESGE\_z_{i,t}
+\end{equation}
+直接衡量的是同一行业--年度内，企业具体环境行动声称占比与华证环境得分的相对差。$GI$ 只记录被识别的环境语句里有多大比例在写具体行动，没有逐句判断语气是否有利、内容是否选择性隐瞒，也没有判断某项行动是否真实发生。一家环境表现较差但如实交代处罚、超标或整改情况的企业，同样可能得到较高的 $GI$。华证环境支柱又同时使用公司公开披露、环境管理信息与负面监管事件，与年报文本不是两套完全分离的信息源。
+
+沟通侧仍用 $GI$，不改成象征性陈述占比 $1-GI$。原因是本文机制建立在审计师阅读年报其他信息并与财务报表、审计底稿核对之上（CAS 1521）。口号、愿景和原则性表态缺少可与在建工程、资本开支、预计负债或合规记录对照的具体对象；只有具体行动声称才会形成可供核对的陈述点。把因变量改成 $1-GI$ 会脱离这一机制。
+
+要把 $GI\_z-ESGE\_z$ 解释为稳健的行动声称--绩效缺口，需要预先定下四条标准，并要求四条同时满足：
+
+\begin{enumerate}
+\item \textbf{不利具体句占比低于 5\%。}若被判为实质性的句子里有较高比例是在交代处罚、超标或违规，高 $GI$ 就混合了棕色披露，不能主要解释为肯定性行动声称。
+\item \textbf{净正面缺口上专长系数仍为负，且至少在 10\% 水平显著。}把不利具体句移出分子后，若专长系数消失或翻号，基准结果就可能来自不利披露的变化，而不是超额行动声称的收敛。
+\item \textbf{控制华证得分后，$GI\_z$ 上专长系数仍为负。}差值型因变量的负相关可能来自声称侧下降，也可能来自绩效侧上升。若控制 $ESGE\_z$ 后声称侧没有负向变化，基准结果就主要是专家客户的华证得分更高。
+\item \textbf{用外生环保处罚替换华证得分后，二元缺口上专长系数仍为负。}监管处罚来自生态环境部门公开记录，不依赖本项目的文本分类，也不依赖第三方评级的综合打分，用来检验绩效侧换源后的方向是否一致。
+\end{enumerate}
+
+华证与年报部分同源本身不会机械制造负向主效应。若同一具体披露同时抬高 $GI$ 与华证环境得分，则 $\mathrm{Cov}(GI\_z,ESGE\_z)>0$，相减后的差值会被压向零，使拒绝原假设更难。但这只说明同源方向偏保守，不能替代第 3、4 条的直接检验。
+
+\section{应用的方法}
+
+四项检验都在基准回归共同样本（$N=15{,}381$，4,604 家公司，2021--2024 年，47 个行业）上完成，不改动主回归面板。回归控制变量与基准完整模型一致，包含财务控制（\texttt{Size}、\texttt{Lev}、\texttt{ROA}、\texttt{CFO}、\texttt{Growth}、\texttt{FirmAge}）、治理控制（\texttt{SOE}、\texttt{Dual}、\texttt{BoardSize}、\texttt{IndependentDirectorRatio}）和审计控制（\texttt{Big4}、\texttt{LnAuditFee}、\texttt{AuditorTenure}、\texttt{IsChangeFirm}），控制年度固定效应与行业固定效应，标准误按公司聚类。核心解释变量为连续市场份额 $IMS$ 与 20\% 切点二元指标 $IMS\_D$。
+
+第一项是在 Layer B 全部成功分类且 \texttt{judgment = 1} 的关键词--句子对上，统计含不利环境事件用语的占比，并做否定词过滤。
+
+第二项是构造净正面具体行动比率。设 $S_{i,t}$ 为实质性对子数，$S^{adv}_{i,t}$ 为其中非否定的不利对子数，$P_{i,t}$ 为象征性对子数，定义
+\begin{equation}
+GI^+_{i,t}=\frac{S_{i,t}-S^{adv}_{i,t}}{S_{i,t}+P_{i,t}},
+\qquad
+Greenwashing^+_{i,t}=z(GI^+_{i,t})-ESGE\_z_{i,t}.
+\end{equation}
+不利句留在分母、退出分子，因此如实披露处罚或超标不会再抬高分子。
+
+第三项是成分拆解。以 $GI\_z$ 为因变量估计不控制与控制 $ESGE\_z$ 两列，再以 $ESGE\_z$ 为因变量估计绩效侧一列，直接比较专长系数落在哪一侧。
+
+第四项是处罚替换。将《上市公司环保处罚总表》按证券代码--年汇总，构造两个替代因变量：一是二元指标 \texttt{GW\_Penalty\_D}，当 $GI$ 严格高于同行业--年度均值且当年发生环保行政处罚时取 1，否则取 0，用线性概率模型估计；二是连续指标
+\begin{equation}
+GW\_Penalty_{i,t}=GI\_z_{i,t}+PenaltyCount\_z_{i,t},
+\end{equation}
+其中 $PenaltyCount\_z$ 为当年处罚次数的行业--年度标准分，等价于用负向处罚次数代替正向环境绩效。
+
+\section{执行上的口径处理}
+
+第一，行业--年度标准化与主回归保持同一口径。分组变量为 \texttt{时间} $\times$ \texttt{ExpertiseIndustryCode}（制造业用证监会二级代码，非制造业用一级代码），标准差采用样本标准差（\texttt{ddof = 1}）。组内有效观测不超过 1，或组内标准差为 0 时，该组标准分记为缺失。因变量不缩尾，连续控制变量沿用共同样本内已完成的 1\%/99\% 缩尾值。
+
+第二，不利具体句词表固定为 15 个词：\texttt{处罚}、\texttt{罚款}、\texttt{罚金}、\texttt{超标}、\texttt{违规}、\texttt{违法}、\texttt{责令}、\texttt{立案}、\texttt{通报}、\texttt{行政处罚}、\texttt{停产}、\texttt{限产}、\texttt{未按时}、\texttt{未完成}、\texttt{逾期}。不单独纳入``整改''``排放''``生态环境''，否则已完成整改和日常达标排放会被误判为不利披露。抽样核查原命中句时发现，年报常写``未超标排放''``未受到行政处罚''``不存在违规情形''。因此增加否定过滤：命中词前 8 个字符内出现 \texttt{未}、\texttt{无}、\texttt{没有}、\texttt{不存在}、\texttt{未发生}、\texttt{未出现}、\texttt{未受到}、\texttt{并未}、\texttt{并不}，或前一个字符为 \texttt{不} 时，不计入不利具体句。汇报同时列出过滤前后的比例。
+
+第三，三份 Layer B 结果文件（制造业、非制造业、扩展样本）按``证券代码\_年份 + 句子编号 + 关键词''合并，跨文件重复冲突数为 0。用 Layer B 重新汇总的 $GI$ 与回归样本原 $GI$ 在 15,381 行上全部匹配，相关系数为 1，中位绝对差为 $1.11\times 10^{-11}$。这保证 $GI^+$ 与原 $GI$ 的差别只来自 $S^{adv}_{i,t}$ 退出分子。在共同样本里，$GI^+$ 所在行业--年度有 1 个观测因组内标准差无法计算而缺失，故 $Greenwashing^+$ 样本量为 15,380。
+
+第四，处罚表限定在 2021--2024 年，按证券代码--年汇总处罚条数与金额；共同样本中未匹配到处罚记录的公司--年记为 0。部分行业--年度内所有样本公司当年处罚次数均为 0，组内标准差为 0，$PenaltyCount\_z$ 按规则记缺失，连续处罚缺口的有效样本因此从 15,381 降为 10,617。处罚金额为 0 的观测更多，不再单列金额标准分回归。
+
+第五，排放明细、碳排放、绿色专利与资产负债表预计负债不进入本次替代回归。前两类数据主要来自企业年报或社会责任报告披露，不能解决与年报文本同源的问题，且缺失较多；绿色专利衡量绿色研发产出而非环境合规；预计负债（\texttt{A002207000}）是通用财务科目而非环境专用负债。
+
+\section{Y 变量目前构造的稳健情况}
+
+\subsection{不利具体句占比与净正面缺口}
+
+表~\ref{tab:adverse_share} 报告 Layer B 实质性句子的不利词命中情况。在 405,637 条实质性关键词--句子对中，词表原命中 7,307 条，占 1.80\%；去掉紧邻否定表述后剩 4,704 条，占 1.16\%，低于 5\% 的句子门槛。在至少有一条实质性句子的 11,468 个公司--年中，1,245 个（10.86\%）至少出现过一条非否定的不利具体句。句子层面，实质性陈述绝大多数不是处罚或超标自曝；公司--年层面，约一成观测带有至少一条此类句子，因此有必要做剔除后的回归检验。
+
+\begin{table}[htbp]
+\centering
+\caption{Layer B 实质性句子中的不利表述占比}
+\label{tab:adverse_share}
+\begin{tabular}{lrrr}
+\toprule
+统计口径 & 分子 & 分母 & 占比 \\
+\midrule
+关键词--句子对（词表原命中） & 7,307 & 405,637 & 1.80\% \\
+关键词--句子对（剔除否定表述） & 4,704 & 405,637 & 1.16\% \\
+公司--年（剔除否定表述） & 1,245 & 11,468 & 10.86\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+表~\ref{tab:gi_plus} 比较基准缺口与净正面缺口。共同样本共含 4,311 条非否定不利对子。把这些对子移出 $GI$ 分子后，$IMS$ 系数从 $-0.4829$（$p=0.0409$）变为 $-0.4730$（$p=0.0452$），仍在 5\% 水平显著为负；$IMS\_D$ 系数从 $-0.1434$（$p=0.0710$）变为 $-0.1363$（$p=0.0849$），仍在 10\% 水平显著为负。第 1、2 条标准通过，基准负相关不是由如实披露处罚、超标或违规句子撑起来的。
+
+\begin{table}[htbp]
+\centering
+\caption{剔除不利具体句前后的回归结果}
+\label{tab:gi_plus}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{lrrrr}
+\toprule
+ & \multicolumn{2}{c}{基准缺口 $Greenwashing$} & \multicolumn{2}{c}{净正面缺口 $Greenwashing^+$} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+ & (1) $IMS$ & (2) $IMS\_D$ & (3) $IMS$ & (4) $IMS\_D$ \\
+\midrule
+行业专长 & \shortstack{$-0.4829^{**}$\\(0.2362)} & \shortstack{$-0.1434^{*}$\\(0.0794)} & \shortstack{$-0.4730^{**}$\\(0.2361)} & \shortstack{$-0.1363^{*}$\\(0.0791)} \\
+控制变量 & 控制 & 控制 & 控制 & 控制 \\
+年度与行业固定效应 & 控制 & 控制 & 控制 & 控制 \\
+观测值 & 15,381 & 15,381 & 15,380 & 15,380 \\
+调整 $R^2$ & 0.0220 & 0.0219 & 0.0220 & 0.0218 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{声称侧与绩效侧拆解}
+
+表~\ref{tab:component_split} 将因变量拆为 $GI\_z$ 与 $ESGE\_z$。当因变量为 $GI\_z$ 时，$IMS$ 系数为 $-0.0261$（标准误 $0.1802$），控制 $ESGE\_z$ 后为 $-0.0353$（标准误 $0.1802$）；$IMS\_D$ 在两列中的系数分别为 $-0.0569$ 与 $-0.0586$（标准误均为 $0.0570$）。四列声称侧系数都为负，但统计上均与零无显著差别。反过来，当因变量为 $ESGE\_z$ 时，$IMS$ 系数为 $0.4568$（标准误 $0.1600$，$p=0.0043$），在 1\% 水平显著为正；$IMS\_D$ 系数为 $0.0865$（标准误 $0.0541$，$p=0.1098$）。
+
+由于 $Greenwashing=GI\_z-ESGE\_z$，无条件拆解下有 $-0.0261-0.4568=-0.4829$，以及 $-0.0569-0.0865=-0.1434$。基准回归中的负向系数，绝大部分来自 $-ESGE\_z$ 这一项，即行业专家事务所客户的华证环境得分显著更高，而不是年报中具体行动声称占比显著更低。第 3 条标准在方向上为负，但没有达到统计显著。
+
+\begin{table}[htbp]
+\centering
+\caption{沟通侧与绩效侧成分拆解}
+\label{tab:component_split}
+\renewcommand{\arraystretch}{1.25}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrr}
+\toprule
+ & \multicolumn{3}{c}{核心解释变量：$IMS$} & \multicolumn{3}{c}{核心解释变量：$IMS\_D$} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+ & (1) $GI\_z$ & (2) $GI\_z$（控 $ESGE\_z$） & (3) $ESGE\_z$ & (4) $GI\_z$ & (5) $GI\_z$（控 $ESGE\_z$） & (6) $ESGE\_z$ \\
+\midrule
+行业专长 & \shortstack{$-0.0261$\\(0.1802)} & \shortstack{$-0.0353$\\(0.1802)} & \shortstack{$0.4568^{***}$\\(0.1600)} & \shortstack{$-0.0569$\\(0.0570)} & \shortstack{$-0.0586$\\(0.0570)} & \shortstack{$0.0865$\\(0.0541)} \\
+控制变量 & 控制 & 控制 & 控制 & 控制 & 控制 & 控制 \\
+年度与行业固定效应 & 控制 & 控制 & 控制 & 控制 & 控制 & 控制 \\
+观测值 & 15,381 & 15,381 & 15,381 & 15,381 & 15,381 & 15,381 \\
+调整 $R^2$ & 0.0467 & 0.0470 & 0.1596 & 0.0468 & 0.0471 & 0.1588 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\subsection{环保行政处罚替换华证得分}
+
+共同样本中，当年至少发生一次环保行政处罚的观测有 1,059 个，占 6.89\%；有正处罚金额的观测 930 个；``高 $GI$ 且当年受罚''的二元指标均值为 3.82\%。表~\ref{tab:penalty_gap} 报告回归结果。二元指标上，$IMS$ 系数为 $-0.0094$（标准误 $0.0237$，$p=0.6904$），不显著；$IMS\_D$ 系数为 $-0.0123$（标准误 $0.0073$，$p=0.0920$），在 10\% 水平显著为负。连续处罚次数缺口上，$IMS$ 系数为 $0.3621$（标准误 $0.2587$），$IMS\_D$ 系数为 $-0.0066$（标准误 $0.0789$），均不显著。第 4 条标准只在二元指标配 $IMS\_D$ 时边际成立，没有复现基准回归中连续 $IMS$ 的显著负相关。
+
+\begin{table}[htbp]
+\centering
+\caption{以环保行政处罚替代华证环境得分的回归结果}
+\label{tab:penalty_gap}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{lrrrr}
+\toprule
+ & \multicolumn{2}{c}{二元：高 $GI$ 且当年受罚} & \multicolumn{2}{c}{连续：$GI\_z + PenaltyCount\_z$} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+ & (1) $IMS$ & (2) $IMS\_D$ & (3) $IMS$ & (4) $IMS\_D$ \\
+\midrule
+行业专长 & \shortstack{$-0.0094$\\(0.0237)} & \shortstack{$-0.0123^{*}$\\(0.0073)} & \shortstack{$0.3621$\\(0.2587)} & \shortstack{$-0.0066$\\(0.0789)} \\
+控制变量 & 控制 & 控制 & 控制 & 控制 \\
+年度与行业固定效应 & 控制 & 控制 & 控制 & 控制 \\
+观测值 & 15,381 & 15,381 & 10,617 & 10,617 \\
+调整 $R^2$ & 0.0752 & 0.0753 & 0.0672 & 0.0669 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{稳健性总判}
+
+表~\ref{tab:summary_check} 汇总四条标准的对照结果。现有因变量在沟通侧通过了``非棕色披露''检验：实质性句子里不利自曝占比仅 1.16\%，剔除后主结果几乎不变。因此，导师第 8 条里``高 $GI$ 可能只是如实披露负面环境表现''这一担忧，在当前样本里不构成主结果的来源。
+
+但后两条标准没有完全通过。成分拆解表明，基准缺口的下降主要由华证环境得分较高驱动，声称侧 $GI\_z$ 的负向系数很弱且不显著；把华证换成外生环保处罚后，只有二元缺口对 $IMS\_D$ 在 10\% 水平显著为负，连续 $IMS$ 不显著。就目前证据而言，$GI\_z-ESGE\_z$ 可以稳健地表述为``以华证评分为外部参照的行动声称--环境评分相对缺口''，但还不足以把主回归强解释为``审计师行业专长直接压低了无绩效支撑的具体环境行动声称''。
+
+\begin{table}[htbp]
+\centering
+\caption{四项测度稳健性标准对照}
+\label{tab:summary_check}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llll}
+\toprule
+检验项目 & 预设标准 & 实际结果 & 判断 \\
+\midrule
+1. 不利具体句占比 & 句子占比 $<5\%$ & 剔除否定后 1.16\%（原命中 1.80\%） & 通过 \\
+2. 净正面缺口 $Greenwashing^+$ & $IMS$、$IMS\_D$ 为负且 $\le 10\%$ 显著 & $-0.4730^{**}$、$-0.1363^{*}$ & 通过 \\
+3. 控制 $ESGE\_z$ 后的 $GI\_z$ & 系数为负且体现声称侧约束 & $-0.0353$、$-0.0586$（均不显著） & 未通过 \\
+4. 环保处罚替代华证得分 & 二元缺口上 $IMS$、$IMS\_D$ 显著为负 & $IMS=-0.0094$；$IMS\_D=-0.0123^{*}$ & 部分通过 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\section{对论文修改与后续处理的含义}
+
+\begin{enumerate}
+\item \textbf{论文正文口径。}正文中已删去``$GI$ 越低越漂绿''的矛盾写法，统一将测度对象界定为同行相对的``具体行动声称--外部环境评分缺口''，不再声称华证得分与年报文本完全独立。
+\item \textbf{导师第 8、9 条的回应重点。}正面性检验（1.16\% 与 $Greenwashing^+$）可以直接作为回应第 8、9 条的实证证据，说明高 $GI$ 主要不是负面违规自曝。同时，因变量的准确名称应落脚在 environmental action-claim--performance gap。
+\item \textbf{导师第 10 条与机制解释的边界。}由于拆解后效应集中在 $ESGE\_z$，且处罚替代仅在 $IMS\_D$ 二元指标上边际显著，汇报与附录应如实写出这一结构，不宜把四项检验写成全部支持``审计师直接削减年报具体环保声称''。
+\end{enumerate}
+
+\section*{结果文件对应}
+
+本汇报全部数字来自 \texttt{measurement Y robustness/} 目录下的脚本输出：
+\begin{itemize}
+\item 不利句占比：\texttt{results/tables/adverse\_share.csv}（由 \texttt{code/01\_adverse\_share.py} 生成）；
+\item 净正面缺口：\texttt{results/tables/gi\_plus\_regression.csv}、\texttt{gi\_plus\_match.csv}（由 \texttt{code/02\_gi\_plus.py} 生成）；
+\item 成分拆解：\texttt{results/tables/component\_split.csv}（由 \texttt{code/03\_component\_split.py} 生成）；
+\item 处罚替换：\texttt{results/tables/penalty\_gap\_regression.csv}、\texttt{penalty\_coverage.csv}（由 \texttt{code/04\_penalty\_gap.py} 生成）。
+\end{itemize}
+
+\end{document}

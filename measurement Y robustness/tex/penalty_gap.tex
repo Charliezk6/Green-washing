@@ -1,0 +1,18 @@
+\begin{table}[H]
+    \centering
+    \caption{Action-claim gap using environmental penalties instead of the Huazheng score}
+    \label{tab:penalty_gap}
+    \begin{tabular}{lrrrr}
+        \toprule
+        & \multicolumn{2}{c}{High GI and penalty} & \multicolumn{2}{c}{GI z-score plus penalty-count z-score} \\
+        \cmidrule(lr){2-3} \cmidrule(lr){4-5}
+        & (1) \(IMS\) & (2) \(IMS_D\) & (3) \(IMS\) & (4) \(IMS_D\) \\
+        \midrule
+        Specialization & \shortstack{-0.0094 \\ (0.0237)} & \shortstack{-0.0123* \\ (0.0073)} & \shortstack{0.3621 \\ (0.2587)} & \shortstack{-0.0066 \\ (0.0789)} \\
+        Controls & Yes & Yes & Yes & Yes \\
+        Observations & 15,381 & 15,381 & 10,617 & 10,617 \\
+        Adjusted $R^2$ & 0.0752 & 0.0753 & 0.0672 & 0.0669 \\
+        Year and industry fixed effects & Yes & Yes & Yes & Yes \\
+        \bottomrule
+    \end{tabular}
+\end{table}

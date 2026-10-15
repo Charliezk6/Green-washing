@@ -1,0 +1,171 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[UTF8]{ctex}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,booktabs,array,graphicx}
+\usepackage[flushleft]{threeparttable}
+\usepackage{float}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue,
+  pdftitle={相关随机效应汇报}
+}
+
+\title{企业异质性的相关随机效应汇报}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{核心结论}
+
+$IMS$ 与 $IMS\_D$ 的组内斜率和组间斜率都为负，方向与正文一致；全样本联合检验在 5\% 水平不拒绝两条斜率相同（$p=0.0945$、$0.1124$）。组内斜率不显著是功效问题：对正文基准效应的功效只有约 56\% 与 60\%，置信区间同时盖住 0 和基准点估计。随机效应列显著为负，但它只在公司均值系数全为零（$\xi=0$）时成立，只作补充。需要如实说明的一点是：$IMS$ 在 $T_i\ge 2$ 子样本上的联合检验 $p=0.043$，在 5\% 水平拒绝；不过子集检验（$p=0.67$、$0.76$）表明，联合检验接近临界主要来自几乎不随时间变化的控制变量，$IMS$ 自身的均值系数也不显著（$p=0.354$）。
+
+\section{目的}
+
+正文主回归（行业加年份固定效应）比较的是同一行业、同一年份里不同公司的漂绿差异。把这种差异拆开，可以问两个问题：
+\begin{itemize}
+\item \textbf{组内}：同一家公司，审计师行业专长升降时，它的漂绿是否随之变化？这只利用公司自身随时间的变动，等价于企业加年份固定效应。
+\item \textbf{组间}：长期专长水平高的公司与长期专长水平低的公司相比，平均漂绿是否更低？这利用的是公司之间的持久差异。
+\end{itemize}
+相关随机效应（CRE）在混合回归中加入各变量的公司均值 $\bar x_i$，一次回归同时给出两条斜率：
+\begin{equation}
+y_{it}=x_{it}\beta_W+\bar x_i\xi+\varepsilon_{it},\qquad \beta_B=\beta_W+\xi_{\mathrm{core}}.
+\end{equation}
+$\beta_W$ 是组内斜率，$\beta_B$ 是组间斜率，$\xi_{\mathrm{core}}$ 是二者之差。若 $\xi$ 全为零，两条斜率相同，随机效应估计也就一致。
+
+\section{结果}
+
+\subsection{组内斜率与组间斜率}
+
+\begin{table}[H]
+\centering
+\begin{threeparttable}
+\caption{相关随机效应的组内斜率与组间斜率}
+\label{tab:cre_main}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{lrrrr}
+\toprule
+ & \multicolumn{2}{c}{$IMS$} & \multicolumn{2}{c}{$IMS\_D$} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+ & (1) 组内 $\beta_W$ & (2) 组间 $\beta_B$ & (3) 组内 $\beta_W$ & (4) 组间 $\beta_B$ \\
+\midrule
+行业专长 & \shortstack{$-0.2360$\\(0.2299)} & \shortstack{$-0.5627^{**}$\\(0.2638)} & \shortstack{$-0.0971$\\(0.0650)} & \shortstack{$-0.1349$\\(0.1042)} \\
+公司均值系数 $\xi$ & \multicolumn{2}{c}{\shortstack{$-0.3267$\\(0.3523)}} & \multicolumn{2}{c}{\shortstack{$-0.0378$\\(0.1248)}} \\
+控制变量及其公司均值 & 控制 & 控制 & 控制 & 控制 \\
+年份哑变量及其公司均值 & 控制 & 控制 & 控制 & 控制 \\
+观测值 & 15,381 & 15,381 & 15,381 & 15,381 \\
+公司数 & 4,604 & 4,604 & 4,604 & 4,604 \\
+调整 $R^2$ & 0.0226 & 0.0226 & 0.0221 & 0.0221 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：表中只有两次回归，每个核心变量一次。列 (1)(2) 来自同一次 $IMS$ 回归，列 (3)(4) 来自同一次 $IMS\_D$ 回归，故观测值与调整 $R^2$ 相同。$\beta_W$ 是专长水平值 $x_{it}$ 的系数；$\beta_B=\beta_W+\xi$ 由回归系数推算，标准误用同一公司聚类稳健协方差矩阵对该线性组合计算；$\xi$ 即组间与组内斜率之差。$^{**}p<0.05$。
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+两个变量的组内、组间斜率都为负。$IMS$ 的组间斜率单独看显著，但衡量两条斜率差别的 $\xi$ 不显著，即数据看不出组内与组间是两条不同的斜率。组内斜率的置信区间很宽（$IMS$ 为 $[-0.687,\,0.215]$，$IMS\_D$ 为 $[-0.225,\,0.030]$），既容纳 0，也容纳正文基准效应（$-0.4829$、$-0.1434$）；在 5\% 水平、80\% 功效下最小可检测效应分别为 0.64 和 0.18，大于基准效应，因此组内不显著应理解为精度不足，而非没有效应。
+
+\subsection{两条斜率是否相同}
+
+\begin{table}[H]
+\centering
+\caption{公司均值系数为零的联合 Wald 检验}
+\label{tab:wald}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{llrrr}
+\toprule
+核心变量 & 检验 & 统计量 & 自由度 & $p$ 值 \\
+\midrule
+$IMS$ & 全样本联合 Wald（主检验） & 26.23 & 18 & 0.0945 \\
+$IMS$ & 子集 Wald & 6.68 & 9 & 0.6709 \\
+$IMS$ & $T_i\ge 2$ 联合 Wald & 29.46 & 18 & 0.0430 \\
+$IMS$ & Chamberlain 联合 Wald & 26.52 & 21 & 0.1874 \\
+$IMS\_D$ & 全样本联合 Wald（主检验） & 25.47 & 18 & 0.1124 \\
+$IMS\_D$ & 子集 Wald & 5.82 & 9 & 0.7573 \\
+$IMS\_D$ & $T_i\ge 2$ 联合 Wald & 28.51 & 18 & 0.0547 \\
+$IMS\_D$ & Chamberlain 联合 Wald & 28.95 & 21 & 0.1153 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+主检验对两个变量都不拒绝“全部公司均值系数为零”，Chamberlain 形式结论相同。唯一例外是 $IMS$ 的 $T_i\ge 2$ 子样本，在 5\% 水平拒绝，应在文中如实交代。子集检验去掉了规模、杠杆、上市年限、产权性质、四大和审计收费这些几乎不随时间变化的控制后，$p$ 值远离临界值，说明主检验接近临界主要由这些控制驱动，而不是由专长本身驱动。
+
+\subsection{随机效应补充列}
+
+\begin{table}[H]
+\centering
+\begin{threeparttable}
+\caption{随机效应补充列}
+\label{tab:re}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{lrrrr}
+\toprule
+ & \multicolumn{2}{c}{仅年份效应} & \multicolumn{2}{c}{年份效应加行业哑变量} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+ & (1) $IMS$ & (2) $IMS\_D$ & (3) $IMS$ & (4) $IMS\_D$ \\
+\midrule
+行业专长 & \shortstack{$-0.4690^{***}$\\(0.1692)} & \shortstack{$-0.1320^{**}$\\(0.0547)} & \shortstack{$-0.4557^{***}$\\(0.1764)} & \shortstack{$-0.1350^{**}$\\(0.0565)} \\
+控制变量 & 控制 & 控制 & 控制 & 控制 \\
+观测值 & 15,381 & 15,381 & 15,381 & 15,381 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\footnotesize
+\item 注：可行广义最小二乘，方程中不含公司均值，标准误按公司聚类。随机效应仅在公司均值系数全部为零时一致。与正文对照时看列 (3)(4)。$^{***}p<0.01$，$^{**}p<0.05$。
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+随机效应同时利用组内和组间变异，标准误更小，四列都显著为负，数量级接近正文基准。它成立的前提正是 $\xi=0$：主检验不拒绝这一前提，但 $IMS$ 的 $T_i\ge 2$ 检验拒绝，因此这些列只能作为补充证据，不能当作组内效应已经显著。
+
+\section{建议表述}
+
+\begin{quote}
+为考察审计师行业专长与漂绿的关系是否只反映公司间的持久差异，我们采用相关随机效应模型（Wooldridge, 2019）将效应分解为组内斜率与组间斜率。连续专长 $IMS$ 与二元专长 $IMS\_D$ 的两条斜率均为负，与主回归方向一致；公司均值系数的联合 Wald 检验在 5\% 水平不拒绝两条斜率相等（$p=0.0945$、$0.1124$）。组内斜率在统计上不显著（$IMS$：$-0.2360$，标准误 $0.2299$；$IMS\_D$：$-0.0971$，标准误 $0.0650$），但其置信区间同时包含 0 与主回归点估计，对主回归效应的检验功效约为 56\% 与 60\%，反映的是公司内专长变动有限导致的精度不足。随机效应估计显著为负，但仅在公司均值系数为零时一致，故仅作补充。仅保留至少两年观测的公司时，$IMS$ 方程的联合检验在 5\% 水平拒绝（$p=0.043$）；进一步检验表明，这主要源于几乎不随时间变化的控制变量，专长自身的均值系数并不显著（$p=0.354$）。
+\end{quote}
+
+\noindent 同时建议把论文中企业固定效应表的系数由 $-0.2410$、$-0.0999$ 更新为正确的双向组内估计 $-0.2360$（标准误 $0.2299$，$p=0.3047$）与 $-0.0971$（标准误 $0.0650$，$p=0.1351$），原因见附录~\ref{app:impl}。
+
+\appendix
+\section{附录}
+
+\subsection{方法细节}
+
+因变量为连续漂绿，核心变量为连续市场份额 $IMS$ 与 20\% 切点的 $IMS\_D$，两条方程分开估计。控制变量、1\%/99\% 缩尾和公司聚类标准误与全控制企业固定效应一致。$x_{it}$ 包括专长、全部控制变量和年份哑变量，$\bar x_i$ 为其在该公司观测年份上的均值；非平衡面板中年份哑变量的公司均值随在样年份变化，必须纳入。Wooldridge（2019）证明，此时 $\beta_W$ 与企业加年份的组内估计相同。
+
+主检验为全样本联合 Wald，原假设为全部公司均值系数（含年份哑变量均值）为零，水平 5\%。另报三项稳健性检验：(i) 只保留至少两年观测的公司重做联合 Wald；(ii) Chamberlain 形式，用专长各日历年取值除以该公司观测年数代替专长的单一均值，控制变量仍用均值；(iii) 子集 Wald，只约束专长及组内方差占比较高的控制之均值，不约束 Size、Lev、FirmAge、SOE、Big4、LnAuditFee。随机效应用可行广义最小二乘，分仅年份效应与年份效应加行业哑变量两种设定。
+
+\subsection{样本}
+
+全样本 15{,}381 个公司--年度、4{,}604 家公司，2021--2024 年，与企业固定效应样本相同。$T_i\ge 2$ 子样本 15{,}012 个观测、4{,}235 家公司。$IMS$ 的组内变异约占其总方差的 15\%。
+
+\subsection{为什么不做 Hausman 预检验}
+
+先做 Hausman 预检验、再据此选择固定效应或随机效应，会使随后检验的水平严重失真（Guggenberger, 2010, \textit{Journal of Econometrics}）；该检验对模型选择既不必要也不充分（Clark and Linzer, 2015, \textit{Political Science Research and Methods}）。Bell and Jones（2015）与 Bell, Fairbrother and Jones（2019）主张同时报告组内与组间斜率。Wooldridge（2019, \textit{Journal of Econometrics}）给出了非平衡面板下 CRE 与组内估计的等价性。因此本文同时报告全部估计，报告方式在看系数之前固定。
+
+\subsection{事先固定的归类规则}
+
+显著性水平 5\%，$IMS$ 与 $IMS\_D$ 分开归类；稳健性检验不作为改变归类的条件。
+\begin{enumerate}
+\item 组内不显著、组间显著为负、联合检验拒绝：效应主要来自公司间持久差异；若专长自身均值系数也显著为负，组间降幅可能含自选择，组内效应不作因果解释。
+\item 组内与组间同为负、联合检验不拒绝：方向与正文一致，数据不拒绝两条斜率相同；组内不显著归为精度不足。
+\item 其余组合：如实报告两条斜率、标准误与联合检验 $p$ 值。
+\end{enumerate}
+结果：$IMS$（组内 $-0.2360$，组间 $-0.5627^{**}$，联合 $p=0.0945$）与 $IMS\_D$（组内 $-0.0971$，组间 $-0.1349$，联合 $p=0.1124$）均属第 2 类。
+
+\subsection{实现说明}\label{app:impl}
+
+\begin{enumerate}
+\item 公司均值只在该次回归实际使用的观测上计算。参照年为 2021 年，方程含 2022--2024 三个年份哑变量及其公司均值。
+\item 等价核对：把因变量、专长、控制和年份哑变量一起做公司内去均值，再做混合最小二乘。CRE 组内斜率与之绝对差小于 $10^{-14}$；在 $T_i\ge 2$ 子样本上该对照与 \texttt{PanelOLS} 的个体加时间效应一致。
+\item 原企业固定效应表的 $-0.2410$（标准误 $0.2297$，$p=0.294$）与 $-0.0999$（标准误 $0.0648$，$p=0.123$）来自另一算法：只对因变量和协变量去均值，年份哑变量以水平值进入。在非平衡面板中这不是双向组内估计。正确的双向组内估计（年份哑变量一并去均值）为 $-0.2360$ 与 $-0.0971$，差别分别为 0.0050 与 0.0028。建议据此更新论文中的企业固定效应表。
+\item 列标准化后设计矩阵条件数约为 7{,}000，因为规模、上市年限、产权性质、四大和审计收费几乎不随时间变化，其水平值与公司均值近似共线；子集检验即针对这一情况。
+\item 星号按 1\%、5\%、10\% 标注，归类只用 5\%。20\% 切点保持不变，也未限定为专长状态发生过切换的公司。
+\end{enumerate}
+
+\end{document}

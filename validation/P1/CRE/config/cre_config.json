@@ -1,0 +1,8 @@
+{
+  "output_dir": "outputs",
+  "equivalence_tolerance": 1e-6,
+  "main_test_alpha": 0.05,
+  "low_within_controls": ["Size", "Lev", "FirmAge", "SOE", "Big4", "LnAuditFee"],
+  "baseline_effect_reference": "validation/P1/FirmFE/outputs/tables/firm_fe_vs_baseline_core.csv",
+  "notes": "样本、变量、缩尾和 20% 切点沿用 FirmFE 配置。命题对照是公司内消去全部时变量与年份哑变量后的企业+年份固定效应。既有 fit() 未消去年份哑变量，差异单独列出。"
+}

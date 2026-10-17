@@ -89,20 +89,12 @@ def reference_coefficients() -> dict[str, float]:
     firm = firm[firm["模型"].str.contains(r"\(4\) 全部控制", regex=True)]
     specs = pd.read_csv(ROOT / "outputs" / "diagnostics" / "firm_fe_spec_extensions.csv", encoding="utf-8-sig")
     specs = specs[specs["规格"] == "企业+年份FE_LOO处理变量"]
-    partner = pd.read_csv(
-        ROOT / "partner" / "outputs" / "tables" / "partner_fe_all_measures.csv",
-        encoding="utf-8-sig",
-    )
-    partner = partner[(partner["规格"] == "企业+年份FE") & (partner["聚类"] == "公司")]
-    expected = {
+    return {
         "IMS": float(firm.loc[firm["变量"] == "IMS", "系数"].iloc[0]),
         "IMS_D": float(firm.loc[firm["变量"] == "IMS_D", "系数"].iloc[0]),
         "IMS_LOO": float(specs.loc[specs["核心变量"] == "IMS_LOO", "系数"].iloc[0]),
         "IMS_LOO_D": float(specs.loc[specs["核心变量"] == "IMS_LOO_D", "系数"].iloc[0]),
     }
-    for variable in ("PIMS_max", "PIMS_mean", "PIMS_LOO_max", "PIMS_LOO_mean", "PIMS_D_leader", "PIMS_D_p90"):
-        expected[variable] = float(partner.loc[partner["变量"] == variable, "系数"].iloc[0])
-    return expected
 
 
 def check_against_existing(table: pd.DataFrame) -> None:

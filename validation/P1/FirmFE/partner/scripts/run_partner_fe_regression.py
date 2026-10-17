@@ -53,12 +53,20 @@ def prepare() -> pd.DataFrame:
     return sample.sort_values([FIRM, YEAR]).reset_index(drop=True), merged
 
 
-def fit_model(data: pd.DataFrame, cores: list[str], controls: list[str], firm_fe: bool, cluster: str):
+def fit_model(data: pd.DataFrame, cores: list[str], controls: list[str], firm_fe: bool, cluster: str,
+              two_way: bool = False):
     sample = data.dropna(subset=[DEPENDENT, *cores, *controls, FIRM, YEAR, INDUSTRY, cluster]).copy()
     if firm_fe:
-        for column in [DEPENDENT, *cores, *controls]:
+        year_columns = []
+        if two_way:
+            years = sorted(int(year) for year in sample[YEAR].dropna().unique())
+            for year in years[1:]:
+                name = f"year_{year}"
+                sample[name] = (sample[YEAR].astype(int) == year).astype(float)
+                year_columns.append(name)
+        for column in [DEPENDENT, *cores, *controls, *year_columns]:
             sample[column] = sample[column] - sample.groupby(FIRM)[column].transform("mean")
-        terms = [*cores, *controls, f"C({YEAR})"]
+        terms = [*cores, *controls, *(year_columns if two_way else [f"C({YEAR})"])]
     else:
         terms = [*cores, *controls, f"C({YEAR})", f"C({INDUSTRY})"]
     model = smf.ols(f"Q('{DEPENDENT}') ~ " + " + ".join(terms), data=sample)
@@ -207,5 +215,37 @@ def main() -> None:
     print(bootstrap[["变量", "系数", "受限wild_cluster_bootstrap_p"]].to_string(index=False))
 
 
+def write_twoway_sensitivity() -> None:
+    """Two-way within estimates for the firm-FE columns already in the memo.
+
+    Does not overwrite partner_fe_all_measures.csv. The published firm-FE
+    columns remain the estimator that demeans covariates and then adds year
+    dummies in levels.
+    """
+    sample, _ = prepare()
+    specs = [
+        ("企业+年份，双向组内", ["PIMS_max"]),
+        ("企业+年份，双向组内，同时放入IMS", ["PIMS_max", "IMS"]),
+        ("企业+年份，双向组内", ["PIMS_D_p90"]),
+        ("企业+年份，双向组内，同时放入IMS_D", ["PIMS_D_p90", "IMS_D"]),
+        ("企业+年份，双向组内", ["PIMS_D_leader"]),
+    ]
+    rows = []
+    for name, cores in specs:
+        result, used = fit_model(sample, cores, ALL_CONTROLS, True, FIRM, two_way=True)
+        for core in cores:
+            row = coefficient_row(result, used, name, core, True, FIRM)
+            row["组内变换"] = "因变量、协变量和年份哑变量一并公司内去均值"
+            rows.append(row)
+    table = pd.DataFrame(rows)
+    destination = ROOT / "outputs" / "tables" / "partner_fe_twoway_sensitivity.csv"
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    table.to_csv(destination, index=False, encoding="utf-8-sig")
+    print(table[["规格", "变量", "系数", "标准误", "p值", "显著性"]].to_string(index=False))
+
+
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 1 and sys.argv[1] == "--twoway-sensitivity":
+        write_twoway_sensitivity()
+    else:
+        main()

@@ -222,10 +222,10 @@ def achieved_power(standard_error: float, effect: float, alpha: float = 0.05) ->
     return float(norm.cdf(delta - z_critical) + norm.cdf(-delta - z_critical))
 
 
-def classify(beta_w: float, p_w: float, beta_b: float, p_b: float, wald_p: float) -> str:
+def classify(beta_w: float, p_w: float, beta_b: float, p_b: float, xi_p: float) -> str:
     within_insignificant = p_w >= ALPHA
     between_significant_negative = beta_b < 0 and p_b < ALPHA
-    rejected = wald_p < ALPHA
+    rejected = xi_p < ALPHA
     both_negative = beta_w < 0 and beta_b < 0
     if within_insignificant and between_significant_negative and rejected:
         return CLASS_BETWEEN
@@ -246,12 +246,12 @@ def xi_sentence(core: str, xi: float, p_value: float) -> str:
 
 
 def paper_sentence(core: str, category: str, beta_w: float, se_w: float, p_w: float, beta_b: float,
-                   se_b: float, p_b: float, wald_p: float, mde: float, power: float) -> str:
+                   se_b: float, p_b: float, xi_p: float, mde: float, power: float) -> str:
     if category == CLASS_BETWEEN:
         return (
             f"{core}：公司内部专长变动的系数为 {beta_w:.4f}（标准误 {se_w:.4f}），不显著；"
             f"公司之间的专长差异为 {beta_b:.4f}（标准误 {se_b:.4f}），显著为负，"
-            f"且联合检验拒绝二者相等（p = {wald_p:.3f}）。组间差异可能含企业自选择，"
+            f"且专长自身的公司均值系数拒绝二者相等（p = {xi_p:.3f}）。组间差异可能含企业自选择，"
             f"这里不把组内效应解释为因果。组内最小可检测效应约 {mde:.2f}，"
             f"对基准效应的功效约 {power:.0%}。"
         )
@@ -259,14 +259,14 @@ def paper_sentence(core: str, category: str, beta_w: float, se_w: float, p_w: fl
         between_test = "组间斜率单独看显著为负" if p_b < ALPHA else "组间斜率单独看也不显著"
         return (
             f"{core}：组内斜率 {beta_w:.4f}（标准误 {se_w:.4f}，p = {p_w:.3f}）与组间斜率 "
-            f"{beta_b:.4f}（标准误 {se_b:.4f}，p = {p_b:.3f}）同为负。全样本联合检验没有拒绝"
-            f"全部公司均值系数为零（p = {wald_p:.3f}），因此没有拒绝组内斜率与组间斜率相同。"
+            f"{beta_b:.4f}（标准误 {se_b:.4f}，p = {p_b:.3f}）同为负。"
+            f"专长自身的公司均值系数没有拒绝二者相等（p = {xi_p:.3f}）。"
             f"方向与正文一致。组内斜率本身不显著，{between_test}。组内最小可检测效应约 {mde:.2f}，"
             f"对基准效应的功效约 {power:.0%}。"
         )
     return (
         f"{core}：组内斜率 {beta_w:.4f}（标准误 {se_w:.4f}），组间斜率 {beta_b:.4f}"
-        f"（标准误 {se_b:.4f}），全样本联合检验 p = {wald_p:.3f}。如实报告这一组合，"
+        f"（标准误 {se_b:.4f}），专长自身均值系数 p = {xi_p:.3f}。如实报告这一组合，"
         "不用随机效应的显著性替换这两个系数。"
     )
 
@@ -274,12 +274,23 @@ def paper_sentence(core: str, category: str, beta_w: float, se_w: float, p_w: fl
 def fit_random_effects(sample: pd.DataFrame, core: str, industry: bool) -> dict:
     dummies, year_columns, _ = year_dummy_frame(sample)
     pieces = [sample[[core, *ALL_CONTROLS]].reset_index(drop=True), dummies.reset_index(drop=True)]
+    industry_columns: list[str] = []
     if industry:
         industry_dummies = pd.get_dummies(
             sample[INDUSTRY].astype(str), drop_first=True, prefix="industry", dtype=float
         ).reset_index(drop=True)
+        industry_columns = list(industry_dummies.columns)
         pieces.append(industry_dummies)
     exog = pd.concat(pieces, axis=1)
+    exog.insert(0, "const", 1.0)
+    if industry_columns:
+        block = np.column_stack([
+            np.ones(len(exog)),
+            exog[industry_columns].to_numpy(dtype=float),
+        ])
+        rank = int(np.linalg.matrix_rank(block, tol=1e-8))
+        if rank < block.shape[1]:
+            raise RuntimeError("常数项与行业哑变量完全共线，随机效应停在写出系数之前。")
     index = pd.MultiIndex.from_arrays(
         [sample[FIRM].to_numpy(), sample[YEAR].astype(int).to_numpy()],
         names=[FIRM, YEAR],
@@ -287,6 +298,11 @@ def fit_random_effects(sample: pd.DataFrame, core: str, industry: bool) -> dict:
     exog.index = index
     dependent = pd.Series(sample[DEPENDENT].to_numpy(), index=index, name=DEPENDENT)
     result = RandomEffects(dependent, exog).fit(cov_type="clustered", cluster_entity=True)
+    if "const" not in result.params.index:
+        raise RuntimeError("随机效应参数里没有常数项。")
+    missing_industry = [name for name in industry_columns if name not in result.params.index]
+    if missing_industry:
+        raise RuntimeError(f"行业哑变量未进入随机效应参数：{missing_industry[:5]}")
     p_value = float(result.pvalues[core])
     interval = result.conf_int().loc[core]
     return {
@@ -299,7 +315,8 @@ def fit_random_effects(sample: pd.DataFrame, core: str, industry: bool) -> dict:
         "显著性": significance(p_value),
         "置信区间下限": float(interval.iloc[0]),
         "置信区间上限": float(interval.iloc[1]),
-        "一致性": "仅在ξ=0下一致",
+        "一致性": "仅在全部公司均值系数为零时一致",
+        "含常数项": "是",
         "样本数": int(result.nobs),
         "公司数": int(sample[FIRM].nunique()),
         "标准误类型": "公司聚类",
@@ -331,25 +348,36 @@ def write_memo(equivalence: pd.DataFrame, classification: pd.DataFrame, hausman:
         "",
         "Wooldridge 命题对应的企业 + 年份固定效应，是把因变量、协变量和年份哑变量一起做公司内去均值。CRE 的组内斜率与这个对照的绝对差小于 1e-6。只保留至少有两年观测的公司后，该对照与 `PanelOLS` 的个体加时间效应一致。",
         "",
-        "既有 `run_firm_fe_regression.fit` 只对公司内的因变量和协变量去均值，年份哑变量仍以水平值进入。在非平衡面板里，这不等于上面的企业 + 年份组内估计。IMS 相差约 0.005，IMS_D 相差约 0.003，来自定义不同，不是 CRE 没有对齐命题。下表和解读里的组内斜率用命题对照；既有脚本的系数另列，便于和原来的企业固定效应表对照。",
-        "",
     ]
+    full_mundlak = equivalence[(equivalence["规格"] == "Mundlak") & (equivalence["样本"] == "全样本")]
+    if not full_mundlak.empty and bool((full_mundlak["绝对差_既有脚本"] < 1e-6).all()):
+        lines.append(
+            "既有 `run_firm_fe_regression.fit` 已把年份哑变量与协变量一起做公司内去均值。"
+            "CRE 组内斜率与既有脚本的绝对差小于 1e-6。"
+        )
+    else:
+        pieces = [
+            f"{row['核心变量']} 绝对差 {row['绝对差_既有脚本']:.3e}"
+            for _, row in full_mundlak.iterrows()
+        ]
+        lines.append("CRE 组内斜率与既有脚本的绝对差为：" + "；".join(pieces) + "。")
+    lines.append("")
     for _, row in equivalence.iterrows():
         if row["规格"] != "Mundlak":
             continue
         lines.append(
             f"- {row['核心变量']}，{row['样本']}：CRE 组内 {fmt(row['CRE组内斜率'])}，"
             f"命题对照 {fmt(row['命题对照组内斜率'])}，绝对差 {row['绝对差_命题']:.3e}，"
-            f"既有脚本 {fmt(row['既有脚本企业FE'])}，与既有脚本绝对差 {row['绝对差_既有脚本']:.4f}。"
+            f"既有脚本 {fmt(row['既有脚本企业FE'])}，与既有脚本绝对差 {row['绝对差_既有脚本']:.3e}。"
         )
     lines.extend(["", "## 系数与归类", ""])
-    lines.append("归类在看系数之前固定，显著性水平 5%。IMS 与 IMS_D 分开。敏感性检验不改变归类。")
+    lines.append("归类在看系数之前固定，显著性水平 5%。IMS 与 IMS_D 分开。判断两条斜率是否相同，用的是专长自身的公司均值系数，不是全部均值的联合检验。敏感性检验不改变归类。")
     lines.append("")
     for _, row in classification.iterrows():
         lines.append(f"- {row['论文句子']}")
         lines.append(f"  {row['均值系数解读']}")
     lines.extend(["", "## 主检验与敏感性", ""])
-    lines.append("唯一主检验是全样本、公司聚类的联合 Wald，原假设为全部公司均值系数等于 0，含年份哑变量的公司均值。")
+    lines.append("斜率是否相同的主检验，是全样本上专长自身公司均值系数的 t 检验。联合 Wald 只说明企业异质性是否与整组协变量相关，不用于这个判断。这些检验只用来解读，不用来选择报告哪一列。")
     lines.append("")
     for _, row in hausman.iterrows():
         role = "主检验" if row["角色"] == "主检验" else "敏感性"
@@ -362,10 +390,14 @@ def write_memo(equivalence: pd.DataFrame, classification: pd.DataFrame, hausman:
     lines.extend(["", "敏感性检验与全样本主检验的 5% 结论不同的，只有下面这些。句子仍按全样本主检验归类。", ""])
     for core in classification["核心变量"]:
         main_row = hausman[(hausman["核心变量"] == core) & (hausman["角色"] == "主检验")].iloc[0]
-        sensitivities = hausman[(hausman["核心变量"] == core) & (hausman["角色"] == "敏感性")]
+        sensitivities = hausman[
+            (hausman["核心变量"] == core)
+            & (hausman["用途"] == "斜率相等")
+            & (hausman["角色"] == "敏感性")
+        ]
         disagreements = sensitivities[sensitivities["5%水平拒绝"] != main_row["5%水平拒绝"]]
         if disagreements.empty:
-            lines.append(f"- {core}：子集检验、T_i ≥ 2 和 Chamberlain 与全样本主检验的 5% 结论相同。")
+            lines.append(f"- {core}：斜率相等的敏感性与全样本专长均值系数的 5% 结论相同。")
             continue
         for _, row in disagreements.iterrows():
             lines.append(
@@ -374,11 +406,11 @@ def write_memo(equivalence: pd.DataFrame, classification: pd.DataFrame, hausman:
             )
     lines.extend([
         "",
-        "列标准化条件数约 7000，因为几乎不随时间变化的控制与其公司均值接近共线。子集检验去掉 Size、Lev、FirmAge、SOE、Big4、LnAuditFee 的均值约束后，p 值明显更大。主检验仍是全样本联合 Wald。",
+        "列标准化条件数约 7000，因为几乎不随时间变化的控制与其公司均值接近共线。这个条件数只用来判断整组协变量相关的联合检验是否受近似共线影响，不用来判断专长的两条斜率是否相等。子集检验去掉 Size、Lev、FirmAge、SOE、Big4、LnAuditFee 的均值约束后，联合检验的 p 值明显更大。",
         "",
         "## 随机效应补充列",
         "",
-        "随机效应用 `linearmodels.RandomEffects`，公司聚类标准误，方程里不放公司均值。两列都报告：仅年份效应；年份效应加行业哑变量。该列仅在 ξ = 0 下一致。随机效应显著，不写成组内效应已经恢复。",
+        "随机效应含常数项，公司聚类标准误，方程里不放公司均值。两列都报告：仅年份效应；年份效应加行业哑变量。该列仅在全部公司均值系数为零时一致。下面按当次 p 值写；无论是否显著，都不写成组内效应已经恢复。",
         "",
     ])
     for _, row in random_effects.iterrows():
@@ -400,9 +432,9 @@ def main() -> None:
     output = ROOT / CONFIG["output_dir"]
     equivalence_dir = output / "equivalence"
     coefficient_dir = output / "coefficients"
-    hausman_dir = output / "hausman"
+    tests_dir = output / "tests"
     random_dir = output / "random_effects"
-    for directory in (equivalence_dir, coefficient_dir, hausman_dir, random_dir, ROOT / "notes"):
+    for directory in (equivalence_dir, coefficient_dir, tests_dir, random_dir, ROOT / "notes"):
         directory.mkdir(parents=True, exist_ok=True)
 
     common = prepare_common()
@@ -517,34 +549,52 @@ def main() -> None:
         restricted_result = fit_cre(restricted, core, restricted_design)
         restricted_wald = wald_zero(restricted_result, restricted_design["mean_columns"])
         chamberlain_wald = wald_zero(chamberlain_result, chamberlain_design_core["mean_columns"])
-        tests = [
-            ("全样本联合Wald", "全样本", "主检验", full_wald, design["condition_number"]),
-            ("子集Wald", "全样本", "敏感性", subset_wald, design["condition_number"]),
-            ("T_i大于等于2联合Wald", "T_i大于等于2", "敏感性", restricted_wald, restricted_design["condition_number"]),
-            ("Chamberlain联合Wald", "全样本", "敏感性", chamberlain_wald, chamberlain_design_core["condition_number"]),
+        full_xi = coefficient_row(result, design["core_mean"])
+        restricted_xi = coefficient_row(restricted_result, restricted_design["core_mean"])
+        chamberlain_core_terms = [
+            name for name in chamberlain_design_core["mean_columns"] if name.startswith(f"{core}_at_")
         ]
-        for name, sample_name, role, test, condition in tests:
+        chamberlain_core = wald_zero(chamberlain_result, chamberlain_core_terms)
+        def t_test(row: dict) -> dict:
+            return {
+                "统计量": abs(row["t值"]),
+                "自由度": 1,
+                "p值": row["p值"],
+                "约束变量": design["core_mean"],
+            }
+        tests = [
+            ("全样本专长均值t检验", "全样本", "主检验", "斜率相等", t_test(full_xi), design["condition_number"]),
+            ("T_i大于等于2专长均值t检验", "T_i大于等于2", "敏感性", "斜率相等", t_test(restricted_xi), restricted_design["condition_number"]),
+            ("Chamberlain专长历史联合检验", "全样本", "敏感性", "斜率相等", chamberlain_core, chamberlain_design_core["condition_number"]),
+            ("全样本联合Wald", "全样本", "敏感性", "协变量整体相关", full_wald, design["condition_number"]),
+            ("子集Wald", "全样本", "敏感性", "协变量整体相关", subset_wald, design["condition_number"]),
+            ("T_i大于等于2联合Wald", "T_i大于等于2", "敏感性", "协变量整体相关", restricted_wald, restricted_design["condition_number"]),
+            ("Chamberlain联合Wald", "全样本", "敏感性", "协变量整体相关", chamberlain_wald, chamberlain_design_core["condition_number"]),
+        ]
+        for name, sample_name, role, purpose, test, condition in tests:
             hausman_rows.append({
                 "核心变量": core,
                 "检验": name,
                 "样本": sample_name,
                 "角色": role,
+                "用途": purpose,
                 "统计量": test["统计量"],
                 "自由度": test["自由度"],
                 "p值": test["p值"],
                 "5%水平拒绝": test["p值"] < ALPHA,
                 "条件数": condition,
                 "约束变量": test["约束变量"],
+                "说明": "只用来解读组内与组间，不用来选择报告哪一列",
             })
 
         baseline = baseline_effect(core)
         mde = minimum_detectable_effect(beta_w["标准误"])
         power = achieved_power(beta_w["标准误"], baseline)
-        category = classify(beta_w["系数"], beta_w["p值"], beta_b["系数"], beta_b["p值"], full_wald["p值"])
+        category = classify(beta_w["系数"], beta_w["p值"], beta_b["系数"], beta_b["p值"], xi["p值"])
         sentence = paper_sentence(
             core, category, beta_w["系数"], beta_w["标准误"], beta_w["p值"],
             beta_b["系数"], beta_b["标准误"], beta_b["p值"],
-            full_wald["p值"], mde, power,
+            xi["p值"], mde, power,
         )
         classification_rows.append({
             "核心变量": core,
@@ -602,11 +652,11 @@ def main() -> None:
     random_effects = pd.DataFrame(random_rows)
     coefficients.to_csv(coefficient_dir / "cre_coefficients.csv", index=False, encoding="utf-8-sig")
     comparison.to_csv(coefficient_dir / "cre_vs_firm_fe.csv", index=False, encoding="utf-8-sig")
-    hausman.to_csv(hausman_dir / "hausman_tests.csv", index=False, encoding="utf-8-sig")
-    classification.to_csv(hausman_dir / "classification.csv", index=False, encoding="utf-8-sig")
+    hausman.to_csv(tests_dir / "mean_coefficient_tests.csv", index=False, encoding="utf-8-sig")
+    classification.to_csv(tests_dir / "classification.csv", index=False, encoding="utf-8-sig")
     random_effects.to_csv(random_dir / "re_coefficients.csv", index=False, encoding="utf-8-sig")
     write_memo(equivalence, classification, hausman, random_effects)
-    print(classification[["核心变量", "类别", "β_W", "β_B", "联合Wald_p"]].to_string(index=False))
+    print(classification[["核心变量", "类别", "β_W", "β_B", "ξ_p值"]].to_string(index=False))
     print(f"outputs={output}")
 
 

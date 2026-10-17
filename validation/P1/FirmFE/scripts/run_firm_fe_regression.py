@@ -114,13 +114,25 @@ def winsorize_controls(
 
 
 def fit(data: pd.DataFrame, core: str, controls: list[str]):
-    """Firm FE via within demeaning + year FE; firm-clustered SE."""
+    """Firm and year FE: demean y, covariates, and year dummies within firm.
+
+    On an unbalanced panel, leaving year dummies in levels after demeaning only
+    y and the covariates is not the two-way within estimator. Clustered standard
+    errors stay on this demeaned regression and do not use the degrees-of-freedom
+    correction from absorbing the firm dummies.
+    """
     required = [DEPENDENT, core, "证券代码", *controls, "时间"]
     sample = data.dropna(subset=required).copy()
-    within_variables = [DEPENDENT, core, *controls]
+    years = sorted(int(year) for year in sample["时间"].dropna().unique())
+    year_columns = []
+    for year in years[1:]:
+        name = f"year_{year}"
+        sample[name] = (sample["时间"].astype(int) == year).astype(float)
+        year_columns.append(name)
+    within_variables = [DEPENDENT, core, *controls, *year_columns]
     for variable in within_variables:
         sample[variable] = sample[variable] - sample.groupby("证券代码")[variable].transform("mean")
-    terms = [core, *controls, "C(时间)"]
+    terms = [core, *controls, *year_columns]
     model = smf.ols(f"Q('{DEPENDENT}') ~ " + " + ".join(terms), data=sample)
     result = model.fit(cov_type="cluster", cov_kwds={"groups": sample["证券代码"]})
     return result, sample

@@ -81,11 +81,19 @@ def classify(sample: pd.DataFrame, measure: str) -> pd.DataFrame:
     return panel
 
 
-def fit_firm_year(sample: pd.DataFrame, regressors: list[str], controls: list[str]) -> tuple[object, pd.DataFrame]:
+def fit_firm_year(sample: pd.DataFrame, regressors: list[str], controls: list[str],
+                  two_way: bool = False) -> tuple[object, pd.DataFrame]:
     used = sample.dropna(subset=[DEPENDENT, *regressors, *controls, FIRM, YEAR]).copy()
-    for column in [DEPENDENT, *regressors, *controls]:
+    year_columns = []
+    if two_way:
+        years = sorted(int(year) for year in used[YEAR].dropna().unique())
+        for year in years[1:]:
+            name = f"year_{year}"
+            used[name] = (used[YEAR].astype(int) == year).astype(float)
+            year_columns.append(name)
+    for column in [DEPENDENT, *regressors, *controls, *year_columns]:
         used[column] = used[column] - used.groupby(FIRM)[column].transform("mean")
-    terms = [*regressors, *controls, f"C({YEAR})"]
+    terms = [*regressors, *controls, *(year_columns if two_way else [f"C({YEAR})"])]
     model = smf.ols(f"Q('{DEPENDENT}') ~ " + " + ".join(terms), data=used)
     result = model.fit(cov_type="cluster", cov_kwds={"groups": used[FIRM]})
     return result, used
@@ -182,5 +190,23 @@ def main() -> None:
     print(table[["专长定义", "规格", "变量", "系数", "标准误", "p值", "处理公司数"]].to_string(index=False))
 
 
+def write_twoway_sensitivity() -> None:
+    """Two-way within Treat x Post estimates. Does not overwrite partner_switch_did.csv."""
+    sample = prepare()
+    rows = []
+    for measure in MEASURES:
+        panel = classify(sample, measure)
+        for controls, label in (([], "企业+年份FE，双向组内"), (ALL_CONTROLS, "企业+年份FE+控制变量，双向组内")):
+            result, used = fit_firm_year(panel, ["treat_post"], controls, two_way=True)
+            rows.append(row(result, used, measure, label, "treat_post"))
+    table = pd.DataFrame(rows)
+    destination = ROOT / "outputs" / "tables" / "partner_switch_did_twoway_sensitivity.csv"
+    table.to_csv(destination, index=False, encoding="utf-8-sig")
+    print(table[["专长定义", "规格", "系数", "标准误", "p值"]].to_string(index=False))
+
+
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 1 and sys.argv[1] == "--twoway-sensitivity":
+        write_twoway_sensitivity()
+    else:
+        main()

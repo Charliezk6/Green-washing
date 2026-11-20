@@ -1,0 +1,235 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="cLgQkJfqt-BDGoRytB8M">
+    <mxGraphModel dx="2073" dy="777" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="8h6m8IBrfChfro4tER9L-44" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="518" width="691" x="-668" y="12" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-5" edge="1" parent="1" source="8h6m8IBrfChfro4tER9L-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;defaultLabelBackgroundColor=page;labelPadding=0 4;" target="8h6m8IBrfChfro4tER9L-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="事务所内部规则" vertex="1">
+          <mxGeometry height="60" width="120" x="-634" y="62" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-7" edge="1" parent="1" source="8h6m8IBrfChfro4tER9L-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;defaultLabelBackgroundColor=page;labelPadding=0 4;" target="8h6m8IBrfChfro4tER9L-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="项目合伙人" vertex="1">
+          <mxGeometry height="60" width="120" x="-214" y="62" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-11" edge="1" parent="1" source="8h6m8IBrfChfro4tER9L-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;defaultLabelBackgroundColor=page;labelPadding=0 4;" target="8h6m8IBrfChfro4tER9L-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-512.4444783528645" y="292.3333333333335" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="审计团队" vertex="1">
+          <mxGeometry height="60" width="120" x="-214" y="262" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-16" edge="1" parent="1" source="8h6m8IBrfChfro4tER9L-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;defaultLabelBackgroundColor=page;labelPadding=0 4;" target="8h6m8IBrfChfro4tER9L-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="客户管理层" vertex="1">
+          <mxGeometry height="60" width="120" x="-634" y="262" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-6" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="通过内部技术部门、准则研究人员、培训体系、审计软件、工作底稿模板和行业数据库，形成一套相对统一的工作规则" vertex="1">
+          <mxGeometry height="110" width="230" x="-474" y="12" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-10" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;div style=&quot;text-align: start;&quot;&gt;项目经理会告知审计团队的成员如何识别风险、判断重要性和执行复核程序，传递内部规则的内容（“audit style”）&lt;/div&gt;" vertex="1">
+          <mxGeometry height="78" width="165" x="-142" y="138" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-12" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="审计团队的具体沟通" vertex="1">
+          <mxGeometry height="35" width="120" x="-432" y="167" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-13" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="&lt;li class=&quot;my-2 p-0 text-[length:var(--chat-text-size)] leading-[var(--chat-line-height)]&quot;&gt;向客户提供披露清单，使客户按照清单补充环境议题；&lt;/li&gt;&lt;li class=&quot;my-2 p-0 text-[length:var(--chat-text-size)] leading-[var(--chat-line-height)]&quot;&gt;要求客户参考事务所其他客户或同行企业的报告；&lt;/li&gt;&lt;li class=&quot;my-2 p-0 text-[length:var(--chat-text-size)] leading-[var(--chat-line-height)]&quot;&gt;指出客户遗漏的环境话题；&lt;/li&gt;&lt;li class=&quot;my-2 p-0 text-[length:var(--chat-text-size)] leading-[var(--chat-line-height)]&quot;&gt;提供替代表述、邮件措辞或安全表达；&lt;/li&gt;&lt;li class=&quot;my-2 p-0 text-[length:var(--chat-text-size)] leading-[var(--chat-line-height)]&quot;&gt;直接修改客户年报草稿；&lt;/li&gt;&lt;li class=&quot;my-2 p-0 text-[length:var(--chat-text-size)] leading-[var(--chat-line-height)]&quot;&gt;在客户编制能力不足时，参与起草甚至代写部分段落。&lt;/li&gt;" vertex="1">
+          <mxGeometry height="98" width="291" x="-499" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-15" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="执行披露" vertex="1">
+          <mxGeometry height="39" width="120" x="-634" y="455" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-17" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="客户自行编制环境披露的成本较高，&lt;span style=&quot;background-color: transparent; color: light-dark(#000000, var(--ge-light-color, #ffffff));&quot;&gt;事务所可以提供现成的议题、结构和措辞，&lt;/span&gt;客户于是采用事务所提供的模板以节省时间和降低风险" vertex="1">
+          <mxGeometry height="84" width="213" x="-563" y="343" as="geometry" />
+        </mxCell>
+        <UserObject label="" mermaidData="{&#xa;  &quot;data&quot;: &quot;graph TD\n    AF[同一会计师事务所]\n    AF --&gt; R[内部准则解释]\n    AF --&gt; T[环境披露模板]\n    AF --&gt; D[客户案例和行业数据库]\n    AF --&gt; P1[项目合伙人/团队1]\n    AF --&gt; P2[项目合伙人/团队2]\n    AF --&gt; P3[项目合伙人/团队3]\n    P1 --&gt; A[客户A]\n    P2 --&gt; B[客户B]\n    P3 --&gt; C[客户C]\n    A -.经验反馈.-&gt; D\n    B -.修改经验.-&gt; D\n    C -.风险判断.-&gt; D&quot;,&#xa;  &quot;config&quot;: null,&#xa;  &quot;version&quot;: &quot;12&quot;&#xa;}" id="8h6m8IBrfChfro4tER9L-20">
+          <mxCell connectable="0" parent="1" style="group;transparentBounds=1;editIcon=1;lockedGroup=0;groupPadding=10;" vertex="1">
+            <mxGeometry as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="8h6m8IBrfChfro4tER9L-68" edge="1" parent="8h6m8IBrfChfro4tER9L-20" source="8h6m8IBrfChfro4tER9L-67" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;labelPadding=0 4;" target="8h6m8IBrfChfro4tER9L-58">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-67" parent="8h6m8IBrfChfro4tER9L-20" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="" vertex="1">
+          <mxGeometry height="481" width="894" x="-759" y="579" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-54" edge="1" parent="8h6m8IBrfChfro4tER9L-20" source="8h6m8IBrfChfro4tER9L-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;defaultLabelBackgroundColor=page;labelPadding=0 4;" target="8h6m8IBrfChfro4tER9L-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-55" edge="1" parent="8h6m8IBrfChfro4tER9L-20" source="8h6m8IBrfChfro4tER9L-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;labelPadding=0 4;" target="8h6m8IBrfChfro4tER9L-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="同一会计师事务所" mermaidId="n:AF" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#ffffff;strokeColor=#28253D;fontColor=#28253D;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;" mermaidBaseValue="同一会计师事务所" id="8h6m8IBrfChfro4tER9L-21">
+          <mxCell parent="8h6m8IBrfChfro4tER9L-20" style="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#ffffff;strokeColor=#28253D;fontColor=#28253D;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="45" width="152" x="-459.5" y="600" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="内部准则解释" mermaidId="n:R" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#ffffff;strokeColor=#28253D;fontColor=#28253D;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;" mermaidBaseValue="内部准则解释" id="8h6m8IBrfChfro4tER9L-22">
+          <mxCell parent="8h6m8IBrfChfro4tER9L-20" style="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#ffffff;strokeColor=#28253D;fontColor=#28253D;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="45" width="117" x="-738" y="725" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="环境披露模板" mermaidId="n:T" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#ffffff;strokeColor=#28253D;fontColor=#28253D;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;" mermaidBaseValue="环境披露模板" id="8h6m8IBrfChfro4tER9L-23">
+          <mxCell parent="8h6m8IBrfChfro4tER9L-20" style="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#ffffff;strokeColor=#28253D;fontColor=#28253D;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="45" width="107.5" x="-580" y="725" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="8h6m8IBrfChfro4tER9L-47" edge="1" parent="8h6m8IBrfChfro4tER9L-20" source="8h6m8IBrfChfro4tER9L-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;labelPadding=0 4;" target="8h6m8IBrfChfro4tER9L-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-51" edge="1" parent="8h6m8IBrfChfro4tER9L-20" source="8h6m8IBrfChfro4tER9L-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;labelPadding=0 4;" target="8h6m8IBrfChfro4tER9L-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="客户案例和行业数据库" mermaidId="n:D" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#ffffff;strokeColor=#28253D;fontColor=#28253D;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;" mermaidBaseValue="客户案例和行业数据库" id="8h6m8IBrfChfro4tER9L-24">
+          <mxCell parent="8h6m8IBrfChfro4tER9L-20" style="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#ffffff;strokeColor=#28253D;fontColor=#28253D;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;labelWidth=120;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="67" width="152" x="-315.5" y="977" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="项目合伙人/团队1" mermaidId="n:P1" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#ffffff;strokeColor=#28253D;fontColor=#28253D;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;" mermaidBaseValue="项目合伙人/团队1" id="8h6m8IBrfChfro4tER9L-25">
+          <mxCell parent="8h6m8IBrfChfro4tER9L-20" style="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#ffffff;strokeColor=#28253D;fontColor=#28253D;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="45" width="152" x="-411.5" y="725" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="项目合伙人/团队2" mermaidId="n:P2" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#ffffff;strokeColor=#28253D;fontColor=#28253D;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;" mermaidBaseValue="项目合伙人/团队2" id="8h6m8IBrfChfro4tER9L-26">
+          <mxCell parent="8h6m8IBrfChfro4tER9L-20" style="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#ffffff;strokeColor=#28253D;fontColor=#28253D;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="45" width="152" x="-219.5" y="725" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="项目合伙人/团队3" mermaidId="n:P3" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#ffffff;strokeColor=#28253D;fontColor=#28253D;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;" mermaidBaseValue="项目合伙人/团队3" id="8h6m8IBrfChfro4tER9L-27">
+          <mxCell parent="8h6m8IBrfChfro4tER9L-20" style="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#ffffff;strokeColor=#28253D;fontColor=#28253D;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="45" width="152" x="-27.5" y="725" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="客户A" mermaidId="n:A" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#ffffff;strokeColor=#28253D;fontColor=#28253D;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;" mermaidBaseValue="客户A" id="8h6m8IBrfChfro4tER9L-28">
+          <mxCell parent="8h6m8IBrfChfro4tER9L-20" style="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#ffffff;strokeColor=#28253D;fontColor=#28253D;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="45" width="152" x="-411.5" y="811" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="客户B" mermaidId="n:B" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#ffffff;strokeColor=#28253D;fontColor=#28253D;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;" mermaidBaseValue="客户B" id="8h6m8IBrfChfro4tER9L-29">
+          <mxCell parent="8h6m8IBrfChfro4tER9L-20" style="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#ffffff;strokeColor=#28253D;fontColor=#28253D;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="45" width="152" x="-219.5" y="811" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="客户C" mermaidId="n:C" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#ffffff;strokeColor=#28253D;fontColor=#28253D;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;" mermaidBaseValue="客户C" id="8h6m8IBrfChfro4tER9L-30">
+          <mxCell parent="8h6m8IBrfChfro4tER9L-20" style="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#ffffff;strokeColor=#28253D;fontColor=#28253D;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="45" width="152" x="-27.5" y="811" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:AF-&gt;P1#0" mermaidBaseStyle="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;exitX=0.56;exitY=1;entryX=0.5;entryY=0.01;strokeWidth=2;targetPerimeterSpacing=4;" mermaidBaseValue="" id="8h6m8IBrfChfro4tER9L-34">
+          <mxCell edge="1" parent="8h6m8IBrfChfro4tER9L-20" source="8h6m8IBrfChfro4tER9L-21" style="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;exitX=0.56;exitY=1;entryX=0.5;entryY=0.01;strokeWidth=2;targetPerimeterSpacing=4;" target="8h6m8IBrfChfro4tER9L-25">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="-374.5" y="705" />
+                <mxPoint x="-335.5" y="705" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:AF-&gt;P2#0" mermaidBaseStyle="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;exitX=0.68;exitY=1;entryX=0.5;entryY=0.01;strokeWidth=2;targetPerimeterSpacing=4;" mermaidBaseValue="" id="8h6m8IBrfChfro4tER9L-35">
+          <mxCell edge="1" parent="8h6m8IBrfChfro4tER9L-20" source="8h6m8IBrfChfro4tER9L-21" style="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;exitX=0.68;exitY=1;entryX=0.5;entryY=0.01;strokeWidth=2;targetPerimeterSpacing=4;" target="8h6m8IBrfChfro4tER9L-26">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="-355.5" y="685" />
+                <mxPoint x="-143.5" y="685" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:AF-&gt;P3#0" mermaidBaseStyle="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;exitX=0.81;exitY=1;entryX=0.5;entryY=0.01;strokeWidth=2;targetPerimeterSpacing=4;" mermaidBaseValue="" id="8h6m8IBrfChfro4tER9L-36">
+          <mxCell edge="1" parent="8h6m8IBrfChfro4tER9L-20" source="8h6m8IBrfChfro4tER9L-21" style="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;exitX=0.81;exitY=1;entryX=0.5;entryY=0.01;strokeWidth=2;targetPerimeterSpacing=4;" target="8h6m8IBrfChfro4tER9L-27">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="-336.5" y="665" />
+                <mxPoint x="48.5" y="665" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:P1-&gt;A#0" mermaidBaseStyle="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;targetPerimeterSpacing=4;" mermaidBaseValue="" id="8h6m8IBrfChfro4tER9L-37">
+          <mxCell edge="1" parent="8h6m8IBrfChfro4tER9L-20" source="8h6m8IBrfChfro4tER9L-25" style="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;targetPerimeterSpacing=4;" target="8h6m8IBrfChfro4tER9L-28">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points" />
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:P2-&gt;B#0" mermaidBaseStyle="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;targetPerimeterSpacing=4;" mermaidBaseValue="" id="8h6m8IBrfChfro4tER9L-38">
+          <mxCell edge="1" parent="8h6m8IBrfChfro4tER9L-20" source="8h6m8IBrfChfro4tER9L-26" style="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;targetPerimeterSpacing=4;" target="8h6m8IBrfChfro4tER9L-29">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points" />
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:P3-&gt;C#0" mermaidBaseStyle="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;targetPerimeterSpacing=4;" mermaidBaseValue="" id="8h6m8IBrfChfro4tER9L-39">
+          <mxCell edge="1" parent="8h6m8IBrfChfro4tER9L-20" source="8h6m8IBrfChfro4tER9L-27" style="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;targetPerimeterSpacing=4;" target="8h6m8IBrfChfro4tER9L-30">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points" />
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="经验反馈" mermaidId="e:A-&gt;D#0" mermaidBaseStyle="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;dashed=1;dashPattern=2 2;fixDash=1;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=16;labelBackgroundColor=#cccccc;fontFamily=Recursive;fontColor=#28253D;exitX=0.5;exitY=0.99;entryX=0.41;entryY=0;strokeWidth=2;targetPerimeterSpacing=4;" mermaidBaseValue="经验反馈" id="8h6m8IBrfChfro4tER9L-40">
+          <mxCell edge="1" parent="8h6m8IBrfChfro4tER9L-20" source="8h6m8IBrfChfro4tER9L-28" style="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;dashed=1;dashPattern=2 2;fixDash=1;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#cccccc;fontFamily=Recursive;fontColor=#28253D;exitX=0.5;exitY=0.99;entryX=0.41;entryY=0;strokeWidth=2;targetPerimeterSpacing=4;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" target="8h6m8IBrfChfro4tER9L-24">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="-335.5" y="937" />
+                <mxPoint x="-252.5" y="937" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="修改经验" mermaidId="e:B-&gt;D#0" mermaidBaseStyle="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;dashed=1;dashPattern=2 2;fixDash=1;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=16;labelBackgroundColor=#cccccc;fontFamily=Recursive;fontColor=#28253D;exitX=0.5;exitY=0.99;entryX=0.59;entryY=0;strokeWidth=2;targetPerimeterSpacing=4;" mermaidBaseValue="修改经验" id="8h6m8IBrfChfro4tER9L-41">
+          <mxCell edge="1" parent="8h6m8IBrfChfro4tER9L-20" source="8h6m8IBrfChfro4tER9L-29" style="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;dashed=1;dashPattern=2 2;fixDash=1;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#cccccc;fontFamily=Recursive;fontColor=#28253D;exitX=0.5;exitY=0.99;entryX=0.59;entryY=0;strokeWidth=2;targetPerimeterSpacing=4;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" target="8h6m8IBrfChfro4tER9L-24">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="-143.5" y="937" />
+                <mxPoint x="-226.5" y="937" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="风险判断" mermaidId="e:C-&gt;D#0" mermaidBaseStyle="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;dashed=1;dashPattern=2 2;fixDash=1;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=16;labelBackgroundColor=#cccccc;fontFamily=Recursive;fontColor=#28253D;exitX=0.5;exitY=0.99;entryX=0.76;entryY=0;strokeWidth=2;targetPerimeterSpacing=4;" mermaidBaseValue="风险判断" id="8h6m8IBrfChfro4tER9L-42">
+          <mxCell edge="1" parent="8h6m8IBrfChfro4tER9L-20" source="8h6m8IBrfChfro4tER9L-30" style="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;dashed=1;dashPattern=2 2;fixDash=1;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#cccccc;fontFamily=Recursive;fontColor=#28253D;exitX=0.5;exitY=0.99;entryX=0.76;entryY=0;strokeWidth=2;targetPerimeterSpacing=4;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" target="8h6m8IBrfChfro4tER9L-24">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="48.5" y="957" />
+                <mxPoint x="-199.5" y="957" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <mxCell id="8h6m8IBrfChfro4tER9L-49" parent="8h6m8IBrfChfro4tER9L-20" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="事务所聘请的技术人员指定准则" vertex="1">
+          <mxGeometry height="30" width="177" x="-669" y="623" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-50" parent="8h6m8IBrfChfro4tER9L-20" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="实务的经验可以便于调整准则模板" vertex="1">
+          <mxGeometry height="30" width="194" x="-518.5" y="977" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-58" parent="8h6m8IBrfChfro4tER9L-20" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="客户D" vertex="1">
+          <mxGeometry height="60" width="113" x="282.5" y="539.5" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-60" edge="1" parent="8h6m8IBrfChfro4tER9L-20" source="8h6m8IBrfChfro4tER9L-58" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;labelPadding=0 4;" target="8h6m8IBrfChfro4tER9L-59">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-59" parent="8h6m8IBrfChfro4tER9L-20" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="执行披露" vertex="1">
+          <mxGeometry height="39" width="120" x="464.5" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-64" parent="8h6m8IBrfChfro4tER9L-20" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;fontSize=15;" value="事务所作为共同中介，把其他客户的披露经验、事务所的审核标准和项目团队的修改意见，重新通过沟通流程转移到新客户" vertex="1">
+          <mxGeometry height="45" width="282" x="213" y="705" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-66" parent="8h6m8IBrfChfro4tER9L-20" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=20;fontStyle=3" value="扩散流程" vertex="1">
+          <mxGeometry height="49.5" width="107.5" x="253.5" y="479" as="geometry" />
+        </mxCell>
+        <mxCell id="8h6m8IBrfChfro4tER9L-65" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=20;fontStyle=3" value="沟通流程" vertex="1">
+          <mxGeometry height="49.5" width="107.5" x="-201.5" y="438" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

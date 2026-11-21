@@ -221,5 +221,9 @@ __marimo__/
 appendix/
 *.jsonl
 
+# Derived regression panels are already tracked.
+# Do not commit another copy under archive/ or validation/.
+# Copies that are already committed stay in the repository.
+
 # LLM intermediate artifacts (~1 million files); scripts are force-added
 Y_variable_reproduction/LLM_classification/

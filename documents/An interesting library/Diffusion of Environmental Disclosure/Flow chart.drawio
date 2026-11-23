@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net">
   <diagram name="Page-1" id="cLgQkJfqt-BDGoRytB8M">
-    <mxGraphModel dx="2073" dy="777" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1696" dy="463" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -228,6 +228,106 @@
         </mxCell>
         <mxCell id="8h6m8IBrfChfro4tER9L-65" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=20;fontStyle=3" value="沟通流程" vertex="1">
           <mxGeometry height="49.5" width="107.5" x="-201.5" y="438" as="geometry" />
+        </mxCell>
+        <mxCell id="sym-44" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="518" width="691" x="-759" y="1120" as="geometry" />
+        </mxCell>
+        <mxCell id="sym-5" edge="1" parent="1" source="sym-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;defaultLabelBackgroundColor=page;labelPadding=0 4;" target="sym-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sym-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="事务所内部规则&lt;br&gt;（合规清单与模板）" vertex="1">
+          <mxGeometry height="60" width="120" x="-725" y="1170" as="geometry" />
+        </mxCell>
+        <mxCell id="sym-7" edge="1" parent="1" source="sym-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;defaultLabelBackgroundColor=page;labelPadding=0 4;" target="sym-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sym-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="项目合伙人" vertex="1">
+          <mxGeometry height="60" width="120" x="-305" y="1170" as="geometry" />
+        </mxCell>
+        <mxCell id="sym-11" edge="1" parent="1" source="sym-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;defaultLabelBackgroundColor=page;labelPadding=0 4;" target="sym-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-603.4444783528645" y="1400.3333333333335" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sym-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="审计团队" vertex="1">
+          <mxGeometry height="60" width="120" x="-305" y="1370" as="geometry" />
+        </mxCell>
+        <mxCell id="sym-16" edge="1" parent="1" source="sym-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;defaultLabelBackgroundColor=page;labelPadding=0 4;" target="sym-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sym-4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="客户管理层" vertex="1">
+          <mxGeometry height="60" width="120" x="-725" y="1370" as="geometry" />
+        </mxCell>
+        <mxCell id="sym-6" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="通过内部技术部门、披露核对清单（Checklist）、合规指引模板与过往客户免责范例，形成标准化的定性披露模板库" vertex="1">
+          <mxGeometry height="110" width="230" x="-565" y="1120" as="geometry" />
+        </mxCell>
+        <mxCell id="sym-10" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;div style=&quot;text-align: start;&quot;&gt;项目合伙人/经理从“形式合规与规避问询风险”出发，要求审计团队检查必答环境议题是否齐全、措辞是否稳妥，传递形式合规风格&lt;/div&gt;" vertex="1">
+          <mxGeometry height="110" width="160" x="-233" y="1246" as="geometry" />
+        </mxCell>
+        <mxCell id="sym-12" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="审计团队的具体沟通（形式填补）" vertex="1">
+          <mxGeometry height="30" width="180" x="-553" y="1265" as="geometry" />
+        </mxCell>
+        <mxCell id="sym-13" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="&lt;li class=&quot;my-2 p-0 text-[length:var(--chat-text-size)] leading-[var(--chat-line-height)]&quot;&gt;发放披露核对清单，按清单补齐环保方针与愿景议题；&lt;/li&gt;&lt;li class=&quot;my-2 p-0 text-[length:var(--chat-text-size)] leading-[var(--chat-line-height)]&quot;&gt;建议客户参考本所其他客户或同行的环境章节框架；&lt;/li&gt;&lt;li class=&quot;my-2 p-0 text-[length:var(--chat-text-size)] leading-[var(--chat-line-height)]&quot;&gt;指出形式上遗漏的定性话题，提供通用替代表述；&lt;/li&gt;&lt;li class=&quot;my-2 p-0 text-[length:var(--chat-text-size)] leading-[var(--chat-line-height)]&quot;&gt;提供经检验的“安全表达”或免责套话以规避问询；&lt;/li&gt;&lt;li class=&quot;my-2 p-0 text-[length:var(--chat-text-size)] leading-[var(--chat-line-height)]&quot;&gt;复核草稿时删改激进表述，替换为事务所稳健措辞；&lt;/li&gt;&lt;li class=&quot;my-2 p-0 text-[length:var(--chat-text-size)] leading-[var(--chat-line-height)]&quot;&gt;客户编制能力不足时，协助搭建框架或代拟定性段落。&lt;/li&gt;" vertex="1">
+          <mxGeometry height="104" width="291" x="-590" y="1294" as="geometry" />
+        </mxCell>
+        <mxCell id="sym-15" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="执行象征性披露&lt;br&gt;（模板化趋同）" vertex="1">
+          <mxGeometry height="44" width="120" x="-725" y="1563" as="geometry" />
+        </mxCell>
+        <mxCell id="sym-17" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="定性口号无需真实环保投入，且不触发账表重大不一致核查；管理层直接采纳事务所现成议题、结构与安全措辞以节省成本、规避风险，形成跨客户的低成本模板扩散" vertex="1">
+          <mxGeometry height="96" width="235" x="-654" y="1445" as="geometry" />
+        </mxCell>
+        <mxCell id="sym-65" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=20;fontStyle=3" value="象征性披露沟通流程" vertex="1">
+          <mxGeometry height="49.5" width="260" x="-369" y="1546" as="geometry" />
+        </mxCell>
+        <mxCell id="sub-44" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="518" width="691" x="-18" y="1120" as="geometry" />
+        </mxCell>
+        <mxCell id="sub-5" edge="1" parent="1" source="sub-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;defaultLabelBackgroundColor=page;labelPadding=0 4;" target="sub-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sub-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="事务所内部规则&lt;br&gt;（准则解释与核查标准）" vertex="1">
+          <mxGeometry height="60" width="120" x="16" y="1170" as="geometry" />
+        </mxCell>
+        <mxCell id="sub-7" edge="1" parent="1" source="sub-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;defaultLabelBackgroundColor=page;labelPadding=0 4;" target="sub-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sub-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="项目合伙人" vertex="1">
+          <mxGeometry height="60" width="120" x="453" y="1170" as="geometry" />
+        </mxCell>
+        <mxCell id="sub-11" edge="1" parent="1" source="sub-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;defaultLabelBackgroundColor=page;labelPadding=0 4;" target="sub-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="137.5555216471355" y="1400.3333333333335" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sub-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="审计团队" vertex="1">
+          <mxGeometry height="60" width="120" x="453" y="1370" as="geometry" />
+        </mxCell>
+        <mxCell id="sub-16" edge="1" parent="1" source="sub-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;defaultLabelBackgroundColor=page;labelPadding=0 4;" target="sub-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sub-4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="客户管理层" vertex="1">
+          <mxGeometry height="60" width="120" x="16" y="1370" as="geometry" />
+        </mxCell>
+        <mxCell id="sub-6" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="通过技术部门对准则（CAS 1631/1521）的专业解释、行业风险数据库、重要性阈值与底稿模板，形成统一的实质核查标准" vertex="1">
+          <mxGeometry height="110" width="230" x="176" y="1120" as="geometry" />
+        </mxCell>
+        <mxCell id="sub-10" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;div style=&quot;text-align: start;&quot;&gt;项目合伙人/经理结合行业专长，指导团队识别环境错报风险、判断量化实质重要性，并执行其他信息与账表的一致性核对&lt;/div&gt;" vertex="1">
+          <mxGeometry height="96" width="145" x="522" y="1246" as="geometry" />
+        </mxCell>
+        <mxCell id="sub-12" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="审计团队的具体沟通（实质核对）" vertex="1">
+          <mxGeometry height="30" width="180" x="217" y="1265" as="geometry" />
+        </mxCell>
+        <mxCell id="sub-13" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="&lt;li class=&quot;my-2 p-0 text-[length:var(--chat-text-size)] leading-[var(--chat-line-height)]&quot;&gt;就环境负债、资产减值及补助的确认计量标准进行沟通；&lt;/li&gt;&lt;li class=&quot;my-2 p-0 text-[length:var(--chat-text-size)] leading-[var(--chat-line-height)]&quot;&gt;依据行业专长，指出排污、处罚等实质议题的披露遗漏；&lt;/li&gt;&lt;li class=&quot;my-2 p-0 text-[length:var(--chat-text-size)] leading-[var(--chat-line-height)]&quot;&gt;将环保技改与设备投产声称同在建工程、资本开支核对；&lt;/li&gt;&lt;li class=&quot;my-2 p-0 text-[length:var(--chat-text-size)] leading-[var(--chat-line-height)]&quot;&gt;核查整改声明是否与已知环保罚单、预计负债重大不一致；&lt;/li&gt;&lt;li class=&quot;my-2 p-0 text-[length:var(--chat-text-size)] leading-[var(--chat-line-height)]&quot;&gt;对缺乏账表支撑的硬性声称，要求提供证据或予以更正；&lt;/li&gt;&lt;li class=&quot;my-2 p-0 text-[length:var(--chat-text-size)] leading-[var(--chat-line-height)]&quot;&gt;传递同行标杆的计量口径与规范，督促按真实投入列报。&lt;/li&gt;" vertex="1">
+          <mxGeometry height="44" width="338" x="155" y="1312" as="geometry" />
+        </mxCell>
+        <mxCell id="sub-15" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="执行实质性披露&lt;br&gt;（受真实绩效约束）" vertex="1">
+          <mxGeometry height="44" width="120" x="16" y="1563" as="geometry" />
+        </mxCell>
+        <mxCell id="sub-17" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="具体行动与量化数据受制于真实环保资本开支与合规留痕（硬锚点），虚报将触发账表不一致与调整压力；事务所仅能传播披露标准，实质披露仍由企业真实环境绩效决定" vertex="1">
+          <mxGeometry height="96" width="235" x="87" y="1445" as="geometry" />
+        </mxCell>
+        <mxCell id="sub-65" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=20;fontStyle=3" value="实质性披露沟通流程" vertex="1">
+          <mxGeometry height="49.5" width="260" x="372" y="1546" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

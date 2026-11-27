@@ -409,67 +409,63 @@ def percent(value: float) -> str:
 def write_report(phi: pd.DataFrame, overlap: pd.DataFrame, cluster: pd.DataFrame) -> None:
     merged = phi.merge(overlap, on=["变量", "变量名称"]).merge(cluster, on=["变量", "变量名称"])
     merged = merged.sort_values("与SameAF的Phi系数", ascending=False)
-    by_name = {row["变量"]: row for row in merged.to_dict("records")}
     same_af_vif = float(merged["SameAF的VIF"].iloc[0])
+    supply = merged.loc[merged["变量"].eq("SupplyChainLink")].iloc[0]
     lines = [
-        "# SameAF 与其他扩散通道的相关性",
+        "# `correlation` 说明",
         "",
-        "样本是 2,051,610 个同一年度、同一行业的无序公司对，其中同所公司对 153,692 个。九条通道都是公司对上的 0/1。Phi 是两个 0/1 变量的相关系数。每条通道对 `SameAF` 的回归去掉行业×年度均值，标准误按两家证券代码双向聚类。VIF 来自九条通道与 `SameAF` 同时进入、并去掉行业×年度均值之后。",
+        "本目录检验同年度、同行业无序公司对上的 `SameAF` 与九条竞争性扩散通道是否重合。样本来自 `../data/pairs/company_pair_x_variables.parquet`，共 2,051,610 对，其中同所 153,692 对、不同所 1,897,918 对。生成脚本是 `../scripts/build_channel_correlation.py`。",
+        "",
+        "## 目录文件",
+        "",
+        "- `company_pair_channels.parquet`：2,051,610 个公司对的标识列、`SameAF` 和九个通道 0/1 变量。",
+        "- `corr_1_pairwise_matrix.csv`：`SameAF` 与九个通道两两之间的 Phi 系数矩阵。两个 0/1 变量的 Phi 等于 Pearson 相关系数。",
+        "- `corr_2_channel_overlap_crosstab.csv`：同所组与不同所组在每条通道上取 1 的对数和比例。",
+        "- `corr_3_clustered_t_and_vif.csv`：每条通道对 `SameAF` 回归的系数、按 `证券代码_i` 与 `证券代码_j` 双向聚类的标准误、t 值、p 值，以及九条通道与 `SameAF` 同时进入时的 VIF。回归与 VIF 都先去掉 `时间 × ExpertiseIndustryCode` 均值。",
+        "",
+        "## 通道口径",
+        "",
+        "九个变量都是公司对上的 0/1。",
+        "",
+        "| 变量 | 含义 | 数据表与规则 |",
+        "| --- | --- | --- |",
+        "| `SameGroup` | 同一企业集团 | `HLD_Contrshr.csv` 年末记录。实际控制人 `S0701b` 相同且非空，去掉含“国资委”或“国有资产监督管理委员会”的名称 |",
+        "| `SameBlockholder` | 共同大股东 | `HLD_Shareholders.csv` 年末记录。至少共享一名 `S0304a >= 5` 的股东，去掉香港中央结算有限公司和 `HKSCC` |",
+        "| `SameProvince` | 注册地同省 | `STK_LISTEDCOINFOANL.csv`，`PROVINCECODE` 相同 |",
+        "| `SameCity` | 注册地同城 | `STK_LISTEDCOINFOANL.csv`，`CITYCODE` 相同 |",
+        "| `SameOfficeZip4` | 办公地同邮区 | `STK_LISTEDCOINFOANL.csv`，办公地址邮编 `Zipcode` 按逗号拆开后，任一对前四位相同 |",
+        "| `BoardInterlock` | 共享董事或高管 | `CG_Director.csv`，共享至少一名职务代码以 `P351` 或 `P353` 开头的 `PersonID`，不含监事 `P352` |",
+        "| `SameIndepDir` | 共享独立董事 | `CG_Director.csv`，同一 `PersonID` 至少在一方任独立董事 `P35106`，并在另一方任董事或高管 |",
+        "| `SupplyChainLink` | 上市前五大客户或供应商 | `SC_TopFiveSaleInfo.csv` 与 `SC_TopFivePurchaseInfo.csv`。`IsListed = Y` 且披露方与 `BusinessSymbol` 恰好为配对双方，方向不限 |",
+        "| `BothInquired` | 双方近年均被年报问询 | `CMS_InquiriesSE.csv` 中 `InquiryType = 1`。两家在当年或上一年都收到过年报问询函 |",
+        "",
+        "## 检验结果",
         "",
         "| 通道 | Phi | 同所组比例 | 不同所组比例 | 聚类系数 | t值 | VIF |",
         "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
     for row in merged.to_dict("records"):
         lines.append(
-            f"| {row['变量名称']} | {row['与SameAF的Phi系数']:.4f} | {percent(row['同所组比例'])} | "
+            f"| `{row['变量']}` {row['变量名称']} | {row['与SameAF的Phi系数']:.4f} | {percent(row['同所组比例'])} | "
             f"{percent(row['不同所组比例'])} | {row['系数']:.4f} | {row['t值']:.2f} | {row['VIF']:.2f} |"
         )
-
-    province = by_name["SameProvince"]
-    city = by_name["SameCity"]
-    office = by_name["SameOfficeZip4"]
-    group = by_name["SameGroup"]
-    holder = by_name["SameBlockholder"]
-    board = by_name["BoardInterlock"]
-    indep = by_name["SameIndepDir"]
-    supply = by_name["SupplyChainLink"]
-    inquiry = by_name["BothInquired"]
+    supply_total = int(supply["同所且通道为1"] + supply["不同所且通道为1"])
     lines.extend([
         "",
         (
-            f"地理通道和同所的重叠最大。同所公司对里，{percent(province['同所组比例'])} 注册地在同一省份，"
-            f"不同所公司对里这一比例是 {percent(province['不同所组比例'])}，Phi 为 {province['与SameAF的Phi系数']:.3f}，"
-            f"双向聚类 t 值为 {province['t值']:.2f}。同城的对应比例是 {percent(city['同所组比例'])} 和 {percent(city['不同所组比例'])}，"
-            f"办公地邮编前四位相同的对应比例是 {percent(office['同所组比例'])} 和 {percent(office['不同所组比例'])}。"
-            "同省与同城、同城与邮编前四位彼此相关，所以同城的 VIF 高于其余地理变量。"
+            f"九条通道一起放进固定行业×年度的回归时，`SameAF` 的 VIF 为 {same_af_vif:.2f}。"
+            "`BoardInterlock` 与 `SameIndepDir` 的 Phi 为 0.85，两者高度重合。"
+            f"`SupplyChainLink` 只覆盖前五名里披露为上市公司且给出代码的对手方，全样本共 {supply_total} 对，"
+            f"其中同所 {int(supply['同所且通道为1'])} 对。"
         ),
         "",
-        (
-            f"集团、大股东和董事联结在同所公司对里仍然很少，比例高于不同所公司对。"
-            f"同所组里，同一集团有 {int(group['同所且通道为1'])} 对（{percent(group['同所组比例'])}），"
-            f"共同持股达到 5% 的股东有 {int(holder['同所且通道为1'])} 对（{percent(holder['同所组比例'])}），"
-            f"共享董事或高管有 {int(board['同所且通道为1'])} 对（{percent(board['同所组比例'])}），"
-            f"共享独立董事有 {int(indep['同所且通道为1'])} 对（{percent(indep['同所组比例'])}）。"
-            f"不同所组的对应比例是 {percent(group['不同所组比例'])}、{percent(holder['不同所组比例'])}、"
-            f"{percent(board['不同所组比例'])} 和 {percent(indep['不同所组比例'])}。"
-            f"四条通道的双向聚类 t 值分别为 {group['t值']:.2f}、{holder['t值']:.2f}、{board['t值']:.2f} 和 {indep['t值']:.2f}。"
-            f"共享董事与共享独董的 Phi 为 0.85，VIF 分别为 {board['VIF']:.2f} 和 {indep['VIF']:.2f}，两条几乎是同一条通道。"
-        ),
+        "## 复现",
         "",
-        (
-            f"与同所几乎不重合的是供应链和年报问询。同所的 153,692 对里，只有 {int(supply['同所且通道为1'])} 对"
-            f"在前五大客户或供应商中互相标为上市公司，Phi 为 {supply['与SameAF的Phi系数']:.4f}，t 值为 {supply['t值']:.2f}。"
-            f"全部公司对里这类上市供应链共 {int(supply['同所且通道为1'] + supply['不同所且通道为1'])} 对。"
-            f"双方在当年或上一年都收到年报问询函的比例，同所组是 {percent(inquiry['同所组比例'])}，"
-            f"不同所组是 {percent(inquiry['不同所组比例'])}，Phi 为 {inquiry['与SameAF的Phi系数']:.3f}。"
-        ),
+        "在项目根目录运行：",
         "",
-        (
-            f"九条通道一起进入时，`SameAF` 的 VIF 是 {same_af_vif:.2f}。"
-            "同所和这些通道可以同时放进行业×年度固定效应回归。"
-        ),
-        "",
-        "供应链只保留前五名中标明为上市公司并给出股票代码的对手方。集团匹配去掉名称中含“国资委”或“国有资产监督管理委员会”的控制人，并使用当年 12 月 31 日的记录。大股东匹配去掉香港中央结算有限公司和 HKSCC NOMINEES，只保留年末持股达到 5% 的股东。董事联结使用人物编码，监事不计入。",
+        "```powershell",
+        'python "Diffusion of Environmental Disclosure/X variable/scripts/build_channel_correlation.py"',
+        "```",
     ])
     (OUT / "SameAF_correlation_report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
